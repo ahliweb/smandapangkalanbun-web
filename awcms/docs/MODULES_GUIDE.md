@@ -58,3 +58,10 @@ AWCMS provides a diverse set of modules for managing content, products, users, a
 - **Extensions**: Modular plugin architecture with Install/Activate/Delete lifecycle.
 - **Internationalization (i18n)**: Manage supported languages (ID/EN) and translation keys.
 - **SEO**: Global and resource-specific SEO settings (Sitemap generation).
+- **Backups**: Database and file backup configuration and scheduling.
+- **SSO**: Single Sign-On configuration for enterprise authentication.
+
+## 9. Communication & Notifications
+
+- **Notifications**: System-wide alerts and user notification management.
+- **Inbox/Messages**: Centralized management of contact form submissions and messages.

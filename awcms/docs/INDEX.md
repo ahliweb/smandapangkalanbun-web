@@ -1,0 +1,54 @@
+# Documentation Index
+
+Welcome to the AWCMS documentation. This index provides a roadmap to help you navigate the available documentation.
+
+## 🚀 Getting Started
+
+- [Installation Guide](INSTALLATION.md): Step-by-step instructions to set up the project.
+- [Configuration](CONFIGURATION.md): Environment variables and system settings.
+- [Folder Structure](FOLDER_STRUCTURE.md): Explanation of the project's file organization.
+
+## 🏗️ Core Concepts
+
+- [System Architecture](ARCHITECTURE.md): High-level overview of the system design.
+- [Public Portal Architecture](PUBLIC_PORTAL_ARCHITECTURE.md): Architecture specific to the public frontend.
+- [Tech Stack](TECH_STACK.md): List of technologies and libraries used.
+- [Multi-Tenancy](MULTI_TENANCY.md): How the multi-tenant SaaS architecture works.
+- [ABAC System](ABAC_SYSTEM.md): Attribute-Based Access Control and Permissions.
+
+## 📦 Modules & Features
+
+- [Modules Guide](MODULES_GUIDE.md): Overview of all available system modules.
+- [Articles Module](ARTICLES_MODULE.md): Details on the article management system.
+- [Visual Builder](VISUAL_BUILDER.md): Guide to using the visual page builder (Puck).
+- [Menu System](MENU_SYSTEM.md): Managing sidebar and frontend menus.
+- [User Management](USER_MANAGEMENT.md): Managing users, roles, and profiles.
+- [Internationalization (i18n)](INTERNATIONALIZATION.md): Multi-language support details.
+- [Theming](THEMING.md): Tenant-specific theming and branding.
+- [Extensions](EXTENSIONS.md): Plugin and extension architecture.
+
+## 💻 Development & API
+
+- [API Documentation](API_DOCUMENTATION.md): Supabase API usage and patterns.
+- [Database Schema](DATABASE_SCHEMA.md): Database tables, relationships, and RLS.
+- [Component Guide](COMPONENT_GUIDE.md): Reusable UI components library.
+- [Mobile Development](MOBILE_DEVELOPMENT.md): Guide for mobile-responsive development.
+- [Agents & AI](AGENTS.md): Integration with AI agents.
+- [Testing](TESTING.md): Testing strategies and commands.
+
+## ⚙️ Operations & Deployment
+
+- [Deployment Guide](DEPLOYMENT.md): General deployment instructions.
+- [Cloudflare Deployment](CLOUDFLARE_DEPLOYMENT.md): Specific guide for Cloudflare Pages.
+- [Security](SECURITY.md): Security best practices and implementations.
+- [Scalability Guide](SCALABILITY_GUIDE.md): Preparing the system for high traffic.
+- [Monitoring](MONITORING.md): System monitoring and observability.
+- [Performance](PERFORMANCE.md): Performance optimization tips.
+- [Troubleshooting](TROUBLESHOOTING.md): Common issues and solutions.
+
+## 🤝 Project Info
+
+- [Contributing](CONTRIBUTING.md): Guidelines for contributing to the project.
+- [Code of Conduct](CODE_OF_CONDUCT.md): Community standards.
+- [Changelog](CHANGELOG.md): History of changes and updates.
+- [License](LICENSE.md): Project license information.

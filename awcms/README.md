@@ -242,7 +242,7 @@ awcms/
 | [ABAC System](docs/ABAC_SYSTEM.md) | Permissions & Policies |
 | [Component Guide](docs/COMPONENT_GUIDE.md) | UI components |
 | [Security](docs/SECURITY.md) | Security measures |
-| [Deployment](docs/DEPLOYMENT_GUIDE.md) | Deploy to production |
+| [Deployment](docs/DEPLOYMENT.md) | Deploy to production |
 | [Contributing](docs/CONTRIBUTING.md) | How to contribute |
 
 ---
