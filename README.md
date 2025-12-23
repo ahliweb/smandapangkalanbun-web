@@ -1,15 +1,18 @@
 # AWCMS Monorepo
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](CONTRIBUTING.md)
+
 Welcome to the AWCMS development monorepo. This repository contains the source code for both the Admin Panel and the Public Portal.
 
 ## 📂 Project Structure
 
-- **`awcms/`**: The Admin Panel and Content Management System. Built with React 18, Vite, and Supabase.
-- **`awcms-public/`**: The Public Portal frontend. Built with Astro 5 and React 19 for high performance and SEO.
+| Directory | Description | Tech Stack |
+| :--- | :--- | :--- |
+| `awcms/` | Admin Panel & CMS | React 18, Vite, Supabase |
+| `awcms-public/` | Public Portal | Astro 5, React 19 |
 
 ## 🚀 Quick Start
-
-To get started, you will need to run both the Admin Panel and the Public Portal.
 
 ### 1. Admin Panel (`awcms`)
 
@@ -38,4 +41,21 @@ Runs on: `http://localhost:4321`
 Detailed documentation is available in the `awcms/docs` directory:
 
 - [**Full Documentation Index**](awcms/docs/INDEX.md)
-- [**Deployment Guide**](awcms/docs/CLOUDFLARE_DEPLOYMENT.md)
+- [**Deployment Guide**](awcms/docs/DEPLOYMENT.md)
+- [**Security Guide**](awcms/docs/SECURITY.md)
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+## 📜 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🔒 Security
+
+For reporting security vulnerabilities, please see our [Security Policy](SECURITY.md).
+
+## 📞 Code of Conduct
+
+Please read our [Code of Conduct](CODE_OF_CONDUCT.md) before participating.

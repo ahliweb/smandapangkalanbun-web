@@ -30,19 +30,28 @@ AWCMS is a **Monorepo** containing two distinct applications. You will deploy th
 
 ## 2. Admin Panel (`awcms`)
 
-**Recommended Host**: Vercel (easiest for React SPA) or Netlify.
+**Recommended Host**: Cloudflare Pages
+**Why**: Keeps deployment in a single platform and works well for React SPAs.
 
-### Setup Steps (Vercel)
+### Setup Steps
 
-1. Log in to [Vercel](https://vercel.com/new).
-2. Import the **Same GitHub Repository** (`ahliweb/awcms`).
-3. **Configure Project**:
-    * **Framework Preset**: `Vite`
-    * **Root Directory**: Edit and select `awcms` folder.
-4. **Environment Variables**:
-    * `VITE_SUPABASE_URL`: Your Supabase URL.
+1. Log in to [Cloudflare Dashboard](https://dash.cloudflare.com) > **Workers & Pages**.
+2. Click **Create Application** > **Connect to Git**.
+3. Select your GitHub Repository (`ahliweb/awcms`).
+4. **Configure Build Settings**:
+    * **Project Name**: `your-brand-admin`
+    * **Production Branch**: `main`
+    * **Framework Preset**: Select `None` (or `Vite` if available)
+    * **Root Directory**: `/awcms` (⚠️ Important: Do not leave empty)
+    * **Build Command**: `npm run build`
+    * **Output Directory**: `dist`
+    * **Node Version**: `20` (Set via Environment Variable `NODE_VERSION`)
+5. **Environment Variables**:
+    * `VITE_SUPABASE_URL`: Your Supabase Project URL.
     * `VITE_SUPABASE_ANON_KEY`: Your Supabase Anon Key.
-5. Click **Deploy**.
+    * `VITE_TURNSTILE_SITE_KEY`: Your Cloudflare Turnstile Site Key.
+    * `NODE_VERSION`: `20` (Required for Vite v5+)
+6. Click **Save and Deploy**.
 
 ---
 
@@ -51,10 +60,11 @@ AWCMS is a **Monorepo** containing two distinct applications. You will deploy th
 Once both sites are live, you need to update Supabase Authentication settings.
 
 1. Go to Supabase Dashboard > **Authentication** > **URL Configuration**.
-2. **Site URL**: Set to your **Admin Panel** URL (e.g., `https://admin.your-project.vercel.app`).
+2. **Site URL**: Set to your **Admin Panel** URL (e.g., `https://admin.your-project.pages.dev`).
     * This is where "Magic Links" and Password Resets will redirect by default.
-3. **Redirect URLs**: Add your Public Portal URL(s).
+3. **Redirect URLs**: Add your Public Portal and Admin URLs.
     * `https://your-brand-portal.pages.dev/*`
+    * `https://your-brand-admin.pages.dev/*`
     * `https://*.your-brand-portal.pages.dev/*` (If using wildcards for tenants)
 
 ---
