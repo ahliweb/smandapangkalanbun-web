@@ -80,6 +80,10 @@ const AuditLogsManager = lazy(() => import('@/components/dashboard/AuditLogsMana
 const TenantsManager = lazy(() => import('@/components/dashboard/TenantsManager'));
 const TenantSettings = lazy(() => import('@/components/dashboard/TenantSettings'));
 
+// ESP32 IoT (Lazy Loaded)
+const DevicesManager = lazy(() => import('@/pages/cmspanel/DevicesManager'));
+const DeviceDetail = lazy(() => import('@/pages/cmspanel/DeviceDetail'));
+
 // Extensions (Lazy Loaded)
 const BackupSettings = lazy(() => import('@/extensions/backup/BackupSettings'));
 
@@ -262,6 +266,10 @@ const MainRouter = () => {
 
           <Route path="visual-editor" element={<VisualPageBuilder />} />
           <Route path="backup" element={<BackupSettings />} />
+
+          {/* ESP32 IoT Devices */}
+          <Route path="devices" element={<DevicesManager />} />
+          <Route path="devices/:id" element={<DeviceDetail />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />
