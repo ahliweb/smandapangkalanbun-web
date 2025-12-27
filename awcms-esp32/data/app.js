@@ -1,22 +1,28 @@
 /**
  * AWCMS ESP32 IoT Dashboard
- * Frontend JavaScript
+ * Frontend JavaScript v2.0
+ * Gas Sensor + Camera Edition
  */
 
 // WebSocket connection
 let ws = null;
 let reconnectInterval = null;
+let cameraRefreshInterval = null;
 
 // DOM Elements
 const elements = {
     connectionStatus: document.getElementById('connectionStatus'),
+    alertBanner: document.getElementById('alertBanner'),
+    alertText: document.getElementById('alertText'),
     deviceId: document.getElementById('deviceId'),
     ipAddress: document.getElementById('ipAddress'),
     wifiRssi: document.getElementById('wifiRssi'),
     uptime: document.getElementById('uptime'),
-    heapFree: document.getElementById('heapFree'),
-    temperature: document.getElementById('temperature'),
-    humidity: document.getElementById('humidity'),
+    gasPPM: document.getElementById('gasPPM'),
+    gasStatus: document.getElementById('gasStatus'),
+    gasCalibrated: document.getElementById('gasCalibrated'),
+    gasDisplay: document.getElementById('gasDisplay'),
+    cameraFeed: document.getElementById('cameraFeed'),
     lastUpdate: document.getElementById('lastUpdate')
 };
 
@@ -39,9 +45,8 @@ function initWebSocket() {
         console.log('WebSocket disconnected');
         updateConnectionStatus('disconnected');
 
-        // Auto reconnect
         reconnectInterval = setInterval(() => {
-            console.log('Attempting to reconnect...');
+            console.log('Reconnecting...');
             initWebSocket();
         }, 5000);
     };
@@ -56,7 +61,7 @@ function initWebSocket() {
             const data = JSON.parse(event.data);
             handleMessage(data);
         } catch (e) {
-            console.error('Error parsing message:', e);
+            console.error('Parse error:', e);
         }
     };
 }
@@ -68,16 +73,66 @@ function handleMessage(data) {
     console.log('Received:', data);
 
     if (data.type === 'sensor_data') {
-        // Update sensor readings
-        updateSensorData(data);
+        updateGasData(data);
+
+        // Check for alerts
+        if (data.alert) {
+            showAlert(data.alert);
+        }
     } else if (data.device_id) {
-        // Device status message
         updateDeviceInfo(data);
+    }
+
+    elements.lastUpdate.textContent = new Date().toLocaleTimeString();
+}
+
+/**
+ * Update gas sensor display
+ */
+function updateGasData(data) {
+    if (data.gas_ppm !== undefined) {
+        const ppm = data.gas_ppm.toFixed(1);
+        elements.gasPPM.textContent = ppm;
+
+        // Update status based on PPM level
+        let status = 'Normal';
+        let level = 'normal';
+
+        if (data.gas_ppm > 1000) {
+            status = 'DANGER';
+            level = 'danger';
+        } else if (data.gas_ppm > 500) {
+            status = 'Warning';
+            level = 'warning';
+        } else if (data.gas_ppm > 200) {
+            status = 'Elevated';
+            level = 'elevated';
+        }
+
+        elements.gasStatus.textContent = status;
+        elements.gasDisplay.className = 'sensor-item gas ' + level;
+    }
+
+    if (data.gas_calibrated !== undefined) {
+        elements.gasCalibrated.textContent = data.gas_calibrated ? 'Calibrated' : 'Not calibrated';
     }
 }
 
 /**
- * Update connection status indicator
+ * Show alert banner
+ */
+function showAlert(message) {
+    elements.alertText.textContent = message;
+    elements.alertBanner.classList.remove('hidden');
+
+    // Auto-hide after 10 seconds
+    setTimeout(() => {
+        elements.alertBanner.classList.add('hidden');
+    }, 10000);
+}
+
+/**
+ * Update connection status
  */
 function updateConnectionStatus(status) {
     const badge = elements.connectionStatus;
@@ -93,57 +148,28 @@ function updateConnectionStatus(status) {
 }
 
 /**
- * Update device info display
+ * Update device info
  */
 function updateDeviceInfo(data) {
     if (data.device_id) elements.deviceId.textContent = data.device_id;
     if (data.ip_address) elements.ipAddress.textContent = data.ip_address;
     if (data.wifi_rssi) elements.wifiRssi.textContent = data.wifi_rssi + ' dBm';
     if (data.uptime) elements.uptime.textContent = formatUptime(data.uptime);
-    if (data.heap_free) elements.heapFree.textContent = formatBytes(data.heap_free);
 }
 
 /**
- * Update sensor data display
- */
-function updateSensorData(data) {
-    if (data.temperature !== undefined) {
-        elements.temperature.textContent = data.temperature.toFixed(1);
-    }
-    if (data.humidity !== undefined) {
-        elements.humidity.textContent = data.humidity.toFixed(1);
-    }
-
-    elements.lastUpdate.textContent = new Date().toLocaleTimeString();
-}
-
-/**
- * Format uptime in human readable format
+ * Format uptime
  */
 function formatUptime(seconds) {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
 
-    if (hours > 0) {
-        return `${hours}h ${minutes}m`;
-    } else if (minutes > 0) {
-        return `${minutes}m ${secs}s`;
-    }
-    return `${secs}s`;
+    if (hours > 0) return `${hours}h ${minutes}m`;
+    return `${minutes}m ${seconds % 60}s`;
 }
 
 /**
- * Format bytes in human readable format
- */
-function formatBytes(bytes) {
-    if (bytes < 1024) return bytes + ' B';
-    if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
-    return (bytes / 1048576).toFixed(1) + ' MB';
-}
-
-/**
- * Refresh data from API
+ * Refresh all data
  */
 async function refreshData() {
     try {
@@ -151,33 +177,81 @@ async function refreshData() {
         const data = await response.json();
         updateDeviceInfo(data);
 
-        const sensorResponse = await fetch('/api/sensors');
-        const sensorData = await sensorResponse.json();
-        updateSensorData(sensorData);
+        const gasResponse = await fetch('/api/gas');
+        const gasData = await gasResponse.json();
+        updateGasData({
+            gas_ppm: gasData.ppm,
+            gas_calibrated: gasData.calibrated
+        });
+
+        refreshCamera();
     } catch (error) {
-        console.error('Error refreshing data:', error);
+        console.error('Refresh error:', error);
     }
 }
 
 /**
- * Restart the device
+ * Calibrate gas sensor
  */
-async function restartDevice() {
-    if (!confirm('Are you sure you want to restart the device?')) {
+async function calibrateGas() {
+    if (!confirm('Calibrate gas sensor?\nMake sure sensor is in clean air.')) {
         return;
     }
 
     try {
-        await fetch('/api/restart', { method: 'POST' });
-        updateConnectionStatus('disconnected');
-        alert('Device is restarting...');
+        const response = await fetch('/api/gas/calibrate', { method: 'POST' });
+        const data = await response.json();
+
+        if (data.status === 'calibrated') {
+            alert('Calibration successful!');
+            elements.gasCalibrated.textContent = 'Calibrated';
+        } else {
+            alert('Calibration failed. Check sensor connection.');
+        }
     } catch (error) {
-        console.error('Error restarting device:', error);
+        console.error('Calibration error:', error);
+        alert('Calibration error');
     }
 }
 
-// Initialize on page load
+/**
+ * Refresh camera feed
+ */
+function refreshCamera() {
+    const timestamp = new Date().getTime();
+    elements.cameraFeed.src = '/capture?' + timestamp;
+}
+
+/**
+ * Download camera capture
+ */
+function downloadCapture() {
+    const link = document.createElement('a');
+    link.href = '/capture';
+    link.download = 'capture_' + new Date().toISOString() + '.jpg';
+    link.click();
+}
+
+/**
+ * Restart device
+ */
+async function restartDevice() {
+    if (!confirm('Restart device?')) return;
+
+    try {
+        await fetch('/api/restart', { method: 'POST' });
+        updateConnectionStatus('disconnected');
+        alert('Device restarting...');
+    } catch (error) {
+        console.error('Restart error:', error);
+    }
+}
+
+// Initialize
 document.addEventListener('DOMContentLoaded', () => {
     initWebSocket();
     refreshData();
+
+    // Auto-refresh camera every 5 seconds
+    cameraRefreshInterval = setInterval(refreshCamera, 5000);
 });

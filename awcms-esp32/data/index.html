@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AWCMS IoT Dashboard</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
   <div class="dashboard">
     <!-- Header -->
@@ -19,8 +21,49 @@
       </div>
     </header>
 
+    <!-- Alert Banner -->
+    <div class="alert-banner hidden" id="alertBanner">
+      <span class="alert-icon">⚠️</span>
+      <span class="alert-text" id="alertText">Gas level warning!</span>
+    </div>
+
     <!-- Main Content -->
     <main class="main-content">
+      <!-- Gas Sensor Card -->
+      <section class="card gas-card">
+        <h2>💨 Gas Sensor</h2>
+        <div class="sensor-grid">
+          <div class="sensor-item gas" id="gasDisplay">
+            <div class="sensor-icon">💨</div>
+            <div class="sensor-value" id="gasPPM">--</div>
+            <div class="sensor-label">Gas Level</div>
+            <div class="sensor-unit">PPM</div>
+          </div>
+          <div class="sensor-item status">
+            <div class="sensor-icon">📊</div>
+            <div class="sensor-value" id="gasStatus">--</div>
+            <div class="sensor-label">Status</div>
+            <div class="sensor-unit" id="gasCalibrated">Not calibrated</div>
+          </div>
+        </div>
+        <div class="actions-inline">
+          <button class="btn btn-small" onclick="calibrateGas()">🔧 Calibrate</button>
+        </div>
+      </section>
+
+      <!-- Camera Card -->
+      <section class="card camera-card">
+        <h2>📷 Camera</h2>
+        <div class="camera-view">
+          <img id="cameraFeed" src="/capture" alt="Camera Feed"
+            onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 640 480%22><rect fill=%22%231e293b%22 width=%22640%22 height=%22480%22/><text x=%22320%22 y=%22240%22 text-anchor=%22middle%22 fill=%22%2394a3b8%22 font-size=%2220%22>Camera Offline</text></svg>'">
+        </div>
+        <div class="actions-inline">
+          <button class="btn btn-small" onclick="refreshCamera()">🔄 Refresh</button>
+          <button class="btn btn-small" onclick="downloadCapture()">📥 Download</button>
+        </div>
+      </section>
+
       <!-- Device Info Card -->
       <section class="card device-card">
         <h2>📱 Device Info</h2>
@@ -41,32 +84,6 @@
             <span class="label">Uptime</span>
             <span class="value" id="uptime">--</span>
           </div>
-          <div class="info-item">
-            <span class="label">Free Memory</span>
-            <span class="value" id="heapFree">--</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- Sensor Data Card -->
-      <section class="card sensor-card">
-        <h2>🌡️ Sensor Data</h2>
-        <div class="sensor-grid">
-          <div class="sensor-item temperature">
-            <div class="sensor-icon">🌡️</div>
-            <div class="sensor-value" id="temperature">--</div>
-            <div class="sensor-label">Temperature</div>
-            <div class="sensor-unit">°C</div>
-          </div>
-          <div class="sensor-item humidity">
-            <div class="sensor-icon">💧</div>
-            <div class="sensor-value" id="humidity">--</div>
-            <div class="sensor-label">Humidity</div>
-            <div class="sensor-unit">%</div>
-          </div>
-        </div>
-        <div class="last-update">
-          Last update: <span id="lastUpdate">--</span>
         </div>
       </section>
 
@@ -75,7 +92,7 @@
         <h2>⚙️ Actions</h2>
         <div class="actions-grid">
           <button class="btn btn-primary" onclick="refreshData()">
-            🔄 Refresh
+            🔄 Refresh All
           </button>
           <button class="btn btn-danger" onclick="restartDevice()">
             🔁 Restart
@@ -86,10 +103,12 @@
 
     <!-- Footer -->
     <footer class="footer">
-      <p>AWCMS IoT Dashboard • v1.0.0</p>
+      <p>AWCMS IoT Dashboard • v2.0.0 • Gas + Camera</p>
+      <p class="last-update">Last update: <span id="lastUpdate">--</span></p>
     </footer>
   </div>
 
   <script src="app.js"></script>
 </body>
+
 </html>

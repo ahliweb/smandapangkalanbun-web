@@ -2,14 +2,17 @@
  * AWCMS ESP32 IoT Firmware
  * Main Entry Point
  *
- * This firmware provides:
- * - Web-based dashboard interface
- * - Sensor data collection
+ * Features:
+ * - Web dashboard interface
+ * - Gas sensor monitoring (MQ series)
+ * - Camera streaming (ESP32-CAM)
  * - Supabase cloud sync
  * - Real-time WebSocket updates
  */
 
+#include "camera.h"
 #include "config.h"
+#include "gas_sensor.h"
 #include "supabase_client.h"
 #include "webserver.h"
 #include <Arduino.h>
@@ -19,11 +22,8 @@
 // ============================================
 unsigned long lastSensorRead = 0;
 unsigned long lastDataSync = 0;
+unsigned long lastGasCheck = 0;
 bool supabaseConnected = false;
-
-// Sensor data (placeholder)
-float temperature = 0.0;
-float humidity = 0.0;
 
 // ============================================
 // Setup
@@ -36,10 +36,24 @@ void setup() {
   DEBUG_PRINTLN();
   DEBUG_PRINTLN("================================");
   DEBUG_PRINTLN("  AWCMS ESP32 IoT Firmware");
+  DEBUG_PRINTLN("  Gas Sensor + Camera Edition");
   DEBUG_PRINTLN("================================");
   DEBUG_PRINTF("Device ID: %s\n", DEVICE_ID);
-  DEBUG_PRINTF("Firmware: v1.0.0\n");
+  DEBUG_PRINTF("Firmware: v2.0.0\n");
   DEBUG_PRINTLN();
+
+  // Initialize gas sensor
+  initGasSensor();
+  DEBUG_PRINTLN("Gas sensor warming up (5-10 min)...");
+
+// Initialize camera (ESP32-CAM only)
+#ifdef ENABLE_CAMERA
+  if (initCamera()) {
+    DEBUG_PRINTLN("Camera ready");
+  } else {
+    DEBUG_PRINTLN("Camera init failed - check connections");
+  }
+#endif
 
   // Connect to WiFi
   if (connectWiFi()) {
@@ -51,7 +65,7 @@ void setup() {
 
     // Log startup event
     if (supabaseConnected) {
-      logEvent("startup", "Device started successfully");
+      logEvent("startup", "Device started with gas sensor and camera");
     }
   } else {
     DEBUG_PRINTLN("Failed to connect to WiFi");
@@ -69,34 +83,53 @@ void loop() {
   // Clean up WebSocket clients
   ws.cleanupClients();
 
-  // Read sensors at interval
+  // Read gas sensor at interval
   if (millis() - lastSensorRead >= SENSOR_READ_INTERVAL) {
     lastSensorRead = millis();
 
-    // Read sensors (placeholder - replace with actual sensor code)
-    temperature = 25.0 + random(-50, 50) / 10.0;
-    humidity = 60.0 + random(-100, 100) / 10.0;
+    // Read gas sensor
+    readGasSensor();
 
     // Broadcast to WebSocket clients
     JsonDocument doc;
     doc["type"] = "sensor_data";
-    doc["temperature"] = temperature;
-    doc["humidity"] = humidity;
+    doc["gas_ppm"] = gasPPM;
+    doc["gas_raw"] = gasRaw;
+    doc["gas_voltage"] = gasVoltage;
+    doc["gas_calibrated"] = sensorCalibrated;
     doc["timestamp"] = millis();
+
+    // Check for danger level
+    if (isGasDangerous()) {
+      doc["alert"] = "DANGER: High gas level detected!";
+      DEBUG_PRINTLN("⚠️ DANGER: High gas level!");
+    }
 
     String message;
     serializeJson(doc, message);
     broadcastWS(message);
 
-    DEBUG_PRINTF("Sensor: T=%.1f°C H=%.1f%%\n", temperature, humidity);
+    DEBUG_PRINTF("Gas: %.1f PPM (raw: %.0f)\n", gasPPM, gasRaw);
   }
 
   // Sync data to Supabase at interval
   if (supabaseConnected && (millis() - lastDataSync >= DATA_SYNC_INTERVAL)) {
     lastDataSync = millis();
 
-    if (postSensorData(temperature, humidity)) {
-      DEBUG_PRINTLN("Data synced to Supabase");
+    // Post gas sensor data
+    JsonDocument doc;
+    doc["device_id"] = DEVICE_ID;
+    doc["tenant_id"] = TENANT_ID;
+    doc["gas_ppm"] = gasPPM;
+    doc["gas_raw"] = gasRaw;
+    doc["timestamp"] = millis();
+
+    String jsonData;
+    serializeJson(doc, jsonData);
+
+    int httpCode = supabase.insert("sensor_readings", jsonData, false);
+    if (httpCode == 201) {
+      DEBUG_PRINTLN("Gas data synced to Supabase");
     }
   }
 

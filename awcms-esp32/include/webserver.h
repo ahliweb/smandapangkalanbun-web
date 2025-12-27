@@ -149,6 +149,52 @@ void setupAPIRoutes() {
     serializeJson(doc, output);
     request->send(200, "application/json", output);
   });
+
+  // API: Get gas sensor data
+  server.on("/api/gas", HTTP_GET, [](AsyncWebServerRequest *request) {
+    extern String getGasSensorJSON();
+    request->send(200, "application/json", getGasSensorJSON());
+  });
+
+  // API: Calibrate gas sensor
+  server.on("/api/gas/calibrate", HTTP_POST,
+            [](AsyncWebServerRequest *request) {
+              extern bool calibrateGasSensor();
+              bool success = calibrateGasSensor();
+              String response = success ? "{\"status\":\"calibrated\"}"
+                                        : "{\"status\":\"failed\"}";
+              request->send(200, "application/json", response);
+            });
+
+  // API: Get camera status
+  server.on("/api/camera", HTTP_GET, [](AsyncWebServerRequest *request) {
+    extern String getCameraStatusJSON();
+    request->send(200, "application/json", getCameraStatusJSON());
+  });
+
+  // API: Capture single frame
+  server.on("/capture", HTTP_GET, [](AsyncWebServerRequest *request) {
+    extern camera_fb_t *captureFrame();
+    extern void releaseFrame(camera_fb_t *);
+    extern bool cameraInitialized;
+
+    if (!cameraInitialized) {
+      request->send(503, "text/plain", "Camera not initialized");
+      return;
+    }
+
+    camera_fb_t *fb = captureFrame();
+    if (!fb) {
+      request->send(500, "text/plain", "Camera capture failed");
+      return;
+    }
+
+    AsyncWebServerResponse *response =
+        request->beginResponse_P(200, "image/jpeg", fb->buf, fb->len);
+    response->addHeader("Content-Disposition", "inline; filename=capture.jpg");
+    request->send(response);
+    releaseFrame(fb);
+  });
 }
 
 /**
