@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-Welcome to the AWCMS development monorepo. This repository contains the source code for both the Admin Panel and the Public Portal.
+Welcome to the AWCMS development monorepo. A complete content management and IoT platform.
 
 ## 📂 Project Structure
 
@@ -11,7 +11,8 @@ Welcome to the AWCMS development monorepo. This repository contains the source c
 | :--- | :--- | :--- |
 | `awcms/` | Admin Panel & CMS | React 18, Vite, Supabase |
 | `awcms-public/` | Public Portal | Astro 5, React 19 |
-| `awcms-mobile/` | Mobile App | Flutter 3.x, Riverpod, Supabase |
+| `awcms-mobile/` | Mobile App | Flutter 3.x, Riverpod |
+| `awcms-esp32/` | IoT Firmware | ESP32, PlatformIO |
 
 ## 🚀 Quick Start
 
@@ -20,43 +21,73 @@ Welcome to the AWCMS development monorepo. This repository contains the source c
 ```bash
 cd awcms
 npm install
-cp .env.example .env.local # Configure your Supabase credentials
+cp .env.example .env.local
 npm run dev
 ```
 
-Runs on: `http://localhost:3000`
+→ `http://localhost:3000`
 
 ### 2. Public Portal (`awcms-public`)
 
 ```bash
 cd awcms-public
 npm install
-cp .env.example .env # Configure your Supabase credentials
 npm run dev
 ```
 
-Runs on: `http://localhost:4321`
+→ `http://localhost:4321`
+
+### 3. Mobile App (`awcms-mobile`)
+
+```bash
+cd awcms-mobile
+flutter pub get
+flutter run
+```
+
+### 4. ESP32 IoT (`awcms-esp32`)
+
+```bash
+cd awcms-esp32
+cp .env.example .env
+# Edit .env with credentials
+source .env && pio run -t upload
+```
+
+## 🌟 Features
+
+### Admin Panel
+
+- 📝 Content management (articles, pages)
+- 👥 Multi-tenant architecture
+- 🔐 ABAC + RLS security
+- 🎨 Visual page builder
+- 📊 Analytics dashboard
+
+### IoT (ESP32)
+
+- 💨 Gas sensor monitoring (MQ series)
+- 📷 Camera streaming (ESP32-CAM)
+- 📡 Realtime data sync to Supabase
+- 🌐 Web dashboard on device
+- 🔐 Secure credentials (.env)
 
 ## 📚 Documentation
 
-Detailed documentation is available in the `awcms/docs` directory:
-
-- [**Full Documentation Index**](awcms/docs/INDEX.md)
-- [**Deployment Guide**](awcms/docs/DEPLOYMENT.md)
-- [**Security Guide**](awcms/docs/SECURITY.md)
+| Doc | Path |
+| :-- | :--- |
+| Admin Docs | `awcms/docs/` |
+| ESP32 Docs | `awcms-esp32/README.md` |
+| Mobile Docs | `awcms-mobile/README.md` |
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## 📜 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT - see [LICENSE](LICENSE)
 
 ## 🔒 Security
 
-For reporting security vulnerabilities, please see our [Security Policy](SECURITY.md).
-
-## 📞 Code of Conduct
-
-Please read our [Code of Conduct](CODE_OF_CONDUCT.md) before participating.
+See [SECURITY.md](SECURITY.md)
