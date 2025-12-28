@@ -177,7 +177,7 @@ CREATE TABLE articles (
   author_id UUID REFERENCES users(id),
   category_id UUID REFERENCES categories(id),
   status TEXT DEFAULT 'draft',
-  workflow_state TEXT DEFAULT 'draft',
+  workflow_state TEXT DEFAULT 'draft', -- draft, reviewed, approved, published
   is_featured BOOLEAN DEFAULT FALSE,
   views INTEGER DEFAULT 0,
   published_at TIMESTAMPTZ,
@@ -190,12 +190,8 @@ CREATE TABLE articles (
 );
 
 CREATE INDEX idx_articles_slug ON articles(slug);
-CREATE INDEX idx_articles_status ON articles(status);
-CREATE INDEX idx_articles_workflow_state ON articles(workflow_state);
-CREATE INDEX idx_articles_author ON articles(author_id);
-CREATE INDEX idx_articles_category ON articles(category_id);
-CREATE INDEX idx_articles_created_by ON articles(created_by);
-CREATE INDEX idx_articles_tenant_id ON articles(tenant_id);
+CREATE INDEX idx_articles_tenant_slug ON articles(tenant_id, slug); -- Optimized Lookup
+CREATE INDEX idx_articles_tenant_status ON articles(tenant_id, status); -- Filter Opt
 ```
 
 ### pages
@@ -209,6 +205,7 @@ CREATE TABLE pages (
   content TEXT,
   template TEXT DEFAULT 'default',
   parent_id UUID REFERENCES pages(id),
+  puck_layout_jsonb JSONB DEFAULT '{}', -- Page builder data
   status TEXT DEFAULT 'draft',
   sort_order INTEGER DEFAULT 0,
   meta_title TEXT,
@@ -217,6 +214,8 @@ CREATE TABLE pages (
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   deleted_at TIMESTAMPTZ
 );
+
+CREATE INDEX idx_pages_tenant_slug ON pages(tenant_id, slug);
 ```
 
 ### products
