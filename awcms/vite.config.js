@@ -14,11 +14,23 @@ export default defineConfig(({ mode }) => {
 			host: '::',
 			port: 3000,
 			cors: true,
-			// Security headers
+			// Security headers (OWASP aligned)
 			headers: {
 				'X-Content-Type-Options': 'nosniff',
 				'X-Frame-Options': 'SAMEORIGIN',
 				'X-XSS-Protection': '1; mode=block',
+				'Referrer-Policy': 'strict-origin-when-cross-origin',
+				'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+				// CSP: Allow Supabase and self
+				'Content-Security-Policy': [
+					"default-src 'self'",
+					"script-src 'self' 'unsafe-inline' 'unsafe-eval'", // Required for React dev
+					"style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+					"font-src 'self' https://fonts.gstatic.com",
+					"img-src 'self' data: blob: https://*.supabase.co",
+					"connect-src 'self' https://*.supabase.co wss://*.supabase.co",
+					"frame-ancestors 'self'",
+				].join('; '),
 			},
 		},
 

@@ -7,6 +7,23 @@ AWCMS implements multiple layers of security to protect your application and dat
 
 ---
 
+## OWASP Top 10 (2021) Alignment
+
+| Risk | Implementation |
+| ---- | -------------- |
+| A01: Broken Access Control | ✅ ABAC + RLS + ProtectedRoute |
+| A02: Cryptographic Failures | ✅ Supabase (AES-256 at rest) |
+| A03: Injection (XSS) | ✅ TipTap sanitization |
+| A04: Insecure Design | ✅ Multi-layer architecture |
+| A05: Security Misconfiguration | ✅ CSP headers configured |
+| A06: Vulnerable Components | ✅ npm audit = 0 vulnerabilities |
+| A07: Auth Failures | ✅ 2FA + JWT + session timeout |
+| A08: Software Integrity | ✅ Supabase signed tokens |
+| A09: Logging Failures | ✅ Audit trail + extension logs |
+| A10: SSRF | ✅ No external server calls |
+
+---
+
 ## Security Architecture
 
 ```text
