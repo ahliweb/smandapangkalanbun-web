@@ -84,11 +84,13 @@ src/
 ├── 📁 contexts/          # React Context providers
 │   ├── SupabaseAuthContext.jsx
 │   ├── PermissionContext.jsx
+│   ├── PluginContext.jsx        # Plugin/Extension system
 │   └── ThemeContext.jsx
 │
 ├── 📁 hooks/             # Custom React hooks
 │   ├── useAdminMenu.js
 │   ├── useDashboardData.js
+│   ├── useExtensionAudit.js     # Extension audit logging
 │   ├── useMedia.js
 │   ├── useNotifications.js
 │   ├── useSearch.js
@@ -98,8 +100,10 @@ src/
 │   ├── customSupabaseClient.js  # Public Supabase client
 │   ├── supabaseAdmin.js         # Admin client (service role)
 │   ├── utils.js                 # Helper functions (cn, etc.)
-│   ├── adminIcons.js            # Admin icon mappings
-│   ├── extensionRegistry.js     # Extension system
+│   ├── hooks.js                 # WordPress-style hooks system
+│   ├── pluginRegistry.js        # Core plugin registry
+│   ├── externalExtensionLoader.js # External extension loader
+│   ├── extensionRegistry.js     # Legacy (deprecated)
 │   ├── i18n.js                  # i18n configuration
 │   └── themeUtils.js            # Theme utilities
 │
@@ -113,8 +117,11 @@ src/
 │   ├── 📁 cmspanel/      # Admin panel pages
 │   └── 📁 public/        # Public site pages (19 files)
 │
-├── 📁 extensions/        # Extension system
-│   └── 📁 backup/        # Extension backups
+├── 📁 plugins/           # Core plugins (bundled)
+│   ├── 📁 backup/        # Backup plugin
+│   │   ├── plugin.json   # Plugin manifest
+│   │   └── index.js      # Entry point
+│   └── 📁 helloworld/    # Example plugin
 │
 ├── 📁 utils/             # Additional utilities
 │
@@ -122,6 +129,8 @@ src/
 ├── 📄 main.jsx           # Entry point
 └── 📄 index.css          # Global styles (TailwindCSS 4)
 ```
+
+> **External Extensions** are located at project root in `awcms-ext-{vendor}-{slug}/` folders. See [EXTENSIONS.md](./EXTENSIONS.md) for details.
 
 ---
 

@@ -109,13 +109,15 @@ export const PluginProvider = ({ children }) => {
                             entry: extPlugin.external_path || 'src/index.js'
                         };
 
-                        const loadedModule = await loadExternalExtension(manifest);
+                        // Pass tenant_id for multi-tenant context
+                        const loadedModule = await loadExternalExtension(manifest, extPlugin.tenant_id);
 
                         if (loadedModule.loaded && typeof loadedModule.register === 'function') {
                             loadedModule.register({
                                 addAction,
                                 addFilter,
                                 supabase,
+                                tenantId: extPlugin.tenant_id, // Pass tenant context
                                 pluginConfig: extPlugin.config || {}
                             });
                             registered.push(extPlugin.slug);

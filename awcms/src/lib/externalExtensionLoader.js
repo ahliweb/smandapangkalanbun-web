@@ -60,9 +60,10 @@ export const getExtensionPath = (manifest) => {
 /**
  * Load an external extension dynamically
  * @param {Object} manifest - Extension manifest from database
+ * @param {string} tenantId - Tenant ID for multi-tenant context
  * @returns {Promise<Object>} Loaded extension module
  */
-export const loadExternalExtension = async (manifest) => {
+export const loadExternalExtension = async (manifest, tenantId = null) => {
     const cacheKey = `${manifest.vendor}-${manifest.slug}`;
 
     // Return cached if available
@@ -89,10 +90,11 @@ export const loadExternalExtension = async (manifest) => {
             throw new Error('Extension must export a default component or register function');
         }
 
-        // Cache the loaded module
+        // Cache the loaded module with tenant context
         const extensionModule = {
             ...module,
             manifest,
+            tenantId,
             loaded: true,
             loadedAt: new Date().toISOString()
         };
