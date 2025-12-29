@@ -358,7 +358,12 @@ const LoginPage = () => {
               {/* Turnstile CAPTCHA - Invisible Mode (configured in Cloudflare) */}
               <div className="min-h-[20px]">
                 <Turnstile
-                  siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+                  siteKey={
+                    // FORCE production key if on primary.ahliweb.com to avoid env var issues
+                    window.location.hostname === 'primary.ahliweb.com'
+                      ? '0x4AAAAAACGtMCPHiTd5Q8W3'
+                      : import.meta.env.VITE_TURNSTILE_SITE_KEY
+                  }
                   onVerify={(token) => {
                     console.log('[Login] Turnstile token received');
                     setTurnstileToken(token);

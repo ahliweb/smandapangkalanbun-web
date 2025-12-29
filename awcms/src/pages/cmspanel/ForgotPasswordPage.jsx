@@ -129,7 +129,11 @@ const ForgotPasswordPage = () => {
                 {/* Turnstile CAPTCHA - Invisible Mode (configured in Cloudflare) */}
                 <div>
                   <Turnstile
-                    siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+                    siteKey={
+                      window.location.hostname === 'primary.ahliweb.com'
+                        ? '0x4AAAAAACGtMCPHiTd5Q8W3'
+                        : import.meta.env.VITE_TURNSTILE_SITE_KEY
+                    }
                     onVerify={(token) => {
                       setTurnstileToken(token);
                       setTurnstileError(false);
