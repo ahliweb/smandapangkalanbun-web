@@ -8,3 +8,11 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+export const createScopedClient = (headers: Record<string, string> = {}) => {
+    return createClient(supabaseUrl, supabaseAnonKey, {
+        global: {
+            headers: headers
+        }
+    });
+};

@@ -79,3 +79,24 @@ The Visual Builder outputs a **JSON Payload** stored in `puck_layout_jsonb`. The
 - **Renderer**: `src/components/PuckRenderer.tsx` (Maps JSON -> Astro/React Components).
 
 > **Security Note**: The Public Portal ignores any blocks NOT in the registry, preventing unauthorized component injection.
+
+## Template Parts
+
+The Visual Builder can also edit **Template Parts** (Headers, Footers, Sidebars). Access the Template Parts editor via `/cmspanel/visual-editor?partId=<uuid>`.
+
+## Extension Integration
+
+Extensions can register new blocks at runtime using the `registerTemplateBlock()` API:
+
+```javascript
+import { registerTemplateBlock } from '@/lib/templateExtensions';
+
+registerTemplateBlock({
+    type: 'my_plugin/chart',
+    label: 'Interactive Chart',
+    render: ChartComponent,
+    fields: { data: { type: 'object' } }
+});
+```
+
+Registered blocks will appear in both the Admin Panel's Visual Builder and the Public Portal's component registry (after being whitelisted).

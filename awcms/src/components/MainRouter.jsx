@@ -63,6 +63,9 @@ const ContactMessagesManager = lazy(() => import('@/components/dashboard/Contact
 const ContactsManager = lazy(() => import('@/components/dashboard/ContactsManager'));
 const ThemesManager = lazy(() => import('@/components/dashboard/ThemesManager'));
 const TemplatesManager = lazy(() => import('@/components/dashboard/TemplatesManager'));
+const TemplateEditor = lazy(() => import('@/components/dashboard/templates/TemplateEditor'));
+const TemplatePartEditor = lazy(() => import('@/components/dashboard/templates/TemplatePartEditor'));
+const WidgetsManager = lazy(() => import('@/components/dashboard/widgets/WidgetsManager'));
 const ThemeEditor = lazy(() => import('@/components/dashboard/ThemeEditor'));
 const SeoManager = lazy(() => import('@/components/dashboard/SeoManager'));
 const ExtensionsManager = lazy(() => import('@/components/dashboard/ExtensionsManager'));
@@ -244,6 +247,9 @@ const MainRouter = () => {
 
           <Route path="themes" element={<ThemesManager />} />
           <Route path="templates" element={<TemplatesManager />} />
+          <Route path="templates/edit/:id" element={<TemplateEditor />} />
+          <Route path="templates/parts/edit/:id" element={<TemplatePartEditor />} />
+          <Route path="widgets" element={<WidgetsManager />} />
           <Route path="themes/edit/:id" element={<ThemeEditor />} />
 
           <Route path="seo" element={<SeoManager />} />

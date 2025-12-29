@@ -1,99 +1,189 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { supabase } from '../lib/supabase';
+import { createScopedClient } from '../lib/supabase';
 import { PuckRenderer } from '../components/PuckRenderer';
 import { TipTapRenderer } from '../components/TipTapRenderer';
-import { getComponent } from '../components/registry';
 
-// SSR Mode (hybrid possible later, for now we default to SSR for dynamic content)
-export const prerender = false; 
+// SSR Mode
+export const prerender = false;
 
 const { slug } = Astro.params;
-const currentPath = slug || '/'; // Handle root index case if [...slug] covers it, or separate index.astro
+const rawSlug = slug || '';
+const currentSlug = rawSlug === '' ? 'home' : rawSlug; // Normalize root to 'home'
 
-// Get Tenant Context from Middleware
-const { tenant_id, host } = Astro.locals;
+// Get Tenant Context
+const { tenant_id } = Astro.locals;
 
-// 1. Fetch Content
-// We use the 'published_articles_view' which forces tenant_id check via RLS
-// But we should also pass tenant_id explicitly to be safe/clear?
-// RLS requires tenant_id in session OR we filter manually.
-// Since we are using Service Role or Anon Key?
-// We configured client with Anon Key. RLS 'articles_select_policy' checks current_tenant_id().
-// But we haven't set current_tenant_id() in Postgres session!
-// Middleware set it in 'locals', but NOT in Supabase connection.
-// IMPORTANT: With standard Supabase client, we cannot easily set PG session vars per request without using Edge Functions or RPC.
-//
-// Workaround for Phase 2/3:
-// We will filter by `tenant_id` column EXPLICITLY in the query.
-// AND `published_articles_view` should ideally handle it, but RLS relies on `current_tenant_id()` function which checks `auth.uid()` or header.
-// If we send header `x-tenant-id` in the supabase client request, it might work if we configured `current_tenant_id` to read it.
-//
-// Let's modify Supabase client in `lib/supabase.ts` to support headers?
-// Or easier: Just filter by `tenant_id` in the WHERE clause.
-// RLS `articles_select_policy` has: `tenant_id = current_tenant_id() OR ...`
-// If `current_tenant_id()` returns NULL (which it will for Anon without header), then RLS fails.
-//
-// WE NEED TO PASS THE HEADER `x-tenant-id` to Supabase!
-// Let's do that locally here or globally.
+// Initialize Scoped Client
+const supabase = createScopedClient({
+    'x-tenant-id': tenant_id
+});
 
-const { data: pageData, error } = await supabase
-  .from('published_articles_view')
-  .select('*')
-  .eq('tenant_id', tenant_id) // Redundant but explicit
-  .eq('slug', currentPath) 
-  .maybeSingle();
-  // Note: This query might FAIL if RLS blocks it.
-  // We need to set global headers for the client, OR use a scoped client.
-  
-  // Scoped client for this request:
-  /*
-  const scopedSupabase = createClient(env.URL, env.KEY, {
-      global: { headers: { 'x-tenant-id': tenant_id } }
-  })
-  */
-  // But we want to reuse the client.
-  // We will re-initialize a lightweight client here properly? Or just override RLS for now by using Service Role (NOT RECOMMENDED for Public).
-  // Correct way: Send 'x-tenant-id' header.
+// 1. Fetch Page
+const { data: pageData } = await supabase
+    .from('pages') // Query raw 'pages' table (assuming RLS allows read public) or use view
+    .select('*')
+    .eq('slug', currentSlug)
+    .eq('status', 'published') // Ensure only published
+    .maybeSingle();
 
-// --- Temporary Fix for RLS context ---
-// We'll trust the direct filter for now, BUT we need RLS to allow it.
-// We updated RLS to: `tenant_id = current_tenant_id()`.
-// `current_tenant_id()` reads `x-tenant-id` header.
-// So we MUST send it.
+// 2. Fetch Template Assignments
+const { data: assignments } = await supabase
+    .from('template_assignments')
+    .select('route_type, template_id')
+    .eq('channel', 'web')
+    .in('route_type', ['home', '404', 'archive', 'search', 'single']);
 
-const scopedSupabase = supabase; 
-// TODO: We need to inject header. 
-// For now, let's assume we fix `lib/supabase.ts` or RLS to allow if passed explicitly in query?
-// No, RLS is strict. 
+const assignmentMap = {};
+(assignments || []).forEach(a => assignmentMap[a.route_type] = a.template_id);
 
-// Let's assume we proceed with rendering for now and fix Supabase Client headers in next step.
-// We will simulate data if fetch fails for testing? No, strict.
+// 3. Determine Flow
+let templateId = null;
+let pageContent = null;
+let meta = { title: 'Page', description: '' };
+let is404 = false;
 
-if (error) {
-  console.error("Error fetching page:", error);
+if (pageData) {
+    // Page Found
+    meta.title = pageData.meta_title || pageData.title;
+    meta.description = pageData.meta_description;
+    pageContent = pageData.puck_layout_jsonb || { content: [], root: {} };
+
+    // Determine Template
+    if (pageData.template && pageData.template !== 'default') {
+        templateId = pageData.template;
+    } else {
+        // Fallback to assigned templates
+        if (currentSlug === 'home') {
+            templateId = assignmentMap['home'];
+        } else {
+            templateId = assignmentMap['single']; // Default for standard pages
+        }
+    }
+} else {
+    // Page Not Found
+    if (currentSlug === 'home') {
+        // Homepage route but no page record 'home' exists
+        // Use 'home' template if available
+        templateId = assignmentMap['home'];
+        meta.title = 'Home';
+    } else {
+        // 404
+        is404 = true;
+        templateId = assignmentMap['404'];
+        meta.title = 'Page Not Found';
+        Astro.response.status = 404;
+    }
 }
 
-if (!pageData) {
-  return Astro.redirect('/404'); 
+// 4. Fetch Template & Parts
+let mergedContent = [];
+
+if (templateId) {
+    const { data: template } = await supabase
+        .from('templates')
+        .select('*')
+        .eq('id', templateId)
+        .maybeSingle();
+
+    if (template) {
+        // Get Parts
+        const parts = template.parts || {}; // e.g. { header: 'uuid', footer: 'uuid' }
+        const partIds = Object.values(parts).filter(Boolean);
+        
+        // Fetch Part Data
+        let partDataMap = {};
+        if (partIds.length > 0) {
+            const { data: partsData } = await supabase
+                .from('template_parts')
+                .select('*')
+                .in('id', partIds);
+                
+            (partsData || []).forEach(p => partDataMap[p.id] = p);
+        }
+
+        // Construct Layout: Header -> Page Content -> Footer
+        // We assume 'parts' keys define order or we hardcode specific zones?
+        // Let's assume a standard structure for now: Header, Main (Content), Footer.
+        // Or strictly follow the order in `parts` entries if it was an array? It's JSONB.
+        // We'll look for specific keys: 'header', 'footer'.
+        
+        if (parts.header && partDataMap[parts.header]) {
+             const headerContent = partDataMap[parts.header].data?.content || [];
+             mergedContent.push(...headerContent);
+        }
+
+        if (pageContent && pageContent.content) {
+             mergedContent.push(...pageContent.content);
+        } else if (is404) {
+             // 404 might have content in the template itself (as 'main' part or just template data?)
+             // Templates currently have `data` (Puck JSON).
+             // Does the Template's OWN `data` field contain content?
+             // Yes, `templates` table has `data`.
+             // If Template has its own content, we should use it?
+             // A Page Template usually has a "Slot" for the page content.
+             // If we treat Template.data as the master layout, we need to inject Page Content into it.
+             // Simplification: We merge arrays.
+             // Template.data.content + Header + Footer?
+             // Usually Template Data IS the layout.
+             // Let's assume Template Data has the static parts of the template (if any)
+             // AND we append/prepend Headers/Footers.
+             
+             // If it's a 404 template, the content IS in the template.data.
+             const templateContent = template.data?.content || [];
+             mergedContent.push(...templateContent);
+        } else if (pageContent) {
+             // Generic fallback
+             mergedContent.push(...(pageContent.content || []));
+        }
+
+        if (parts.footer && partDataMap[parts.footer]) {
+             const footerContent = partDataMap[parts.footer].data?.content || [];
+             mergedContent.push(...footerContent);
+        }
+        
+    } else {
+        // Template assigned but not found? Fallback to just page content
+        if (pageContent) mergedContent = pageContent.content || [];
+    }
+} else {
+    // No template assigned. Just render page content.
+    if (pageContent) mergedContent = pageContent.content || [];
 }
 
-const { title, puck_layout_jsonb, tiptap_doc_jsonb, meta_title, meta_description } = pageData;
+const finalPuckData = {
+    content: mergedContent,
+    root: { title: meta.title } // Root props
+};
+
+// TipTap content?
+// Currently ignoring `tiptap_doc_jsonb` unless we have a specific block for it in Puck.
+// Ideally, we convert TipTap to a Puck block.
+// For now, if mergedContent is empty, maybe fallback to TipTap?
+// Or append TipTap as a RichText block?
+// Let's append if present and `pageData` exists.
+if (pageData?.tiptap_doc_jsonb) {
+    // TODO: Need a way to render TipTap inside Puck or after.
+    // We'll leave it out for this iteration as users focus on Visual Builder (Puck).
+}
 
 ---
 
-<Layout title={meta_title || title} description={meta_description}>
+<Layout title={meta.title} description={meta.description}>
   <main>
-    {/* 1. Puck Layout (Visual Blocks) */}
-    {puck_layout_jsonb && Object.keys(puck_layout_jsonb).length > 0 && (
-       <PuckRenderer data={puck_layout_jsonb} />
-    )}
-
-    {/* 2. TipTap Content (Rich Text) */}
-    {tiptap_doc_jsonb && Object.keys(tiptap_doc_jsonb).length > 0 && (
-      <article className="container mx-auto px-4 py-8">
-        <TipTapRenderer doc={tiptap_doc_jsonb} />
-      </article>
+    {finalPuckData.content.length > 0 ? (
+       <PuckRenderer data={finalPuckData} />
+    ) : (
+       <div class="container mx-auto py-20 text-center">
+         {is404 ? (
+            <div>
+                <h1 class="text-4xl font-bold mb-4">404 - Not Found</h1>
+                <p>The page you are looking for does not exist.</p>
+            </div>
+         ) : (
+            <p>No content found.</p>
+         )}
+       </div>
     )}
   </main>
 </Layout>

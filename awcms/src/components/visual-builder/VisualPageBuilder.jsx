@@ -43,8 +43,9 @@ const VisualPageBuilder = ({ page: initialPage, onClose, onSuccess }) => {
 
     // Determine mode and IDs
     const templateId = searchParams.get('templateId');
+    const partId = searchParams.get('partId');
     const pageId = searchParams.get('pageId'); // Optional, to support deep linking 
-    const mode = templateId ? 'template' : 'page';
+    const mode = partId ? 'part' : (templateId ? 'template' : 'page');
 
     // State
     const [page, setPage] = useState(initialPage || null);
@@ -55,6 +56,7 @@ const VisualPageBuilder = ({ page: initialPage, onClose, onSuccess }) => {
         pageStateId: page?.id,
         mode,
         templateId,
+        partId,
         pageIdFromUrl: pageId
     });
 
@@ -93,9 +95,9 @@ const VisualPageBuilder = ({ page: initialPage, onClose, onSuccess }) => {
         published_at: initialPage?.published_at ? new Date(initialPage.published_at).toISOString().slice(0, 16) : ''
     });
 
-    const isEditorEnabled = mode === 'template' ? hasPermission('tenant.theme.update') : checkAccess('edit', 'pages', page);
+    const isEditorEnabled = (mode === 'template' || mode === 'part') ? hasPermission('tenant.theme.update') : checkAccess('edit', 'pages', page);
     const canEdit = isEditorEnabled; // Alias for readability
-    const canPublish = mode === 'template' ? false : checkAccess('publish', 'pages', page);
+    const canPublish = (mode === 'template' || mode === 'part') ? false : checkAccess('publish', 'pages', page);
 
     const [isSaving, setIsSaving] = useState(false);
     const [isPublishing, setIsPublishing] = useState(false);
@@ -133,6 +135,23 @@ const VisualPageBuilder = ({ page: initialPage, onClose, onSuccess }) => {
                         slug: tpl.slug,
                         meta_description: tpl.description,
                         status: tpl.is_active ? 'published' : 'draft',
+                        published_at: ''
+                    });
+
+                } else if (mode === 'part' && partId) {
+                    const { data: part, error } = await supabase.from('template_parts').select('*').eq('id', partId).single();
+                    if (error) throw error;
+
+                    fetchedData = {
+                        id: part.id,
+                        ...part,
+                        content_draft: part.content || { content: [], root: { props: { title: part.name } } }
+                    };
+                    setPageMetadata({
+                        title: part.name,
+                        slug: part.type,
+                        meta_description: part.type,
+                        status: part.is_active ? 'published' : 'draft',
                         published_at: ''
                     });
 
@@ -311,6 +330,21 @@ const VisualPageBuilder = ({ page: initialPage, onClose, onSuccess }) => {
                     .select();
                 error = result.error;
                 resultData = result.data;
+            } else if (mode === 'part') {
+                console.log('Saving part to database:', partId);
+                const result = await supabase
+                    .from('template_parts')
+                    .update({
+                        content: contentData,
+                        updated_at: new Date().toISOString(),
+                        name: pageMetadata.title,
+                        type: pageMetadata.slug, // Ensure slug reflects type if editable, or lock it
+                        is_active: pageMetadata.status === 'published'
+                    })
+                    .eq('id', partId)
+                    .select();
+                error = result.error;
+                resultData = result.data;
             } else {
                 console.log('Saving page to database:', page.id);
                 const result = await supabase
@@ -351,7 +385,8 @@ const VisualPageBuilder = ({ page: initialPage, onClose, onSuccess }) => {
             setHasUnsavedChanges(false);
 
             if (!isAutoSave) {
-                toast({ title: 'Saved', description: `${mode === 'template' ? 'Template' : 'Page'} saved successfully.` });
+                const entityName = mode === 'template' ? 'Template' : (mode === 'part' ? 'Part' : 'Page');
+                toast({ title: 'Saved', description: `${entityName} saved successfully.` });
             }
         } catch (err) {
             console.error('Save error:', err);

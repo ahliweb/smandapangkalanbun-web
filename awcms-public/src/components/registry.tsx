@@ -22,6 +22,25 @@ export const RichTextSchema = z.object({
     content: z.any(), // JSON content from TipTap
 });
 
+export const CoreTextSchema = z.object({
+    content: z.string().optional(),
+    isHtml: z.boolean().optional(),
+});
+
+export const CoreImageSchema = z.object({
+    url: z.string().min(1),
+    alt: z.string().optional(),
+});
+
+export const CoreButtonSchema = z.object({
+    text: z.string().default('Click Me'),
+    url: z.string().default('#'),
+});
+
+export const CoreMenuSchema = z.object({
+    menuId: z.string().optional(),
+});
+
 // --- Types ---
 
 type ComponentRegistryItem<T = any> = {
@@ -85,12 +104,53 @@ const RichTextBlock = (props: z.infer<typeof RichTextSchema>) => (
     </div>
 );
 
+const CoreText = ({ content, isHtml }: z.infer<typeof CoreTextSchema>) => {
+    if (isHtml) {
+        return <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: content || '' }} />;
+    }
+    return <div className="whitespace-pre-wrap">{content}</div>;
+};
+
+const CoreImage = ({ url, alt }: z.infer<typeof CoreImageSchema>) => (
+    <img src={url} alt={alt || ''} className="max-w-full h-auto rounded-lg my-4" />
+);
+
+const CoreButton = ({ text, url }: z.infer<typeof CoreButtonSchema>) => (
+    <Button href={url} variant="primary" className="my-2">{text}</Button>
+);
+
+const CoreMenu = ({ menuId }: z.infer<typeof CoreMenuSchema>) => {
+    // Client-side fetch or static placeholder
+    const [items, setItems] = React.useState<any[]>([]);
+
+    React.useEffect(() => {
+        if (!menuId) return;
+        // Fetch logic would go here. For now, check localStorage or just show placeholder if no standard API yet.
+        // We'll return a placeholder to avoid breaking if API logic isn't ready.
+        console.log('CoreMenu: Fetching menu', menuId);
+    }, [menuId]);
+
+    return (
+        <nav className="flex gap-4 p-4">
+            {items.length > 0 ? items.map((i, idx) => (
+                <a key={idx} href={i.url} className="text-slate-700 hover:text-blue-600">{i.label}</a>
+            )) : (
+                <span className="text-muted-foreground text-sm border border-dashed px-2">Menu {menuId}</span>
+            )}
+        </nav>
+    );
+};
+
 // --- Registry ---
 
 export const COMPONENT_REGISTRY: Record<string, ComponentRegistryItem> = {
     Hero: { component: Hero, schema: HeroSchema },
     Section: { component: Section, schema: SectionSchema },
     RichText: { component: RichTextBlock, schema: RichTextSchema },
+    'core/text': { component: CoreText, schema: CoreTextSchema },
+    'core/image': { component: CoreImage, schema: CoreImageSchema },
+    'core/button': { component: CoreButton, schema: CoreButtonSchema },
+    'core/menu': { component: CoreMenu, schema: CoreMenuSchema },
 };
 
 export const getComponent = (type: string) => {

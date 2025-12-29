@@ -174,14 +174,16 @@ class MyComponent extends Component<Props> { } // NO class components!
 
 ### Utility Libraries
 
-| File                              | Purpose                               |
-| --------------------------------- | ------------------------------------- |
-| `src/lib/customSupabaseClient.js` | Public Supabase client (respects RLS) |
-| `src/lib/supabaseAdmin.js`        | Admin client (bypasses RLS)           |
-| `src/lib/utils.js`                | Helper functions (`cn()`, etc.)       |
-| `src/lib/extensionRegistry.js`    | Extension component mapping           |
-| `src/lib/themeUtils.js`           | Theme utilities                       |
-| `src/lib/i18n.js`                 | i18next configuration                 |
+| File                              | Purpose                                   |
+| --------------------------------- | ----------------------------------------- |
+| `src/lib/customSupabaseClient.js` | Public Supabase client (respects RLS)     |
+| `src/lib/supabaseAdmin.js`        | Admin client (bypasses RLS)               |
+| `src/lib/utils.js`                | Helper functions (`cn()`, etc.)           |
+| `src/lib/extensionRegistry.js`    | Extension component mapping               |
+| `src/lib/templateExtensions.js`   | Template/Widget/PageType extension APIs   |
+| `src/lib/widgetRegistry.js`       | Widget type definitions                   |
+| `src/lib/themeUtils.js`           | Theme utilities                           |
+| `src/lib/i18n.js`                 | i18next configuration                     |
 
 ---
 
