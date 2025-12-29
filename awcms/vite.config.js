@@ -28,7 +28,7 @@ export default defineConfig(({ mode }) => {
 					"style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://rsms.me",
 					"font-src 'self' https://fonts.gstatic.com https://rsms.me",
 					"img-src 'self' data: blob: https://*.supabase.co",
-					"connect-src 'self' https://*.supabase.co wss://*.supabase.co https://challenges.cloudflare.com",
+					"connect-src 'self' https://*.supabase.co wss://*.supabase.co https://challenges.cloudflare.com https://cloudflareinsights.com",
 					"frame-src https://challenges.cloudflare.com",
 					"frame-ancestors 'self'",
 				].join('; '),
