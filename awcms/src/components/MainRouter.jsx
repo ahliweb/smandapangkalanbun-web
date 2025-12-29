@@ -289,9 +289,6 @@ const MainRouter = () => {
           <Route path="mobile/users" element={<MobileUsersManager />} />
           <Route path="mobile/push" element={<PushNotificationsManager />} />
           <Route path="mobile/config" element={<MobileAppConfig />} />
-
-          {/* Plugin Dynamic Routes */}
-          <PluginRoutes />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />
