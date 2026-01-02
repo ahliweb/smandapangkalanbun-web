@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRegions } from '../../hooks/useRegions';
 import { REGION_LEVELS, getNextLevel } from '../../lib/regionUtils';
 
@@ -15,7 +15,7 @@ const RegionPicker = ({
     // value is the leaf region ID selected
     const [selections, setSelections] = useState({});
     const [levelsData, setLevelsData] = useState({});
-    const { getRegions, getLevels } = useRegions();
+    const { getRegions } = useRegions();
     const [activeLevels, setActiveLevels] = useState([]);
 
     // Initial load of levels structure
@@ -26,12 +26,7 @@ const RegionPicker = ({
         setActiveLevels(levels);
     }, [maxLevel]);
 
-    // Load root level (Negara usually, or level 1)
-    useEffect(() => {
-        loadRegionsForLevel(REGION_LEVELS[0].key, null);
-    }, []);
-
-    const loadRegionsForLevel = async (levelKey, parentId) => {
+    const loadRegionsForLevel = useCallback(async (levelKey, parentId) => {
         const levelObj = REGION_LEVELS.find(l => l.key === levelKey);
         if (!levelObj) return;
 
@@ -54,7 +49,12 @@ const RegionPicker = ({
             ...prev,
             [levelKey]: regions
         }));
-    };
+    }, [getRegions]);
+
+    // Load root level (Negara usually, or level 1)
+    useEffect(() => {
+        loadRegionsForLevel(REGION_LEVELS[0].key, null);
+    }, [loadRegionsForLevel]);
 
     const handleSelection = async (levelKey, regionId) => {
         const region = levelsData[levelKey]?.find(r => r.id === regionId);

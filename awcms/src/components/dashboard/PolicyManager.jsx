@@ -1,23 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { usePermissions } from '@/contexts/PermissionContext';
 import { supabase } from '@/lib/customSupabaseClient';
 import { useToast } from '@/components/ui/use-toast';
-import { Plus, Trash2, Edit2, ShieldCheck, AlertTriangle } from 'lucide-react';
+import { Plus, Trash2, Edit2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 
 export default function PolicyManager() {
-    const { tenantId, userRole, hasPermission, isPlatformAdmin } = usePermissions();
+    const { tenantId, hasPermission, isPlatformAdmin } = usePermissions();
     const { toast } = useToast();
     const [policies, setPolicies] = useState([]);
     const [loading, setLoading] = useState(false);
 
     const canManage = isPlatformAdmin || hasPermission('tenant.policy.create'); // Simplified for now, usually create/update/delete separate
     const canView = isPlatformAdmin || hasPermission('tenant.policy.read');
-
-    if (!canView) return <div className="p-8 text-center text-red-500">Access Denied</div>;
 
     // Editor State
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -30,7 +28,7 @@ export default function PolicyManager() {
         conditions: '{}'
     });
 
-    const fetchPolicies = async () => {
+    const fetchPolicies = useCallback(async () => {
         setLoading(true);
         try {
             const { data, error } = await supabase
@@ -46,11 +44,15 @@ export default function PolicyManager() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [toast]);
 
     useEffect(() => {
-        fetchPolicies();
-    }, [tenantId]);
+        if (canView) {
+            fetchPolicies();
+        }
+    }, [tenantId, canView, fetchPolicies]);
+
+    if (!canView) return <div className="p-8 text-center text-red-500">Access Denied</div>;
 
     const handleOpenDialog = (policy = null) => {
         if (policy) {
@@ -126,7 +128,7 @@ export default function PolicyManager() {
     };
 
     const handleDelete = async (id) => {
-        if (!confirm('Are you sure you want to delete this policy?')) return;
+        if (!window.confirm('Are you sure you want to delete this policy?')) return;
 
         try {
             const { error } = await supabase.from('policies').delete().eq('id', id);

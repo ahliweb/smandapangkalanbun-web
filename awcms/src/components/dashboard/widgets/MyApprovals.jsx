@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { CheckCircle, Clock, ArrowRight, FileText } from 'lucide-react';
+import { CheckCircle, ArrowRight, FileText } from 'lucide-react';
 import { supabase } from '@/lib/customSupabaseClient';
 import { usePermissions } from '@/contexts/PermissionContext';
 import { Link } from 'react-router-dom';

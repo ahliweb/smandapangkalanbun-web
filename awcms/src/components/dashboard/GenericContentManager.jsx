@@ -227,12 +227,12 @@ const GenericContentManager = ({
     };
 
     if (!canView) return (
-        <div className="flex flex-col items-center justify-center min-h-[400px] bg-white rounded-xl border border-slate-200 p-12 text-center">
-            <div className="p-4 bg-red-50 rounded-full mb-4">
-                <ShieldAlert className="w-12 h-12 text-red-500" />
+        <div className="flex flex-col items-center justify-center min-h-[400px] bg-card rounded-xl border border-border p-12 text-center">
+            <div className="p-4 bg-destructive/10 rounded-full mb-4">
+                <ShieldAlert className="w-12 h-12 text-destructive" />
             </div>
-            <h3 className="text-xl font-bold text-slate-800">Access Denied</h3>
-            <p className="text-slate-500 mt-2">You do not have permission to view {resourceName}s.</p>
+            <h3 className="text-xl font-bold text-foreground">Access Denied</h3>
+            <p className="text-muted-foreground mt-2">You do not have permission to view {resourceName}s.</p>
         </div>
     );
 
@@ -284,9 +284,9 @@ const GenericContentManager = ({
                     {/* Enhanced Breadcrumb Navigation */}
                     {showBreadcrumbs && (
                         <nav className="mb-6">
-                            <ol className="flex flex-wrap items-center gap-1.5 break-words text-sm text-slate-500 sm:gap-2.5">
+                            <ol className="flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5">
                                 <li className="inline-flex items-center gap-1.5">
-                                    <Link to="/cmspanel" className="transition-colors hover:text-slate-950 flex items-center gap-1">
+                                    <Link to="/cmspanel" className="transition-colors hover:text-foreground flex items-center gap-1">
                                         <Home className="w-4 h-4" />
                                         Dashboard
                                     </Link>
@@ -296,8 +296,8 @@ const GenericContentManager = ({
                                 <li className="inline-flex items-center gap-1.5">
                                     <div
                                         className={`flex items-center gap-1.5 px-3 py-1 rounded-full font-medium transition-colors ${showTrash
-                                                ? 'bg-slate-100 text-slate-600 cursor-pointer hover:bg-slate-200'
-                                                : 'bg-blue-600 text-white shadow-sm'
+                                            ? 'bg-muted text-muted-foreground cursor-pointer hover:bg-muted/80'
+                                            : 'bg-primary text-primary-foreground shadow-sm'
                                             }`}
                                         onClick={showTrash ? () => setShowTrash(false) : undefined}
                                     >
@@ -309,7 +309,7 @@ const GenericContentManager = ({
                                     <>
                                         <li aria-hidden="true" className="[&>svg]:size-3.5"><ChevronRight /></li>
                                         <li className="inline-flex items-center gap-1.5">
-                                            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-600 text-white font-medium shadow-sm">
+                                            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-destructive text-destructive-foreground font-medium shadow-sm">
                                                 <Trash2 className="w-3.5 h-3.5" />
                                                 <span>Trash</span>
                                             </div>
@@ -321,42 +321,42 @@ const GenericContentManager = ({
                     )}
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                         <div>
-                            <h2 className="text-3xl font-bold text-slate-800 flex items-center gap-2">
+                            <h2 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-2">
                                 {resourceName}s
-                                {showTrash && <span className="text-lg font-normal text-red-500 bg-red-50 px-2 py-0.5 rounded-md">Trash Bin</span>}
+                                {showTrash && <span className="text-lg font-normal text-destructive bg-destructive/10 px-2 py-0.5 rounded-md">Trash Bin</span>}
                             </h2>
-                            <p className="text-slate-600">Manage {resourceName.toLowerCase()} entries.</p>
+                            <p className="text-muted-foreground">Manage {resourceName.toLowerCase()} entries.</p>
                         </div>
                         <div className="flex gap-2">
                             <Button
-                                variant={showTrash ? "default" : "outline"}
+                                variant={showTrash ? "destructive" : "outline"}
                                 onClick={() => { setShowTrash(!showTrash); setCurrentPage(1); }}
-                                className={showTrash ? "bg-red-600 hover:bg-red-700" : ""}
+                                className={showTrash ? "bg-destructive hover:bg-destructive/90" : ""}
                             >
                                 {showTrash ? <RotateCcw className="w-4 h-4 mr-2" /> : <Trash2 className="w-4 h-4 mr-2" />}
                                 {showTrash ? "Back to Active" : "Trash"}
                             </Button>
                             {canCreate && !showTrash && (
-                                <Button onClick={() => { setSelectedItem(null); setShowEditor(true); }} className="bg-blue-600">
+                                <Button onClick={() => { setSelectedItem(null); setShowEditor(true); }} className="bg-primary text-primary-foreground hover:bg-primary/90">
                                     <Plus className="w-4 h-4 mr-2" /> New {resourceName}
                                 </Button>
                             )}
                         </div>
                     </div>
 
-                    <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-2">
+                    <div className="bg-card p-4 rounded-xl border border-border shadow-sm flex items-center gap-2">
                         <div className="relative flex-1 max-w-sm">
-                            <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+                            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                             <Input
                                 placeholder={`Search ${resourceName}s...`}
                                 value={query}
                                 onChange={e => setQuery(e.target.value)}
-                                className="pl-9"
+                                className="pl-9 bg-background"
                             />
                         </div>
                         <div className="flex-1"></div>
-                        <Button variant="ghost" size="icon" onClick={fetchItems} title="Refresh">
-                            <RefreshCw className="w-4 h-4 text-slate-500" />
+                        <Button variant="ghost" size="icon" onClick={fetchItems} title="Refresh" className="text-muted-foreground hover:text-foreground">
+                            <RefreshCw className="w-4 h-4" />
                         </Button>
                     </div>
 

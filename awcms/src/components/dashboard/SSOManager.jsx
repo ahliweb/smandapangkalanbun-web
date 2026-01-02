@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Shield, Key, Lock, Activity, RefreshCw, CheckCircle, XCircle, AlertTriangle, Users, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
@@ -7,13 +7,11 @@ import { supabase } from '@/lib/customSupabaseClient';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { format } from 'date-fns';
 
 function SSOManager() {
   const { toast } = useToast();
   const { t } = useTranslation();
-  const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [securityInfo, setSecurityInfo] = useState({
     authProviders: [],
@@ -25,11 +23,7 @@ function SSOManager() {
     }
   });
 
-  useEffect(() => {
-    fetchSecurityData();
-  }, []);
-
-  const fetchSecurityData = async () => {
+  const fetchSecurityData = useCallback(async () => {
     setLoading(true);
     try {
       // Fetch recent login activity from audit_logs
@@ -69,7 +63,11 @@ function SSOManager() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [t, toast]);
+
+  useEffect(() => {
+    fetchSecurityData();
+  }, [fetchSecurityData]);
 
   const SecurityFeatureCard = ({ title, description, enabled, icon: Icon }) => (
     <div className="flex items-start gap-4 p-4 bg-slate-50 rounded-lg border">

@@ -1,13 +1,12 @@
 
 import React, { useState } from 'react';
-import { Upload, X, Image as ImageIcon, FolderOpen } from 'lucide-react';
+import { X, Image as ImageIcon, FolderOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import MediaLibrary from '@/components/dashboard/media/MediaLibrary';
-import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/lib/customSupabaseClient';
 
 // Enhanced ImageUpload that includes FilePicker

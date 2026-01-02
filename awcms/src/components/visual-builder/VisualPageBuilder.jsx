@@ -3,10 +3,8 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Puck, Render } from '@measured/puck';
 import '@measured/puck/puck.css';
 import './puck-theme.css';
-import { motion } from 'framer-motion';
-import { Save, Eye, EyeOff, ArrowLeft, Upload, Monitor, Tablet, Smartphone, Layout, Undo2, Redo2, Cloud, Loader2, WifiOff } from 'lucide-react';
+import { Save, Eye, EyeOff, ArrowLeft, Upload, Monitor, Tablet, Smartphone, Undo2, Redo2, Loader2, WifiOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useToast } from '@/components/ui/use-toast';
 import { udm } from '@/lib/data/UnifiedDataManager';
 import editorConfig from './config';
@@ -67,7 +65,6 @@ const VisualPageBuilder = ({ page: initialPage, onClose, onSuccess }) => {
         dataRef.current = data;
     }, [data]);
 
-    const [loading, setLoading] = useState(!initialPage);
 
     // Page Metadata State
     const [pageMetadata, setPageMetadata] = useState({
@@ -85,7 +82,7 @@ const VisualPageBuilder = ({ page: initialPage, onClose, onSuccess }) => {
     const [isSaving, setIsSaving] = useState(false);
     const [isPublishing, setIsPublishing] = useState(false);
     const [previewMode, setPreviewMode] = useState(false);
-    const [viewport, setViewport] = useState('desktop');
+    const [viewport] = useState('desktop');
     const [editorKey, setEditorKey] = useState(0);
     const [templateSelectorOpen, setTemplateSelectorOpen] = useState(false);
     const [settingsOpen, setSettingsOpen] = useState(false);
@@ -113,7 +110,7 @@ const VisualPageBuilder = ({ page: initialPage, onClose, onSuccess }) => {
         const loadData = async () => {
             if (initialPage) return; // Already have data from props
 
-            setLoading(true);
+            if (initialPage) return; // Already have data from props
             try {
                 let fetchedData = null;
                 // CHANGED: Added tenant isolation to queries
@@ -191,7 +188,7 @@ const VisualPageBuilder = ({ page: initialPage, onClose, onSuccess }) => {
                     setTimeout(() => handleClose(), 2000);
                 }
             } finally {
-                setLoading(false);
+                // Done
             }
         };
 
@@ -274,7 +271,7 @@ const VisualPageBuilder = ({ page: initialPage, onClose, onSuccess }) => {
     }, [setData, cleanPuckData]);
 
     // Save Content Function
-    const saveContent = async (contentData, isAutoSave = false) => {
+    const saveContent = useCallback(async (contentData, isAutoSave = false) => {
         if (mode === 'template' && !templateId) {
             if (!isAutoSave) toast({ variant: 'destructive', title: 'Error', description: 'Template ID is missing. Cannot save.' });
             return;
@@ -286,7 +283,6 @@ const VisualPageBuilder = ({ page: initialPage, onClose, onSuccess }) => {
         setIsSaving(true);
         try {
             let error = null;
-            let resultData = null; // Can be payload (optimistic) or row array
 
             const timestamp = new Date().toISOString();
 
@@ -296,7 +292,7 @@ const VisualPageBuilder = ({ page: initialPage, onClose, onSuccess }) => {
 
             if (mode === 'template') {
                 console.log('Saving template:', templateId);
-                const { data: res, error: err } = await udm
+                const { error: err } = await udm
                     .from('templates')
                     .update({
                         data: contentData,
@@ -308,10 +304,9 @@ const VisualPageBuilder = ({ page: initialPage, onClose, onSuccess }) => {
                     })
                     .eq('id', templateId);
                 error = err;
-                resultData = res;
             } else if (mode === 'part') {
                 console.log('Saving part:', partId);
-                const { data: res, error: err } = await udm
+                const { error: err } = await udm
                     .from('template_parts')
                     .update({
                         content: contentData,
@@ -322,10 +317,9 @@ const VisualPageBuilder = ({ page: initialPage, onClose, onSuccess }) => {
                     })
                     .eq('id', partId);
                 error = err;
-                resultData = res;
             } else {
                 console.log('Saving page:', page.id);
-                const { data: res, error: err } = await udm
+                const { error: err } = await udm
                     .from('pages')
                     .update({
                         content_draft: contentData,
@@ -338,7 +332,6 @@ const VisualPageBuilder = ({ page: initialPage, onClose, onSuccess }) => {
                     })
                     .eq('id', page.id);
                 error = err;
-                resultData = res;
             }
 
             if (error) throw error;
@@ -360,22 +353,22 @@ const VisualPageBuilder = ({ page: initialPage, onClose, onSuccess }) => {
         } finally {
             setIsSaving(false);
         }
-    };
+    }, [mode, templateId, partId, page, toast, pageMetadata, isOffline]);
 
     // undo/redo wrappers
-    const handleUndo = () => {
+    const handleUndo = useCallback(() => {
         if (canUndo && historyCanUndo) {
             undo();
             setEditorKey(prev => prev + 1);
         }
-    };
+    }, [canUndo, historyCanUndo, undo]);
 
-    const handleRedo = () => {
+    const handleRedo = useCallback(() => {
         if (canRedo && historyCanRedo) {
             redo();
             setEditorKey(prev => prev + 1);
         }
-    };
+    }, [canRedo, historyCanRedo, redo]);
 
     // Keyboard shortcuts for undo/redo
     useEffect(() => {
@@ -398,7 +391,7 @@ const VisualPageBuilder = ({ page: initialPage, onClose, onSuccess }) => {
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [canUndo, canRedo, undo, redo, data]);
+    }, [canUndo, canRedo, undo, redo, data, handleUndo, handleRedo, saveContent]);
 
     // Handle manual save
     const handleManualSave = async () => {
@@ -425,7 +418,7 @@ const VisualPageBuilder = ({ page: initialPage, onClose, onSuccess }) => {
             }, 30000); // Auto-save every 30s
             return () => clearTimeout(timer);
         }
-    }, [hasUnsavedChanges, isSaving, data, canEdit]);
+    }, [hasUnsavedChanges, isSaving, data, canEdit, saveContent]);
 
     // Publish page
     const handlePublish = async () => {

@@ -124,7 +124,7 @@ function NotificationsManager() {
     };
 
     const handleMarkAllRead = () => {
-        if (confirm('Are you sure you want to mark all notifications as read?')) {
+        if (window.confirm('Are you sure you want to mark all notifications as read?')) {
             markAllAsRead();
         }
     };

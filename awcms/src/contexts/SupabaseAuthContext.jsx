@@ -198,7 +198,7 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       clearLocalAuth();
     }
-  }, [toast, clearLocalAuth]);
+  }, [clearLocalAuth]);
 
   const resetPassword = useCallback(async (email) => {
     try {

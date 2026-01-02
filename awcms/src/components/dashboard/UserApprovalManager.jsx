@@ -5,7 +5,7 @@ import { usePermissions } from '@/contexts/PermissionContext';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useToast } from '@/components/ui/use-toast';
 import { Loader2, CheckCircle, UserCheck, ShieldCheck, ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
@@ -29,7 +29,7 @@ const UserApprovalManager = () => {
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
 
-    const { userRole, isPlatformAdmin, hasPermission } = usePermissions();
+    const { userRole, isPlatformAdmin } = usePermissions();
     const { toast } = useToast();
 
     const isSuperAdmin = isPlatformAdmin || ['super_admin', 'owner'].includes(userRole);
@@ -39,9 +39,7 @@ const UserApprovalManager = () => {
         setCurrentPage(1);
     }, [activeTab]);
 
-    useEffect(() => {
-        fetchRequests();
-    }, [activeTab, currentPage, itemsPerPage]);
+
 
     const fetchRequests = useCallback(async () => {
         setLoading(true);
@@ -79,6 +77,10 @@ const UserApprovalManager = () => {
             setLoading(false);
         }
     }, [activeTab, currentPage, itemsPerPage, isSuperAdmin, toast]);
+
+    useEffect(() => {
+        fetchRequests();
+    }, [activeTab, currentPage, itemsPerPage, fetchRequests]);
 
     const handleApprove = async (request) => {
         setProcessingId(request.id);
@@ -138,22 +140,22 @@ const UserApprovalManager = () => {
 
     const getStatusBadge = (status) => {
         switch (status) {
-            case 'pending_admin': return <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200">Pending Admin</Badge>;
-            case 'pending_super_admin': return <Badge className="bg-blue-100 text-blue-800 border-blue-200">Pending Super Admin</Badge>;
-            case 'completed': return <Badge className="bg-green-100 text-green-800 border-green-200">Approved & Invited</Badge>;
+            case 'pending_admin': return <Badge className="bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/40 dark:text-amber-300 dark:border-amber-800">Pending Admin</Badge>;
+            case 'pending_super_admin': return <Badge className="bg-primary/10 text-primary border-primary/20">Pending Super Admin</Badge>;
+            case 'completed': return <Badge className="bg-green-100 text-green-800 border-green-200 dark:bg-green-900/40 dark:text-green-300 dark:border-green-800">Approved & Invited</Badge>;
             case 'rejected': return <Badge variant="destructive">Rejected</Badge>;
-            default: return <Badge>{status}</Badge>;
+            default: return <Badge variant="secondary" className="text-secondary-foreground">{status}</Badge>;
         }
     };
 
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
     const PaginationControls = () => (
-        <div className="flex items-center justify-between pt-4 border-t">
-            <div className="flex items-center gap-2 text-sm text-slate-500">
+        <div className="flex items-center justify-between pt-4 border-t border-border">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <span>Rows per page:</span>
                 <Select value={String(itemsPerPage)} onValueChange={(v) => { setItemsPerPage(Number(v)); setCurrentPage(1); }}>
-                    <SelectTrigger className="w-16 h-8">
+                    <SelectTrigger className="w-16 h-8 bg-background border-input">
                         <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -167,11 +169,11 @@ const UserApprovalManager = () => {
                 </span>
             </div>
             <div className="flex items-center gap-1">
-                <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage <= 1}>
+                <Button variant="outline" size="icon" className="h-8 w-8 text-muted-foreground" onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage <= 1}>
                     <ChevronLeft className="w-4 h-4" />
                 </Button>
-                <span className="px-2 text-sm">Page {currentPage} of {totalPages || 1}</span>
-                <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage >= totalPages}>
+                <span className="px-2 text-sm text-foreground">Page {currentPage} of {totalPages || 1}</span>
+                <Button variant="outline" size="icon" className="h-8 w-8 text-muted-foreground" onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage >= totalPages}>
                     <ChevronRight className="w-4 h-4" />
                 </Button>
             </div>
@@ -182,10 +184,10 @@ const UserApprovalManager = () => {
         <>
             {loading ? (
                 <div className="flex items-center justify-center p-8">
-                    <Loader2 className="w-6 h-6 animate-spin text-slate-400" />
+                    <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
                 </div>
             ) : requests.length === 0 ? (
-                <div className="text-center p-8 text-slate-500 border border-dashed border-slate-200 rounded-lg">
+                <div className="text-center p-8 text-muted-foreground border border-dashed border-border rounded-lg bg-muted/20">
                     No requests found
                 </div>
             ) : (

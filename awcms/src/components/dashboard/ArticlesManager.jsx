@@ -111,25 +111,25 @@ function ArticlesManager() {
 
       {/* Enhanced Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <div className="bg-white rounded-xl border border-slate-200 p-1.5 shadow-sm mb-6 inline-flex">
+        <div className="bg-muted p-1 rounded-xl mb-6 inline-flex">
           <TabsList className="grid grid-cols-3 gap-1 bg-transparent p-0">
             <TabsTrigger
               value="articles"
-              className="flex items-center gap-2 px-6 py-2.5 rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-blue-700 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200 font-medium"
+              className="flex items-center gap-2 px-6 py-2.5 rounded-lg data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm transition-all duration-200 font-medium text-muted-foreground"
             >
               <FileText className="w-4 h-4" />
               Articles
             </TabsTrigger>
             <TabsTrigger
               value="categories"
-              className="flex items-center gap-2 px-6 py-2.5 rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-purple-700 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200 font-medium"
+              className="flex items-center gap-2 px-6 py-2.5 rounded-lg data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm transition-all duration-200 font-medium text-muted-foreground"
             >
               <FolderOpen className="w-4 h-4" />
               Categories
             </TabsTrigger>
             <TabsTrigger
               value="tags"
-              className="flex items-center gap-2 px-6 py-2.5 rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-600 data-[state=active]:to-emerald-700 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200 font-medium"
+              className="flex items-center gap-2 px-6 py-2.5 rounded-lg data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm transition-all duration-200 font-medium text-muted-foreground"
             >
               <Tag className="w-4 h-4" />
               Tags

@@ -159,10 +159,12 @@ export const sendNotification = async ({ to, subject, message }) => {
     });
 };
 
-export default {
+const mailketingService = {
     sendEmail,
     addSubscriber,
     checkCredits,
     getLists,
     sendNotification,
 };
+
+export default mailketingService;

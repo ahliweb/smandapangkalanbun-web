@@ -15,10 +15,10 @@ function ProductsManager() {
       label: '',
       className: 'w-16',
       render: (val) => val ? (
-        <img src={val} alt="" className="w-12 h-12 object-cover rounded-lg border" />
+        <img src={val} alt="" className="w-12 h-12 object-cover rounded-lg border border-border" />
       ) : (
-        <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center">
-          <Package className="w-6 h-6 text-slate-300" />
+        <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+          <Package className="w-6 h-6 text-muted-foreground" />
         </div>
       )
     },
@@ -26,8 +26,8 @@ function ProductsManager() {
     {
       key: 'sku',
       label: 'SKU',
-      className: 'font-mono text-xs text-slate-500',
-      render: (val) => val || <span className="text-slate-300">-</span>
+      className: 'font-mono text-xs text-muted-foreground',
+      render: (val) => val || <span className="text-muted-foreground/50">-</span>
     },
     {
       key: 'price',
@@ -36,10 +36,10 @@ function ProductsManager() {
         <div className="flex flex-col">
           {row.discount_price && row.discount_price < val ? (
             <>
-              <span className="text-green-600 font-semibold">
+              <span className="text-green-600 font-semibold dark:text-green-400">
                 {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(row.discount_price)}
               </span>
-              <span className="text-xs text-slate-400 line-through">
+              <span className="text-xs text-muted-foreground line-through">
                 {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(val)}
               </span>
             </>
@@ -67,10 +67,10 @@ function ProductsManager() {
       key: 'status',
       label: 'Status',
       render: (value) => (
-        <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${value === 'active' ? 'bg-green-100 text-green-700' :
-          value === 'out_of_stock' ? 'bg-red-100 text-red-700' :
-            value === 'draft' ? 'bg-amber-100 text-amber-700' :
-              'bg-slate-100 text-slate-600'
+        <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${value === 'active' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
+          value === 'out_of_stock' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' :
+            value === 'draft' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' :
+              'bg-muted text-muted-foreground'
           }`}>
           {value?.replace(/_/g, ' ') || 'draft'}
         </span>
@@ -113,7 +113,7 @@ function ProductsManager() {
       label: '',
       className: 'w-12',
       render: (val) => val ? (
-        <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center text-lg">
+        <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center text-lg">
           {val.startsWith('http') ? (
             <img src={val} alt="" className="w-6 h-6 object-contain" />
           ) : (
@@ -121,13 +121,13 @@ function ProductsManager() {
           )}
         </div>
       ) : (
-        <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
-          <Layers className="w-5 h-5 text-slate-400" />
+        <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center">
+          <Layers className="w-5 h-5 text-muted-foreground" />
         </div>
       )
     },
     { key: 'name', label: 'Type Name', className: 'font-medium' },
-    { key: 'slug', label: 'Slug', className: 'font-mono text-xs text-slate-500' },
+    { key: 'slug', label: 'Slug', className: 'font-mono text-xs text-muted-foreground' },
     { key: 'created_at', label: 'Created', type: 'date' }
   ];
 
@@ -157,45 +157,45 @@ function ProductsManager() {
   return (
     <div className="space-y-6">
       {/* Breadcrumb Navigation */}
-      <nav className="flex items-center text-sm text-slate-500">
-        <Link to="/cmspanel" className="hover:text-blue-600 transition-colors flex items-center gap-1">
+      <nav className="flex items-center text-sm text-muted-foreground">
+        <Link to="/cmspanel" className="hover:text-primary transition-colors flex items-center gap-1">
           <Home className="w-4 h-4" />
           Dashboard
         </Link>
-        <ChevronRight className="w-4 h-4 mx-2 text-slate-300" />
-        <span className="flex items-center gap-1 text-slate-700 font-medium">
+        <ChevronRight className="w-4 h-4 mx-2 text-muted-foreground/50" />
+        <span className="flex items-center gap-1 text-foreground font-medium">
           <Package className="w-4 h-4" />
           Products
         </span>
         {activeTab !== 'products' && (
           <>
-            <ChevronRight className="w-4 h-4 mx-2 text-slate-300" />
-            <span className="text-blue-600 font-medium capitalize">{activeTab.replace('_', ' ')}</span>
+            <ChevronRight className="w-4 h-4 mx-2 text-muted-foreground/50" />
+            <span className="text-primary font-medium capitalize">{activeTab.replace('_', ' ')}</span>
           </>
         )}
       </nav>
 
       {/* Enhanced Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <div className="bg-white rounded-xl border border-slate-200 p-1.5 shadow-sm mb-6 inline-flex">
+        <div className="bg-muted/50 rounded-xl border border-border p-1.5 shadow-sm mb-6 inline-flex">
           <TabsList className="grid grid-cols-3 gap-1 bg-transparent p-0">
             <TabsTrigger
               value="products"
-              className="flex items-center gap-2 px-6 py-2.5 rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-blue-700 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200 font-medium"
+              className="flex items-center gap-2 px-6 py-2.5 rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all duration-200 font-medium"
             >
               <Package className="w-4 h-4" />
               Products
             </TabsTrigger>
             <TabsTrigger
               value="types"
-              className="flex items-center gap-2 px-6 py-2.5 rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-purple-700 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200 font-medium"
+              className="flex items-center gap-2 px-6 py-2.5 rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all duration-200 font-medium"
             >
               <Layers className="w-4 h-4" />
               Types
             </TabsTrigger>
             <TabsTrigger
               value="categories"
-              className="flex items-center gap-2 px-6 py-2.5 rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-600 data-[state=active]:to-emerald-700 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200 font-medium"
+              className="flex items-center gap-2 px-6 py-2.5 rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md transition-all duration-200 font-medium"
             >
               <FolderOpen className="w-4 h-4" />
               Categories

@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/customSupabaseClient';
 import { useToast } from '@/components/ui/use-toast';
-import { usePermissions } from '@/contexts/PermissionContext';
 
 export const useTemplates = () => {
     const { toast } = useToast();
@@ -10,9 +9,8 @@ export const useTemplates = () => {
     const [assignments, setAssignments] = useState([]);
     const [templateStrings, setTemplateStrings] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { hasPermission } = usePermissions();
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         setLoading(true);
         try {
             // Fetch templates
@@ -63,7 +61,7 @@ export const useTemplates = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [toast]);
 
     // --- Template CRUD ---
 
@@ -259,7 +257,7 @@ export const useTemplates = () => {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     return {
         templates,

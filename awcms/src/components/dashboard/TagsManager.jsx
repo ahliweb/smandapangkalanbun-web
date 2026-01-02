@@ -387,19 +387,19 @@ function TagsManager() {
 
     return (
         <div className="space-y-6">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-card p-6 rounded-xl border border-border shadow-sm">
                 <div>
-                    <h2 className="text-3xl font-bold text-slate-800 flex items-center gap-2">
-                        Tags Manager {showTrash && <span className="text-red-500 text-lg font-normal bg-red-50 px-2 rounded">(Trash)</span>}
+                    <h2 className="text-3xl font-bold text-foreground flex items-center gap-2">
+                        Tags Manager {showTrash && <span className="text-destructive text-lg font-normal bg-destructive/10 px-2 rounded">(Trash)</span>}
                     </h2>
-                    <p className="text-slate-500 mt-1">Manage content tags, colors, and view usage statistics across the system.</p>
+                    <p className="text-muted-foreground mt-1">Manage content tags, colors, and view usage statistics across the system.</p>
                 </div>
                 <div className="flex flex-wrap gap-3">
                     {(canSoftDelete || showTrash) && (
                         <Button
-                            variant={showTrash ? "default" : "outline"}
+                            variant={showTrash ? "destructive" : "outline"}
                             onClick={() => { setShowTrash(!showTrash); setCurrentPage(1); }}
-                            className={showTrash ? "bg-red-600 hover:bg-red-700 text-white" : "text-slate-600"}
+                            className={showTrash ? "bg-destructive hover:bg-destructive/90 text-destructive-foreground" : "text-muted-foreground hover:text-foreground"}
                         >
                             {showTrash ? "View Active Tags" : "Trash / Deleted"}
                             <Trash2 className="w-4 h-4 ml-2" />
@@ -407,35 +407,35 @@ function TagsManager() {
                     )}
 
                     {!showTrash && canCreate && (
-                        <Button onClick={() => openModal(null)} className="bg-blue-600 hover:bg-blue-700">
+                        <Button onClick={() => openModal(null)} className="bg-primary text-primary-foreground hover:bg-primary/90">
                             <Plus className="w-4 h-4 mr-2" /> Create Tag
                         </Button>
                     )}
                 </div>
             </div>
 
-            <div className="flex flex-col lg:flex-row gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <div className="flex flex-col lg:flex-row gap-4 bg-card p-4 rounded-xl border border-border shadow-sm">
                 <div className="relative flex-1">
-                    <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+                    <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                     <Input
                         placeholder={`Search tags... (${minLength}+ chars)`}
                         value={query}
                         onChange={e => { setQuery(e.target.value); setCurrentPage(1); }}
-                        className={`pl-9 pr-24 ${!isSearchValid ? 'border-red-300 focus:ring-red-200' : ''}`}
+                        className={`pl-9 pr-24 bg-background ${!isSearchValid ? 'border-destructive focus:ring-destructive' : ''}`}
                     />
                     <div className="absolute right-3 top-2.5 flex items-center gap-2">
-                        {(loading || searchLoading) && <Loader2 className="h-4 w-4 animate-spin text-slate-400" />}
+                        {(loading || searchLoading) && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
                         {query && (
-                            <button onClick={() => { clearSearch(); setCurrentPage(1); }} className="text-slate-400 hover:text-slate-600">
+                            <button onClick={() => { clearSearch(); setCurrentPage(1); }} className="text-muted-foreground hover:text-foreground">
                                 <X className="h-4 w-4" />
                             </button>
                         )}
-                        <span className={`text-xs font-mono ${query.length > 0 && query.length < minLength ? 'text-red-500 font-bold' : 'text-slate-400'}`}>
+                        <span className={`text-xs font-mono ${query.length > 0 && query.length < minLength ? 'text-destructive font-bold' : 'text-muted-foreground'}`}>
                             {query.length}/{minLength}
                         </span>
                     </div>
                     {!isSearchValid && (
-                        <div className="absolute top-full left-0 mt-1 text-xs text-red-500 font-medium animate-in slide-in-from-top-1 px-1">
+                        <div className="absolute top-full left-0 mt-1 text-xs text-destructive font-medium animate-in slide-in-from-top-1 px-1">
                             {searchMessage}
                         </div>
                     )}
@@ -444,11 +444,11 @@ function TagsManager() {
                 {!showTrash && (
                     <div className="flex flex-col sm:flex-row gap-3">
                         <div className="relative w-full sm:w-48">
-                            <Filter className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+                            <Filter className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                             <select
                                 value={moduleFilter}
                                 onChange={(e) => { setModuleFilter(e.target.value); setCurrentPage(1); }}
-                                className="flex h-10 w-full items-center justify-between rounded-md border border-slate-300 bg-white px-3 py-2 text-sm pl-9 appearance-none focus:ring-2 focus:ring-blue-500"
+                                className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm pl-9 appearance-none focus:ring-2 focus:ring-ring"
                             >
                                 {MODULES.map(m => (
                                     <option key={m.value} value={m.value}>{m.label}</option>
@@ -456,11 +456,11 @@ function TagsManager() {
                             </select>
                         </div>
                         <div className="relative w-full sm:w-40">
-                            <CheckCircle className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+                            <CheckCircle className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                             <select
                                 value={activeFilter}
                                 onChange={(e) => { setActiveFilter(e.target.value); setCurrentPage(1); }}
-                                className="flex h-10 w-full items-center justify-between rounded-md border border-slate-300 bg-white px-3 py-2 text-sm pl-9 appearance-none focus:ring-2 focus:ring-blue-500"
+                                className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm pl-9 appearance-none focus:ring-2 focus:ring-ring"
                             >
                                 <option value="all">All Status</option>
                                 <option value="active">Active</option>
@@ -470,18 +470,18 @@ function TagsManager() {
                     </div>
                 )}
 
-                <Button variant="ghost" size="icon" onClick={fetchTags} title="Refresh Data">
-                    <RefreshCw className="w-4 h-4 text-slate-500" />
+                <Button variant="ghost" size="icon" onClick={fetchTags} title="Refresh Data" className="text-muted-foreground hover:text-foreground">
+                    <RefreshCw className="w-4 h-4" />
                 </Button>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full">
-                        <thead className="bg-slate-50 border-b border-slate-200">
+                        <thead className="bg-muted/50 border-b border-border">
                             <tr>
                                 <th
-                                    className="px-6 py-4 text-left text-xs font-bold text-slate-600 uppercase cursor-pointer hover:text-blue-600 group"
+                                    className="px-6 py-4 text-left text-xs font-bold text-muted-foreground uppercase cursor-pointer hover:text-foreground group"
                                     onClick={() => handleSort('name')}
                                 >
                                     <div className="flex items-center gap-1">
@@ -489,10 +489,10 @@ function TagsManager() {
                                         {sortConfig.key === 'name' && (sortConfig.direction === 'asc' ? <SortAsc className="w-3 h-3" /> : <SortDesc className="w-3 h-3" />)}
                                     </div>
                                 </th>
-                                <th className="px-6 py-4 text-left text-xs font-bold text-slate-600 uppercase">Color</th>
-                                {!showTrash && <th className="px-6 py-4 text-left text-xs font-bold text-slate-600 uppercase">Usage Breakdown</th>}
+                                <th className="px-6 py-4 text-left text-xs font-bold text-muted-foreground uppercase">Color</th>
+                                {!showTrash && <th className="px-6 py-4 text-left text-xs font-bold text-muted-foreground uppercase">Usage Breakdown</th>}
                                 <th
-                                    className="px-6 py-4 text-center text-xs font-bold text-slate-600 uppercase cursor-pointer hover:text-blue-600"
+                                    className="px-6 py-4 text-center text-xs font-bold text-muted-foreground uppercase cursor-pointer hover:text-foreground"
                                     onClick={() => handleSort('total_usage')}
                                 >
                                     <div className="flex items-center justify-center gap-1">
@@ -500,11 +500,11 @@ function TagsManager() {
                                         {sortConfig.key === 'total_usage' && (sortConfig.direction === 'asc' ? <SortAsc className="w-3 h-3" /> : <SortDesc className="w-3 h-3" />)}
                                     </div>
                                 </th>
-                                <th className="px-6 py-4 text-center text-xs font-bold text-slate-600 uppercase">Status</th>
-                                <th className="px-6 py-4 text-right text-xs font-bold text-slate-600 uppercase">Actions</th>
+                                <th className="px-6 py-4 text-center text-xs font-bold text-muted-foreground uppercase">Status</th>
+                                <th className="px-6 py-4 text-right text-xs font-bold text-muted-foreground uppercase">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-100">
+                        <tbody className="divide-y divide-border">
                             {loading ? (
                                 <tr><td colSpan="6" className="p-12 text-center text-slate-500">
                                     <div className="flex flex-col items-center gap-2">
@@ -525,22 +525,22 @@ function TagsManager() {
                                         key={tag.tag_id}
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
-                                        className="hover:bg-blue-50/50 transition-colors"
+                                        className="hover:bg-muted/50 transition-colors"
                                     >
                                         <td className="px-6 py-4">
                                             <div className="flex flex-col">
                                                 <div className="flex items-center gap-2">
-                                                    <Tag className="w-4 h-4 text-slate-400" />
-                                                    <span className="font-medium text-slate-800">{tag.tag_name}</span>
+                                                    <Tag className="w-4 h-4 text-muted-foreground" />
+                                                    <span className="font-medium text-foreground">{tag.tag_name}</span>
                                                 </div>
-                                                <span className="text-xs text-slate-400 pl-6">{tag.tag_slug}</span>
-                                                {tag.tag_description && <span className="text-xs text-slate-500 pl-6 mt-1 truncate max-w-[200px]">{tag.tag_description}</span>}
+                                                <span className="text-xs text-muted-foreground pl-6">{tag.tag_slug}</span>
+                                                {tag.tag_description && <span className="text-xs text-muted-foreground pl-6 mt-1 truncate max-w-[200px]">{tag.tag_description}</span>}
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-2 group relative">
-                                                <div className="w-6 h-6 rounded-full border border-slate-200 shadow-sm transition-transform hover:scale-110 cursor-help" style={{ backgroundColor: tag.tag_color }} />
-                                                <span className="text-xs text-slate-500 font-mono opacity-0 group-hover:opacity-100 transition-opacity absolute left-8 bg-white border px-1 rounded shadow-sm z-10">
+                                                <div className="w-6 h-6 rounded-full border border-border shadow-sm transition-transform hover:scale-110 cursor-help" style={{ backgroundColor: tag.tag_color }} />
+                                                <span className="text-xs text-muted-foreground font-mono opacity-0 group-hover:opacity-100 transition-opacity absolute left-8 bg-card border border-border px-1 rounded shadow-sm z-10">
                                                     {tag.tag_color}
                                                 </span>
                                             </div>
@@ -549,28 +549,28 @@ function TagsManager() {
                                             <td className="px-6 py-4">
                                                 <div className="flex flex-wrap gap-1 max-w-[250px]">
                                                     {Object.entries(tag.breakdown || {}).slice(0, 4).map(([mod, count]) => (
-                                                        <span key={mod} className="text-[10px] uppercase bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded border border-slate-200 flex items-center gap-1">
+                                                        <span key={mod} className="text-[10px] uppercase bg-secondary text-secondary-foreground px-1.5 py-0.5 rounded border border-border flex items-center gap-1">
                                                             {mod.replace('_', ' ').slice(0, 8)}
-                                                            <span className="bg-slate-200 px-1 rounded-full text-[9px] font-bold">{count}</span>
+                                                            <span className="bg-background px-1 rounded-full text-[9px] font-bold">{count}</span>
                                                         </span>
                                                     ))}
                                                     {Object.keys(tag.breakdown || {}).length > 4 && (
-                                                        <span className="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded">+{Object.keys(tag.breakdown).length - 4} more</span>
+                                                        <span className="text-[10px] bg-muted text-muted-foreground px-2 py-0.5 rounded">+{Object.keys(tag.breakdown).length - 4} more</span>
                                                     )}
                                                 </div>
                                             </td>
                                         )}
                                         <td className="px-6 py-4 text-center">
-                                            <span className={`inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-xs font-medium ${tag.count > 0 ? 'bg-blue-100 text-blue-800' : 'bg-slate-100 text-slate-600'
+                                            <span className={`inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-xs font-medium ${tag.count > 0 ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'
                                                 }`}>
                                                 {tag.count || 0} uses
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 text-center">
                                             {tag.tag_is_active ? (
-                                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Active</span>
+                                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20">Active</span>
                                             ) : (
-                                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">Inactive</span>
+                                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-muted text-muted-foreground border border-border">Inactive</span>
                                             )}
                                         </td>
                                         <td className="px-6 py-4 text-right">
@@ -578,12 +578,12 @@ function TagsManager() {
                                                 {showTrash ? (
                                                     <>
                                                         {canRestore && (
-                                                            <Button variant="ghost" size="icon" onClick={() => handleRestore(tag.tag_id)} className="text-green-600 hover:bg-green-50" title="Restore">
+                                                            <Button variant="ghost" size="icon" onClick={() => handleRestore(tag.tag_id)} className="text-green-600 hover:text-green-700 hover:bg-green-50" title="Restore">
                                                                 <RotateCcw className="w-4 h-4" />
                                                             </Button>
                                                         )}
                                                         {canPermanentDelete && (
-                                                            <Button variant="ghost" size="icon" onClick={() => handleDelete(tag.tag_id, true)} className="text-red-600 hover:bg-red-50" title="Permanent Delete">
+                                                            <Button variant="ghost" size="icon" onClick={() => handleDelete(tag.tag_id, true)} className="text-destructive hover:bg-destructive/10" title="Permanent Delete">
                                                                 <Ban className="w-4 h-4" />
                                                             </Button>
                                                         )}
@@ -591,12 +591,12 @@ function TagsManager() {
                                                 ) : (
                                                     <>
                                                         {canEdit && (
-                                                            <Button variant="ghost" size="icon" onClick={() => openModal(tag)} className="text-slate-400 hover:text-blue-600 hover:bg-blue-50">
+                                                            <Button variant="ghost" size="icon" onClick={() => openModal(tag)} className="text-muted-foreground hover:text-primary hover:bg-primary/10">
                                                                 <Edit className="w-4 h-4" />
                                                             </Button>
                                                         )}
                                                         {canSoftDelete && (
-                                                            <Button variant="ghost" size="icon" onClick={() => handleDelete(tag.tag_id, false)} className="text-slate-400 hover:text-red-600 hover:bg-red-50">
+                                                            <Button variant="ghost" size="icon" onClick={() => handleDelete(tag.tag_id, false)} className="text-muted-foreground hover:text-destructive hover:bg-destructive/10">
                                                                 <Trash2 className="w-4 h-4" />
                                                             </Button>
                                                         )}
@@ -614,12 +614,12 @@ function TagsManager() {
 
             {displayedTags.length > 0 && (
                 <div className="flex flex-col sm:flex-row justify-between items-center gap-4 px-2">
-                    <div className="text-sm text-slate-500">
-                        Showing <span className="font-medium">{((currentPage - 1) * itemsPerPage) + 1}</span> to <span className="font-medium">{Math.min(currentPage * itemsPerPage, displayedTags.length)}</span> of <span className="font-medium">{displayedTags.length}</span> items
+                    <div className="text-sm text-muted-foreground">
+                        Showing <span className="font-medium text-foreground">{((currentPage - 1) * itemsPerPage) + 1}</span> to <span className="font-medium text-foreground">{Math.min(currentPage * itemsPerPage, displayedTags.length)}</span> of <span className="font-medium text-foreground">{displayedTags.length}</span> items
                     </div>
                     <div className="flex items-center gap-4">
                         <select
-                            className="h-8 rounded-md border border-slate-300 bg-white text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="h-8 rounded-md border border-input bg-background text-sm text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                             value={itemsPerPage}
                             onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
                         >
@@ -648,7 +648,7 @@ function TagsManager() {
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
                         <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="name" className="text-right">Name <span className="text-red-500">*</span></Label>
+                            <Label htmlFor="name" className="text-right">Name <span className="text-destructive">*</span></Label>
                             <Input
                                 id="name"
                                 value={formData.name}
@@ -690,7 +690,7 @@ function TagsManager() {
                                     type="color"
                                     value={formData.color}
                                     onChange={(e) => setFormData(prev => ({ ...prev, color: e.target.value }))}
-                                    className="w-12 h-10 p-1 cursor-pointer"
+                                    className="w-12 h-10 p-1 cursor-pointer bg-transparent border-input"
                                 />
                                 <Input
                                     value={formData.color}
@@ -707,15 +707,15 @@ function TagsManager() {
                                     id="is_active"
                                     checked={formData.is_active}
                                     onChange={(e) => setFormData(prev => ({ ...prev, is_active: e.target.checked }))}
-                                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600"
+                                    className="h-4 w-4 rounded border-input text-primary focus:ring-primary bg-background"
                                 />
-                                <Label htmlFor="is_active" className="font-normal text-slate-600">Active (Visible in selectors)</Label>
+                                <Label htmlFor="is_active" className="font-normal text-muted-foreground">Active (Visible in selectors)</Label>
                             </div>
                         </div>
                     </div>
                     <DialogFooter>
                         <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
-                        <Button onClick={handleSave} disabled={saving} className="bg-blue-600 hover:bg-blue-700">
+                        <Button onClick={handleSave} disabled={saving} className="bg-primary text-primary-foreground hover:bg-primary/90">
                             {saving ? 'Saving...' : 'Save Changes'}
                         </Button>
                     </DialogFooter>

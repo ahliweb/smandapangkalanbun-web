@@ -186,7 +186,7 @@ const compareVersions = (a, b) => {
     return 0;
 };
 
-export default {
+const externalExtensionLoader = {
     loadExternalExtension,
     unloadExternalExtension,
     validateManifest,
@@ -195,3 +195,5 @@ export default {
     clearExtensionCache,
     isCompatible
 };
+
+export default externalExtensionLoader;

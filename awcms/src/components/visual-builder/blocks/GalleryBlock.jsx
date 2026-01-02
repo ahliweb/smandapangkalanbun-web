@@ -129,7 +129,7 @@ export const GalleryBlock = ({ images, columns, gap, aspectRatio, lightbox, bord
                     >
                         <img
                             src={src}
-                            alt={`Gallery image ${index + 1}`}
+                            alt={`Slide ${index + 1}`}
                             className="w-full h-full object-cover"
                         />
                     </div>
@@ -155,7 +155,7 @@ export const GalleryBlock = ({ images, columns, gap, aspectRatio, lightbox, bord
 
                     <img
                         src={imageList[currentIndex]}
-                        alt={`Gallery image ${currentIndex + 1}`}
+                        alt={`Slide ${currentIndex + 1}`}
                         className="max-w-full max-h-[80vh] object-contain"
                     />
 

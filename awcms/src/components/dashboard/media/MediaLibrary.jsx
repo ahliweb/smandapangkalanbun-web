@@ -5,8 +5,8 @@ import { supabase } from '@/lib/customSupabaseClient';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
-import { Upload, Image as ImageIcon, File, Trash2, Copy, Search, Loader2, Grid, List, RefreshCw, Info, Link2, Eye, ChevronLeft, ChevronRight, CheckSquare, Square } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Upload, File, Trash2, Copy, Search, Loader2, Grid, List, RefreshCw, Info, Link2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
@@ -50,7 +50,6 @@ const MediaLibrary = ({ onSelect, selectionMode = false, refreshTrigger = 0, isT
     const [query, setQuery] = useState('');
     const [viewMode, setViewMode] = useState('grid');
     const [usageData, setUsageData] = useState({});
-    const [selectedFileDetails, setSelectedFileDetails] = useState(null);
     const [deleteConfirm, setDeleteConfirm] = useState({ open: false, fileId: null, fileName: '', isBulk: false });
     const [selectedFiles, setSelectedFiles] = useState(new Set());
 
@@ -195,7 +194,7 @@ const MediaLibrary = ({ onSelect, selectionMode = false, refreshTrigger = 0, isT
             toast({ title: 'Upload Complete', description: `${successCount} files uploaded successfully.` });
             fetchFiles();
         }
-    }, [fetchFiles, toast]);
+    }, [fetchFiles, toast, canUpload, tenantId]);
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,

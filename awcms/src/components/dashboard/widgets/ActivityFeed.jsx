@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileEdit, Plus, Trash, User } from 'lucide-react';
+import { FileEdit } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
 export function ActivityFeed({ activities }) {
@@ -33,7 +33,7 @@ export function ActivityFeed({ activities }) {
             ))
           ) : (
             <div className="text-center text-slate-500 py-8">
-                No recent activity found.
+              No recent activity found.
             </div>
           )}
         </div>

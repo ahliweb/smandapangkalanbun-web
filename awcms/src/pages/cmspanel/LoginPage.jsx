@@ -47,7 +47,7 @@ const LoginPage = () => {
             .maybeSingle();
 
           // Check if user is active (soft deletion check)
-          const { data: userData, error } = await supabase
+          const { data: userData } = await supabase
             .from('users')
             .select('deleted_at, roles(name)')
             .eq('id', user.id)
@@ -152,7 +152,7 @@ const LoginPage = () => {
       const userId = data.user.id;
 
       // 1.5 Check if user is active/deleted in public.users
-      const { data: userProfile, error: profileError } = await supabase
+      const { data: userProfile } = await supabase
         .from('users')
         .select('deleted_at')
         .eq('id', userId)

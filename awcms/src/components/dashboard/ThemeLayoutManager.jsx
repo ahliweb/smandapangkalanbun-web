@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import PagesManager from './PagesManager';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Layout, Globe, FileType, AlertTriangle, Monitor, PanelTop, PanelBottom, Pencil } from 'lucide-react';
+import { Layout, Globe, FileType, AlertTriangle, PanelTop, PanelBottom, Pencil } from 'lucide-react';
 import GenericContentManager from './GenericContentManager';
 import VisualPageBuilder from '@/components/visual-builder/VisualPageBuilder';
 import { Button } from '@/components/ui/button';

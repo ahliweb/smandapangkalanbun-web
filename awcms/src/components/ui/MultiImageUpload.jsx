@@ -1,7 +1,6 @@
 
 import React, { useState } from 'react';
-import { Plus, X, Image as ImageIcon, FolderOpen, GripVertical } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Plus, X } from 'lucide-react';
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import MediaLibrary from '@/components/dashboard/media/MediaLibrary';
 import { supabase } from '@/lib/customSupabaseClient';

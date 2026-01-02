@@ -5,10 +5,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/lib/customSupabaseClient';
-import { Loader2, AlertCircle, ExternalLink, X } from 'lucide-react';
+import { Loader2, AlertCircle, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { SelectField } from '../fields/SelectField';
 
 export const PromotionBlockFields = {
@@ -46,6 +46,7 @@ export const PromotionBlock = ({ promotionId, variant = 'banner', showImage = tr
     const [promotion, setPromotion] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
         const fetchPromotion = async () => {
@@ -119,11 +120,6 @@ export const PromotionBlock = ({ promotionId, variant = 'banner', showImage = tr
         </div>
     );
 
-    const handleClick = (e) => {
-        // Prevent default in editor if needed, but usually we want to test link
-        // In editor this might be just a div
-    };
-
     const CTA = () => (
         promotion.link ? (
             <Button asChild size={variant === 'card' ? 'sm' : 'default'} className="mt-4 bg-blue-600 hover:bg-blue-700">
@@ -135,6 +131,7 @@ export const PromotionBlock = ({ promotionId, variant = 'banner', showImage = tr
         ) : null
     );
 
+
     if (variant === 'popup') {
         // For popup, we show a button to trigger it? Or does it auto-trigger in preview?
         // In editor, it should probably just show a placeholder or a "Show Popup" button.
@@ -144,7 +141,6 @@ export const PromotionBlock = ({ promotionId, variant = 'banner', showImage = tr
         // But for Puck editor visualization, we might want to just show "Popup Active: [Title]"
 
         // Let's implement a "preview" mode for the editor
-        const [isOpen, setIsOpen] = useState(false);
 
         // Auto-open in preview mode or real site? 
         // For now, let's just show a button "Open [Title]" in the block flow

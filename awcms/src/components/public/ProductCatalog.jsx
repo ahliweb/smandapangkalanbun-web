@@ -3,7 +3,7 @@
  */
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Plus, Minus, Star, Filter, Grid, List, Loader2 } from 'lucide-react';
+import { ShoppingCart, Plus, Filter, Grid, List, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -27,14 +27,9 @@ function ProductCatalog() {
     const [search, setSearch] = useState('');
     const [categoryFilter, setCategoryFilter] = useState('all');
     const [sortBy, setSortBy] = useState('newest');
-    const [priceRange, setPriceRange] = useState({ min: '', max: '' });
+    const [priceRange] = useState({ min: '', max: '' });
 
-    useEffect(() => {
-        fetchProducts();
-        fetchCategories();
-    }, [currentTenant?.id]);
-
-    const fetchProducts = async () => {
+    const fetchProducts = React.useCallback(async () => {
         if (!currentTenant?.id) return;
 
         setLoading(true);
@@ -59,9 +54,9 @@ function ProductCatalog() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [currentTenant?.id]);
 
-    const fetchCategories = async () => {
+    const fetchCategories = React.useCallback(async () => {
         if (!currentTenant?.id) return;
 
         try {
@@ -76,7 +71,12 @@ function ProductCatalog() {
         } catch (error) {
             console.error('Error fetching categories:', error);
         }
-    };
+    }, [currentTenant?.id]);
+
+    useEffect(() => {
+        fetchProducts();
+        fetchCategories();
+    }, [fetchProducts, fetchCategories]);
 
     const handleAddToCart = async (product) => {
         if (product.stock <= 0) {
@@ -216,8 +216,8 @@ function ProductCatalog() {
                 </div>
             ) : (
                 <div className={`grid gap-6 ${viewMode === 'grid'
-                        ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-                        : 'grid-cols-1'
+                    ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+                    : 'grid-cols-1'
                     }`}>
                     {filteredProducts.map(product => (
                         <div

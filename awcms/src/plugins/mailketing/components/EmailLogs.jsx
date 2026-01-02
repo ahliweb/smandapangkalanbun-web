@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTenant } from '@/contexts/TenantContext';
 import { usePermissions } from '@/contexts/PermissionContext';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -47,7 +46,6 @@ const EVENT_TYPE_CONFIG = {
 };
 
 function EmailLogs() {
-    const { t } = useTranslation();
     const { currentTenant } = useTenant();
     const { hasPermission } = usePermissions();
 
@@ -63,13 +61,7 @@ function EmailLogs() {
     const canViewLogs = hasPermission('tenant.email.view_logs');
     const limit = 20;
 
-    useEffect(() => {
-        if (currentTenant?.id && canViewLogs) {
-            loadLogs();
-        }
-    }, [currentTenant?.id, page, filters]);
-
-    const loadLogs = async () => {
+    const loadLogs = useCallback(async () => {
         setLoading(true);
         try {
             const { data, count: total } = await getEmailLogs(currentTenant.id, {
@@ -85,7 +77,20 @@ function EmailLogs() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [currentTenant?.id, page, filters, limit]);
+
+    useEffect(() => {
+        if (currentTenant?.id && canViewLogs) {
+            loadLogs();
+        }
+    }, [currentTenant?.id, page, filters, canViewLogs, loadLogs]);
+
+    useEffect(() => {
+        if (currentTenant?.id && canViewLogs) {
+            loadLogs();
+        }
+    }, [currentTenant?.id, page, filters, canViewLogs, loadLogs]);
+
 
     const handleExport = () => {
         const csv = [
@@ -108,15 +113,17 @@ function EmailLogs() {
         a.click();
     };
 
-    return (
-        <div className="flex flex-col items-center justify-center min-h-[400px] bg-white rounded-xl border border-slate-200 p-12 text-center">
-            <div className="p-4 bg-red-50 rounded-full mb-4">
-                <ShieldAlert className="w-12 h-12 text-red-500" />
+    if (!canViewLogs) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[400px] bg-white rounded-xl border border-slate-200 p-12 text-center">
+                <div className="p-4 bg-red-50 rounded-full mb-4">
+                    <ShieldAlert className="w-12 h-12 text-red-500" />
+                </div>
+                <h3 className="text-xl font-bold text-slate-800">Access Denied</h3>
+                <p className="text-slate-500 mt-2">You do not have permission to view email logs.</p>
             </div>
-            <h3 className="text-xl font-bold text-slate-800">Access Denied</h3>
-            <p className="text-slate-500 mt-2">You do not have permission to view email logs.</p>
-        </div>
-    );
+        );
+    }
 
     return (
         <div className="space-y-6 p-6">

@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import GenericContentManager from '@/components/dashboard/GenericContentManager';
-import { CreditCard, Building2, Wallet, DollarSign } from 'lucide-react';
+import { CreditCard } from 'lucide-react';
 
 function PaymentMethodsManager() {
     const columns = [
@@ -16,8 +16,8 @@ function PaymentMethodsManager() {
                     return <img src={val} alt="" className="w-8 h-8 object-contain" />;
                 }
                 return (
-                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <CreditCard className="w-4 h-4 text-blue-600" />
+                    <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                        <CreditCard className="w-4 h-4 text-primary" />
                     </div>
                 );
             }
@@ -28,10 +28,10 @@ function PaymentMethodsManager() {
             label: 'Type',
             render: (val) => {
                 const typeConfig = {
-                    xendit: { bg: 'bg-blue-100', text: 'text-blue-700', label: 'Xendit' },
-                    bank_transfer: { bg: 'bg-green-100', text: 'text-green-700', label: 'Bank Transfer' },
-                    cod: { bg: 'bg-amber-100', text: 'text-amber-700', label: 'Cash on Delivery' },
-                    manual: { bg: 'bg-slate-100', text: 'text-slate-700', label: 'Manual' }
+                    xendit: { bg: 'bg-blue-100 dark:bg-blue-900/30', text: 'text-blue-700 dark:text-blue-400', label: 'Xendit' },
+                    bank_transfer: { bg: 'bg-green-100 dark:bg-green-900/30', text: 'text-green-700 dark:text-green-400', label: 'Bank Transfer' },
+                    cod: { bg: 'bg-amber-100 dark:bg-amber-900/30', text: 'text-amber-700 dark:text-amber-400', label: 'Cash on Delivery' },
+                    manual: { bg: 'bg-muted', text: 'text-muted-foreground', label: 'Manual' }
                 };
                 const config = typeConfig[val] || typeConfig.manual;
                 return (
@@ -54,9 +54,9 @@ function PaymentMethodsManager() {
             key: 'is_active',
             label: 'Status',
             render: (val) => val ? (
-                <span className="text-green-600 text-xs font-medium">✓ Active</span>
+                <span className="text-green-600 dark:text-green-400 text-xs font-medium">✓ Active</span>
             ) : (
-                <span className="text-slate-400 text-xs">Inactive</span>
+                <span className="text-muted-foreground/50 text-xs">Inactive</span>
             )
         },
         { key: 'sort_order', label: 'Order', className: 'text-center' }
@@ -87,19 +87,19 @@ function PaymentMethodsManager() {
 
     return (
         <div className="space-y-6">
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+            <div className="bg-primary/5 border border-primary/20 rounded-xl p-4">
                 <div className="flex items-start gap-3">
-                    <div className="p-2 bg-blue-100 rounded-lg">
-                        <CreditCard className="w-5 h-5 text-blue-600" />
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                        <CreditCard className="w-5 h-5 text-primary" />
                     </div>
                     <div className="flex-1">
-                        <h3 className="font-semibold text-blue-900 mb-1">Xendit Configuration</h3>
-                        <p className="text-sm text-blue-800 mb-2">
+                        <h3 className="font-semibold text-foreground mb-1">Xendit Configuration</h3>
+                        <p className="text-sm text-muted-foreground mb-2">
                             To enable online payments via Xendit, you need to configure the API key in the Edge Function.
                         </p>
-                        <ol className="text-sm text-blue-800 space-y-1 list-decimal list-inside">
-                            <li>Get your API key from <a href="https://dashboard.xendit.co" target="_blank" rel="noopener noreferrer" className="underline font-medium">Xendit Dashboard</a></li>
-                            <li>Add <code className="bg-blue-100 px-1 rounded text-xs">XENDIT_API_KEY</code> to Supabase Edge Function secrets</li>
+                        <ol className="text-sm text-muted-foreground space-y-1 list-decimal list-inside">
+                            <li>Get your API key from <a href="https://dashboard.xendit.co" target="_blank" rel="noopener noreferrer" className="underline font-medium text-primary hover:text-primary/80">Xendit Dashboard</a></li>
+                            <li>Add <code className="bg-muted px-1 rounded text-xs font-mono text-foreground">XENDIT_API_KEY</code> to Supabase Edge Function secrets</li>
                             <li>Create a payment method with type "Xendit"</li>
                         </ol>
                     </div>

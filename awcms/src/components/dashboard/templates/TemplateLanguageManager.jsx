@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Languages, Plus, Search, Trash2, Save } from 'lucide-react';
+// import { useTranslation } from 'react-i18next';
+import { Plus, Search, Trash2, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -29,7 +29,6 @@ import {
 import { useTemplates } from '@/hooks/useTemplates';
 
 const TemplateLanguageManager = () => {
-    const { t } = useTranslation();
     const { templateStrings, updateTemplateString, deleteTemplateString } = useTemplates();
     const [searchQuery, setSearchQuery] = useState('');
     const [isAddOpen, setIsAddOpen] = useState(false);

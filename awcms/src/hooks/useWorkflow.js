@@ -17,7 +17,7 @@ export const WORKFLOW_STATES = {
  */
 export function useWorkflow(initialState = 'draft', resourceType = 'posts', resourceId = null) {
     const { user } = useAuth();
-    const { hasPermission, checkAccess } = usePermissions();
+    const { hasPermission } = usePermissions();
     const { toast } = useToast();
     const [currentState, setCurrentState] = useState(initialState);
     const [loading, setLoading] = useState(false);

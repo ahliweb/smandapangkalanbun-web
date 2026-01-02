@@ -1,6 +1,6 @@
 
-import React, { useState, useEffect } from 'react';
-import { Shield, Search, Plus, Trash2, RotateCcw, Ban, X, Loader2 } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Shield, Search, Plus, X, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
@@ -19,7 +19,7 @@ import { Label } from '@/components/ui/label';
 
 function PermissionsManager() {
   const { toast } = useToast();
-  const { hasPermission, userRole, loading: permsLoading } = usePermissions();
+  const { userRole, loading: permsLoading } = usePermissions();
 
   const {
     query,
@@ -41,29 +41,7 @@ function PermissionsManager() {
 
   const isSuperAdmin = ['super_admin', 'owner'].includes(userRole);
 
-  useEffect(() => {
-    if (!permsLoading) {
-      if (isSuperAdmin) {
-        fetchPermissions();
-      } else {
-        setLoading(false);
-      }
-    }
-  }, [permsLoading, isSuperAdmin]);
-
-  useEffect(() => {
-    if (!debouncedQuery) {
-      setFilteredPermissions(permissions);
-    } else {
-      const lower = debouncedQuery.toLowerCase();
-      setFilteredPermissions(permissions.filter(p =>
-        p.name.toLowerCase().includes(lower) ||
-        (p.description && p.description.toLowerCase().includes(lower))
-      ));
-    }
-  }, [debouncedQuery, permissions]);
-
-  const fetchPermissions = async () => {
+  const fetchPermissions = useCallback(async () => {
     try {
       setLoading(true);
       const { data, error } = await supabase
@@ -84,7 +62,29 @@ function PermissionsManager() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    if (!permsLoading) {
+      if (isSuperAdmin) {
+        fetchPermissions();
+      } else {
+        setLoading(false);
+      }
+    }
+  }, [permsLoading, isSuperAdmin, fetchPermissions]);
+
+  useEffect(() => {
+    if (!debouncedQuery) {
+      setFilteredPermissions(permissions);
+    } else {
+      const lower = debouncedQuery.toLowerCase();
+      setFilteredPermissions(permissions.filter(p =>
+        p.name.toLowerCase().includes(lower) ||
+        (p.description && p.description.toLowerCase().includes(lower))
+      ));
+    }
+  }, [debouncedQuery, permissions]);
 
   const handleSave = async (e) => {
     e.preventDefault();
@@ -139,47 +139,53 @@ function PermissionsManager() {
   ];
 
   if (!isSuperAdmin) {
-    return <div className="p-8 text-center text-red-500">Access Restricted: Owner or Super Admin only.</div>;
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[400px] bg-card rounded-xl border border-border p-12 text-center">
+        <Shield className="w-12 h-12 text-destructive mb-4" />
+        <h3 className="text-xl font-bold text-foreground">Access Restricted</h3>
+        <p className="text-muted-foreground">Owner or Super Admin only.</p>
+      </div>
+    );
   }
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-bold text-slate-800">Permissions</h2>
-          <p className="text-slate-600">Manage system permissions</p>
+          <h2 className="text-3xl font-bold text-foreground">Permissions</h2>
+          <p className="text-muted-foreground">Manage system permissions</p>
         </div>
         <Button onClick={() => {
           setEditingPermission(null);
           setFormData({ name: '', description: '', resource: '', action: '' });
           setIsEditorOpen(true);
-        }} className="bg-slate-900 text-white">
+        }} className="bg-primary text-primary-foreground hover:bg-primary/90">
           <Plus className="w-4 h-4 mr-2" /> New Permission
         </Button>
       </div>
 
-      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div className="bg-card p-4 rounded-xl border border-border shadow-sm">
         <div className="relative">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+          <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder={`Search permissions... (${minLength}+ chars)`}
             value={query}
             onChange={e => setQuery(e.target.value)}
-            className={`pl-9 pr-24 ${!isSearchValid ? 'border-red-300 focus:ring-red-200' : ''}`}
+            className={`pl-9 pr-24 ${!isSearchValid ? 'border-destructive focus:ring-destructive/30' : 'bg-background'}`}
           />
           <div className="absolute right-3 top-2.5 flex items-center gap-2">
-            {(loading || searchLoading) && <Loader2 className="h-4 w-4 animate-spin text-slate-400" />}
+            {(loading || searchLoading) && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
             {query && (
-              <button onClick={clearSearch} className="text-slate-400 hover:text-slate-600">
+              <button onClick={clearSearch} className="text-muted-foreground hover:text-foreground">
                 <X className="h-4 w-4" />
               </button>
             )}
-            <span className={`text-xs font-mono ${query.length > 0 && query.length < minLength ? 'text-red-500 font-bold' : 'text-slate-400'}`}>
+            <span className={`text-xs font-mono ${query.length > 0 && query.length < minLength ? 'text-destructive font-bold' : 'text-muted-foreground'}`}>
               {query.length}/{minLength}
             </span>
           </div>
           {!isSearchValid && (
-            <div className="absolute top-full left-0 mt-1 text-xs text-red-500 font-medium animate-in slide-in-from-top-1 px-1">
+            <div className="absolute top-full left-0 mt-1 text-xs text-destructive font-medium animate-in slide-in-from-top-1 px-1">
               {searchMessage}
             </div>
           )}

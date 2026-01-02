@@ -39,7 +39,7 @@ function MobileAppConfig() {
         const fetchConfig = async () => {
             if (!tenantId) return;
 
-            const { data, error } = await supabase
+            const { data } = await supabase
                 .from('mobile_app_config')
                 .select('*')
                 .eq('tenant_id', tenantId)

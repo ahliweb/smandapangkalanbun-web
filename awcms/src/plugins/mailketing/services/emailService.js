@@ -220,7 +220,7 @@ export const sendTestEmail = async (tenantId, toEmail) => {
     });
 };
 
-export default {
+const emailService = {
     getTenantEmailConfig,
     saveTenantEmailConfig,
     sendEmail,
@@ -230,3 +230,5 @@ export default {
     getEmailLogs,
     sendTestEmail,
 };
+
+export default emailService;

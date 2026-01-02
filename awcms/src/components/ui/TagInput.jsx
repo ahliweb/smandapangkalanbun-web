@@ -6,10 +6,10 @@ import { supabase } from '@/lib/customSupabaseClient';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/components/ui/use-toast';
 
-const TagInput = ({ 
-  value = [], 
-  onChange, 
-  placeholder = "Add tags...", 
+const TagInput = ({
+  value = [],
+  onChange,
+  placeholder = "Add tags...",
   className,
   disabled = false
 }) => {
@@ -19,8 +19,8 @@ const TagInput = ({
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [loading, setLoading] = useState(false);
   const wrapperRef = useRef(null);
-  
-  const safeValue = Array.isArray(value) ? value : [];
+
+  const safeValue = React.useMemo(() => Array.isArray(value) ? value : [], [value]);
 
   // Debounced autocomplete
   useEffect(() => {
@@ -29,7 +29,7 @@ const TagInput = ({
         setSuggestions([]);
         return;
       }
-      
+
       setLoading(true);
       try {
         const { data } = await supabase
@@ -39,7 +39,7 @@ const TagInput = ({
           .is('deleted_at', null)
           .eq('is_active', true)
           .limit(5);
-          
+
         if (data) {
           const filtered = data.filter(t => !safeValue.includes(t.name));
           setSuggestions(filtered);
@@ -81,13 +81,13 @@ const TagInput = ({
   const addTag = (tagName) => {
     if (disabled) return;
     const trimmed = tagName.trim();
-    
+
     if (!trimmed) return;
 
     if (safeValue.includes(trimmed)) {
-        toast({ description: `Tag "${trimmed}" is already added.`, duration: 2000 });
-        setInputValue('');
-        return;
+      toast({ description: `Tag "${trimmed}" is already added.`, duration: 2000 });
+      setInputValue('');
+      return;
     }
 
     onChange([...safeValue, trimmed]);
@@ -105,33 +105,33 @@ const TagInput = ({
 
   return (
     <div ref={wrapperRef} className={cn("relative w-full", className)}>
-      <div 
+      <div
         className={cn(
-            "flex flex-wrap gap-2 p-2 min-h-[42px] rounded-md border border-slate-300 bg-white transition-all w-full items-center focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent",
-            disabled && "bg-slate-50 opacity-70 cursor-not-allowed"
+          "flex flex-wrap gap-2 p-2 min-h-[42px] rounded-md border border-slate-300 bg-white transition-all w-full items-center focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent",
+          disabled && "bg-slate-50 opacity-70 cursor-not-allowed"
         )}
         onClick={() => !disabled && document.getElementById('tag-input-field')?.focus()}
       >
         {safeValue.map((tag, index) => (
-          <Badge 
-            key={index} 
-            variant="secondary" 
+          <Badge
+            key={index}
+            variant="secondary"
             className="flex items-center gap-1 px-2 py-1 text-sm font-normal bg-blue-50 text-blue-700 border border-blue-100"
           >
             <Tag className="w-3 h-3 opacity-50" />
             {tag}
             {!disabled && (
-                <button
+              <button
                 type="button"
                 onClick={(e) => { e.stopPropagation(); removeTag(index); }}
                 className="ml-1 text-blue-400 hover:text-blue-600 hover:bg-blue-200 rounded-full p-0.5 transition-colors"
-                >
+              >
                 <X className="w-3 h-3" />
-                </button>
+              </button>
             )}
           </Badge>
         ))}
-        
+
         <input
           id="tag-input-field"
           type="text"
@@ -153,7 +153,7 @@ const TagInput = ({
         <div className="absolute z-50 w-full mt-1 bg-white rounded-md border border-slate-200 shadow-lg max-h-60 overflow-auto">
           {loading ? (
             <div className="p-3 text-center text-slate-500 text-sm flex items-center justify-center gap-2">
-                <Loader2 className="w-3 h-3 animate-spin" /> Searching...
+              <Loader2 className="w-3 h-3 animate-spin" /> Searching...
             </div>
           ) : suggestions.length > 0 ? (
             suggestions.map((suggestion) => (
@@ -167,13 +167,13 @@ const TagInput = ({
               </div>
             ))
           ) : (
-             <div 
-                className="px-3 py-2 text-sm text-slate-500 hover:bg-slate-50 cursor-pointer flex items-center gap-2"
-                onClick={() => addTag(inputValue)}
-             >
-                <Plus className="w-3 h-3" />
-                Create new tag "<span className="font-medium text-slate-800">{inputValue}</span>"
-             </div>
+            <div
+              className="px-3 py-2 text-sm text-slate-500 hover:bg-slate-50 cursor-pointer flex items-center gap-2"
+              onClick={() => addTag(inputValue)}
+            >
+              <Plus className="w-3 h-3" />
+              Create new tag "<span className="font-medium text-slate-800">{inputValue}</span>"
+            </div>
           )}
         </div>
       )}

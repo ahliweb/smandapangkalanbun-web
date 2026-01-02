@@ -1,11 +1,11 @@
 
 import {
   LayoutDashboard, FileText, FileEdit, Package, Briefcase, Megaphone, Tag,
-  Image, Video, Users, Shield, Search, X, LogOut, FolderTree, Hash,
+  Image, Video, Users, Shield, Search, FolderTree, Hash,
   Languages, MessageSquare as MessageSquareQuote, MapPin, Inbox, List,
   Menu, Puzzle, Box, Database, Lock, Palette, FolderOpen, Settings2,
   Layers, ShieldCheck, FileClock, Mail, MailOpen, Smartphone, Bell, Settings,
-  Cpu, Contact, ShoppingCart, CreditCard
+  Cpu, ShoppingCart, CreditCard
 } from 'lucide-react';
 
 // Map string keys to Lucide components

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Globe, Save, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -29,11 +29,7 @@ function SeoManager() {
     /* 
      * Fetch SEO Settings from 'settings' table (key='seo_global')
      */
-    useEffect(() => {
-        fetchSeoSettings();
-    }, [tenantId]);
-
-    const fetchSeoSettings = async () => {
+    const fetchSeoSettings = useCallback(async () => {
         if (!tenantId) return;
 
         setLoading(true);
@@ -62,7 +58,11 @@ function SeoManager() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [tenantId]);
+
+    useEffect(() => {
+        fetchSeoSettings();
+    }, [tenantId, fetchSeoSettings]);
 
     const handleSave = async (e) => {
         e.preventDefault();
@@ -117,12 +117,12 @@ function SeoManager() {
 
     if (!hasPermission('tenant.setting.read')) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[400px] bg-white rounded-xl border border-slate-200 p-12 text-center">
-                <div className="p-4 bg-red-50 rounded-full mb-4">
-                    <ShieldAlert className="w-12 h-12 text-red-500" />
+            <div className="flex flex-col items-center justify-center min-h-[400px] bg-card rounded-xl border border-border p-12 text-center">
+                <div className="p-4 bg-destructive/10 rounded-full mb-4">
+                    <ShieldAlert className="w-12 h-12 text-destructive" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-800">Access Denied</h3>
-                <p className="text-slate-500 mt-2">You do not have permission to view SEO settings.</p>
+                <h3 className="text-xl font-bold text-foreground">Access Denied</h3>
+                <p className="text-muted-foreground mt-2">You do not have permission to view SEO settings.</p>
             </div>
         );
     }
@@ -130,8 +130,8 @@ function SeoManager() {
     return (
         <div className="max-w-4xl mx-auto space-y-6">
             <div>
-                <h2 className="text-3xl font-bold text-slate-800">SEO Management</h2>
-                <p className="text-slate-600">Configure global metadata and search engine settings</p>
+                <h2 className="text-3xl font-bold text-foreground">SEO Management</h2>
+                <p className="text-muted-foreground">Configure global metadata and search engine settings</p>
             </div>
 
             <Card>
@@ -202,7 +202,7 @@ function SeoManager() {
                             </p>
                         </div>
 
-                        <div className="pt-4 border-t border-slate-100 flex justify-end">
+                        <div className="pt-4 border-t border-border flex justify-end">
                             <Button type="submit" disabled={saving}>
                                 {saving ? (
                                     <>
@@ -221,18 +221,18 @@ function SeoManager() {
                 </CardContent>
             </Card>
 
-            <Card className="bg-blue-50 border-blue-100">
+            <Card className="bg-primary/5 border-primary/20">
                 <CardContent className="pt-6">
                     <div className="flex items-start gap-4">
-                        <div className="p-3 bg-blue-100 rounded-lg text-blue-600">
+                        <div className="p-3 bg-primary/10 rounded-lg text-primary">
                             <Globe className="w-6 h-6" />
                         </div>
                         <div>
-                            <h3 className="font-bold text-blue-900 mb-1">Robots.txt & Sitemap</h3>
-                            <p className="text-sm text-blue-800 mb-4">
-                                Your sitemap is automatically generated at <code className="bg-blue-100 px-1 py-0.5 rounded">/sitemap.xml</code> based on public content visibility.
+                            <h3 className="font-bold text-foreground mb-1">Robots.txt & Sitemap</h3>
+                            <p className="text-sm text-muted-foreground mb-4">
+                                Your sitemap is automatically generated at <code className="bg-muted px-1 py-0.5 rounded text-foreground font-mono">/sitemap.xml</code> based on public content visibility.
                             </p>
-                            <Button variant="outline" size="sm" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
+                            <Button variant="outline" size="sm" className="bg-background hover:bg-muted text-foreground border-border">
                                 View Sitemap
                             </Button>
                         </div>

@@ -5,7 +5,7 @@ import { applyTheme } from '@/lib/themeUtils';
 
 const ThemeContext = createContext({
   currentTheme: null,
-  refreshTheme: () => {},
+  refreshTheme: () => { },
   loading: true
 });
 
@@ -18,7 +18,7 @@ export const ThemeProvider = ({ children }) => {
   const fetchActiveTheme = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('themes')
         .select('*')
         .eq('is_active', true)
@@ -40,15 +40,15 @@ export const ThemeProvider = ({ children }) => {
 
   useEffect(() => {
     fetchActiveTheme();
-    
+
     // Subscribe to theme changes to update in real-time
     const channel = supabase
       .channel('public:themes')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'themes' }, (payload) => {
         // If the active theme changed or the currently active theme was updated
         if (payload.new && payload.new.is_active) {
-            setCurrentTheme(payload.new);
-            applyTheme(payload.new.config);
+          setCurrentTheme(payload.new);
+          applyTheme(payload.new.config);
         }
       })
       .subscribe();

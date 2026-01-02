@@ -34,7 +34,7 @@ function DeviceDetail() {
     const [device, setDevice] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const { chartData, latestReading, loading: sensorLoading } = useSensorData(
+    const { chartData, latestReading } = useSensorData(
         device?.device_id,
         { limit: 100 }
     );

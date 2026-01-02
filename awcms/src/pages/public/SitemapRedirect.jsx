@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+
 
 /**
  * SitemapRedirect Component
@@ -13,7 +13,6 @@ const SitemapRedirect = () => {
     const [sitemapXml, setSitemapXml] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [searchParams] = useSearchParams();
 
     useEffect(() => {
         const fetchSitemap = async () => {

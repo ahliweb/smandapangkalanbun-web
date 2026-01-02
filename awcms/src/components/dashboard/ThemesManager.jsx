@@ -1,7 +1,6 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/lib/customSupabaseClient';
-import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Palette, Plus, Edit, Check, Trash2, Power, Copy, Download, Upload, Search, MoreVertical, LayoutTemplate } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -24,7 +23,6 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { usePermissions } from '@/contexts/PermissionContext';
 import { shadcnHslToHex } from '@/lib/themeUtils';
@@ -67,7 +65,6 @@ const MiniThemePreview = ({ config, isActive }) => {
 };
 
 const ThemesManager = () => {
-    const { t } = useTranslation();
     const navigate = useNavigate();
     const { toast } = useToast();
     const [themes, setThemes] = useState([]);
@@ -77,11 +74,7 @@ const ThemesManager = () => {
 
     const { hasPermission } = usePermissions();
 
-    useEffect(() => {
-        fetchThemes();
-    }, []);
-
-    const fetchThemes = async () => {
+    const fetchThemes = useCallback(async () => {
         setLoading(true);
         const { data, error } = await supabase
             .from('themes')
@@ -95,7 +88,11 @@ const ThemesManager = () => {
             setThemes(data || []);
         }
         setLoading(false);
-    };
+    }, [toast]);
+
+    useEffect(() => {
+        fetchThemes();
+    }, [fetchThemes]);
 
     const handleActivate = async (id) => {
         if (!hasPermission('tenant.setting.update')) {
@@ -247,10 +244,10 @@ const ThemesManager = () => {
             {/* Header */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-2">
-                        <Palette className="w-8 h-8 text-blue-600" /> Theme Gallery
+                    <h1 className="text-3xl font-bold text-foreground flex items-center gap-2">
+                        <Palette className="w-8 h-8 text-primary" /> Theme Gallery
                     </h1>
-                    <p className="text-slate-500 mt-1">Manage, customize, and activate visual themes for your site.</p>
+                    <p className="text-muted-foreground mt-1">Manage, customize, and activate visual themes for your site.</p>
                 </div>
 
                 <div className="flex gap-2 w-full sm:w-auto">
@@ -268,7 +265,7 @@ const ThemesManager = () => {
                     </div>
 
                     {hasPermission('tenant.setting.update') && (
-                        <Button onClick={handleCreate} className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto">
+                        <Button onClick={handleCreate} className="w-full sm:w-auto">
                             <Plus className="w-4 h-4 mr-2" /> New Theme
                         </Button>
                     )}
@@ -277,10 +274,10 @@ const ThemesManager = () => {
 
             {/* Search Bar */}
             <div className="relative max-w-md">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                     placeholder="Search themes..."
-                    className="pl-9"
+                    className="pl-9 bg-background"
                     value={searchTerm}
                     onChange={e => setSearchTerm(e.target.value)}
                 />
@@ -290,30 +287,30 @@ const ThemesManager = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {loading ? (
                     [...Array(4)].map((_, i) => (
-                        <div key={i} className="h-64 bg-slate-100 rounded-xl animate-pulse"></div>
+                        <div key={i} className="h-64 bg-muted/50 rounded-xl animate-pulse"></div>
                     ))
                 ) : filteredThemes.length === 0 ? (
-                    <div className="col-span-full py-20 text-center text-slate-500 bg-white rounded-xl border border-dashed border-slate-300">
+                    <div className="col-span-full py-20 text-center text-muted-foreground bg-card rounded-xl border border-dashed border-border">
                         <LayoutTemplate className="w-12 h-12 mx-auto mb-4 opacity-20" />
                         <p>No themes found matching your search.</p>
                     </div>
                 ) : (
                     filteredThemes.map(theme => (
-                        <div key={theme.id} className={`group bg-white rounded-xl border transition-all duration-200 overflow-hidden flex flex-col ${theme.is_active ? 'border-blue-500 shadow-md ring-1 ring-blue-500' : 'border-slate-200 hover:border-slate-300 hover:shadow-lg'}`}>
+                        <div key={theme.id} className={`group bg-card rounded-xl border transition-all duration-200 overflow-hidden flex flex-col ${theme.is_active ? 'border-primary shadow-md ring-1 ring-primary' : 'border-border hover:border-primary/50 hover:shadow-lg'}`}>
 
                             <MiniThemePreview config={theme.config} isActive={theme.is_active} />
 
                             <div className="p-4 flex-1 flex flex-col">
                                 <div className="flex justify-between items-start mb-2">
                                     <div>
-                                        <h3 className="font-semibold text-slate-900 truncate pr-2" title={theme.name}>{theme.name}</h3>
-                                        <p className="text-xs text-slate-500 line-clamp-2 min-h-[2.5em]">{theme.description || 'No description provided.'}</p>
+                                        <h3 className="font-semibold text-foreground truncate pr-2" title={theme.name}>{theme.name}</h3>
+                                        <p className="text-xs text-muted-foreground line-clamp-2 min-h-[2.5em]">{theme.description || 'No description provided.'}</p>
                                     </div>
 
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
                                             <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                                                <MoreVertical className="w-4 h-4 text-slate-400" />
+                                                <MoreVertical className="w-4 h-4 text-muted-foreground" />
                                             </Button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end">
@@ -331,7 +328,7 @@ const ThemesManager = () => {
                                             {hasPermission('tenant.setting.update') && (
                                                 <DropdownMenuItem
                                                     onClick={() => setThemeToDelete(theme.id)}
-                                                    className="text-red-600 focus:text-red-700 focus:bg-red-50"
+                                                    className="text-destructive focus:text-destructive focus:bg-destructive/10"
                                                     disabled={theme.is_active}
                                                 >
                                                     <Trash2 className="w-4 h-4 mr-2" /> Delete
@@ -356,7 +353,7 @@ const ThemesManager = () => {
                                     {!theme.is_active && hasPermission('tenant.setting.update') && (
                                         <Button
                                             size="sm"
-                                            className="flex-1 bg-slate-900 hover:bg-slate-800"
+                                            className="flex-1"
                                             onClick={() => handleActivate(theme.id)}
                                         >
                                             <Power className="w-3.5 h-3.5 mr-1.5" /> Activate

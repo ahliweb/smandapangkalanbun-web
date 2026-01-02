@@ -23,6 +23,8 @@ const ResourceSelect = ({
     const [loading, setLoading] = useState(false);
     const { toast } = useToast();
 
+    const filterString = JSON.stringify(filter);
+
     useEffect(() => {
         if (!table) return;
 
@@ -61,7 +63,8 @@ const ResourceSelect = ({
         };
 
         fetchItems();
-    }, [table, labelKey, valueKey, JSON.stringify(filter)]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [table, labelKey, valueKey, filterString, toast]);
 
     return (
         <Select

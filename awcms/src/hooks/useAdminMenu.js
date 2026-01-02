@@ -224,7 +224,7 @@ export function useAdminMenu() {
       if (newInserts.length > 0) {
         // Try to insert - if key constraint exists, use upsert; otherwise insert
         try {
-          const { data: insertedData, error: insertError } = await supabase
+          const { error: insertError } = await supabase
             .from('admin_menus')
             .insert(newInserts)
             .select();
@@ -319,7 +319,7 @@ export function useAdminMenu() {
         // Fallback item - find it and insert first, then update
         const item = menuItems.find(i => i.id === id);
         if (item) {
-          const { data, error } = await supabase
+          const { error } = await supabase
             .from('admin_menus')
             .upsert({
               key: item.key || item.id,

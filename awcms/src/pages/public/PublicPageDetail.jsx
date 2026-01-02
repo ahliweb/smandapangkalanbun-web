@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/customSupabaseClient';
 import { motion } from 'framer-motion';
-import { Calendar, ArrowLeft, Clock, Share2, Printer, User, Eye, Tag, ChevronRight, Home, FileText } from 'lucide-react';
+import { Calendar, ArrowLeft, Share2, Printer, User, Eye, Tag, ChevronRight, Home, FileText } from 'lucide-react';
 import SeoHelmet from '@/components/public/SeoHelmet';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';

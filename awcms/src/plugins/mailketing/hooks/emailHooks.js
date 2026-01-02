@@ -119,7 +119,7 @@ export const DEFAULT_TEMPLATES = [
     },
 ];
 
-export default {
+const emailHooks = {
     triggerEmailSent,
     triggerEmailFailed,
     triggerSubscriberAdded,
@@ -128,3 +128,5 @@ export default {
     filterEmailRecipients,
     DEFAULT_TEMPLATES,
 };
+
+export default emailHooks;

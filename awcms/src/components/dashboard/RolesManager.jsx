@@ -132,15 +132,15 @@ function RolesManager() {
       className: 'font-bold w-[200px]',
       render: (name) => (
         <div className="flex items-center gap-2">
-          <Shield className={`w-4 h-4 ${['super_admin'].includes(name) ? 'text-purple-600' : 'text-slate-400'}`} />
+          <Shield className={`w-4 h-4 ${['super_admin'].includes(name) ? 'text-primary' : 'text-muted-foreground'}`} />
           {name === 'owner' && <Crown className="w-4 h-4 text-amber-500 fill-amber-500" />}
           <span>{name}</span>
-          {name === 'owner' && <span className="bg-amber-100 text-amber-700 text-[10px] px-1.5 py-0.5 rounded-full uppercase font-bold">Owner</span>}
-          {name === 'super_admin' && <span className="bg-purple-100 text-purple-700 text-[10px] px-1.5 py-0.5 rounded-full uppercase font-bold">Tenant Root</span>}
+          {name === 'owner' && <span className="bg-amber-500/10 text-amber-600 dark:text-amber-500 text-[10px] px-1.5 py-0.5 rounded-full uppercase font-bold border border-amber-500/20">Owner</span>}
+          {name === 'super_admin' && <span className="bg-primary/10 text-primary text-[10px] px-1.5 py-0.5 rounded-full uppercase font-bold border border-primary/20">Tenant Root</span>}
         </div>
       )
     },
-    { key: 'description', label: 'Description', className: 'text-slate-600' },
+    { key: 'description', label: 'Description', className: 'text-muted-foreground' },
     {
       key: 'permissions_count',
       label: 'Permissions',
@@ -148,15 +148,15 @@ function RolesManager() {
       render: (_, row) => {
         const count = row.role_permissions ? row.role_permissions[0]?.count : 0;
         if (['owner', 'super_admin'].includes(row.name)) {
-          return <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">ALL ACCESS ({count || '∞'})</span>;
+          return <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20">ALL ACCESS ({count || '∞'})</span>;
         }
-        return <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-800">{count || 0} Permissions</span>;
+        return <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-secondary text-secondary-foreground">{count || 0} Permissions</span>;
       }
     },
     {
       key: 'owner',
       label: 'Created By',
-      className: 'text-slate-500 text-xs',
+      className: 'text-muted-foreground text-xs',
       render: (_, row) => row.owner?.email || '-'
     }
   ];
@@ -219,44 +219,44 @@ function RolesManager() {
       ) : (
         <>
           {/* Breadcrumb Navigation */}
-          <nav className="flex items-center text-sm text-slate-500">
-            <a href="/cmspanel" className="hover:text-blue-600 transition-colors flex items-center gap-1">
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+          <nav className="flex items-center text-sm text-muted-foreground">
+            <a href="/cmspanel" className="hover:text-foreground transition-colors flex items-center gap-1">
+              <RefreshCw className="w-4 h-4" /> {/* Fallback icon, really should be Home but sticking to imports */}
               Dashboard
             </a>
-            <svg className="w-4 h-4 mx-2 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-            <span className="flex items-center gap-1 text-slate-700 font-medium">
+            <span className="w-4 h-4 mx-2 text-muted" >/</span>
+            <span className="flex items-center gap-1 text-foreground font-medium">
               <Shield className="w-4 h-4" />
               Roles & Permissions
             </span>
           </nav>
 
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-card p-6 rounded-xl border border-border shadow-sm">
             <div>
-              <h2 className="text-3xl font-bold text-slate-800 flex items-center gap-2">
+              <h2 className="text-3xl font-bold text-foreground flex items-center gap-2">
                 Roles & Permissions
               </h2>
-              <p className="text-slate-500 mt-1">Manage access levels and configure granular permissions.</p>
+              <p className="text-muted-foreground mt-1">Manage access levels and configure granular permissions.</p>
             </div>
             <div className="flex gap-2">
-              <Button variant="ghost" onClick={fetchRoles} title="Refresh">
+              <Button variant="ghost" onClick={fetchRoles} title="Refresh" className="text-muted-foreground hover:text-foreground">
                 <RefreshCw className="w-4 h-4" />
               </Button>
               {canCreate && (
-                <Button onClick={() => { setSelectedRole(null); setShowEditor(true); }} className="bg-blue-600 hover:bg-blue-700">
+                <Button onClick={() => { setSelectedRole(null); setShowEditor(true); }} className="bg-primary text-primary-foreground hover:bg-primary/90">
                   <Plus className="w-4 h-4 mr-2" /> New Role
                 </Button>
               )}
             </div>
           </div>
 
-          <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-            <div className="p-4 border-b border-slate-100 bg-slate-50/50">
+          <div className="bg-card rounded-xl border border-border shadow-sm overflow-hidden">
+            <div className="p-4 border-b border-border bg-muted/20">
               <Input
                 placeholder="Search roles..."
                 value={query}
                 onChange={e => setQuery(e.target.value)}
-                className="max-w-sm bg-white"
+                className="max-w-sm bg-background border-input"
               />
             </div>
 

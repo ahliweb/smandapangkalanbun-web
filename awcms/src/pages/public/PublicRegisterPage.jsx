@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { supabase } from '@/lib/customSupabaseClient';
 import { Input } from '@/components/ui/input';
@@ -19,7 +19,6 @@ const PublicRegisterPage = () => {
     const [isSuccess, setIsSuccess] = useState(false);
     const [turnstileToken, setTurnstileToken] = useState('');
 
-    const navigate = useNavigate();
     const { toast } = useToast();
 
     const handleSubmit = async (e) => {

@@ -1,14 +1,12 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle2, Star, Zap, Shield, Globe } from 'lucide-react';
+import { ArrowRight, Zap, Shield, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import DynamicTemplate from '@/components/public/DynamicTemplate';
 
 // Default Landing Page Component (Fallback)
 const DefaultLandingPage = () => {
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
 
   return (
     <div className="flex flex-col">
@@ -98,8 +96,6 @@ const DefaultLandingPage = () => {
   );
 };
 
-// Main Home Component using DynamicTemplate
-import DynamicTemplate from '@/components/public/DynamicTemplate';
 
 function Home() {
   return (

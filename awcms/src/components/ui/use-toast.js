@@ -61,9 +61,9 @@ function reducer(state, action) {
         toasts: state.toasts.map((t) =>
           t.id === toastId || toastId === undefined
             ? {
-                ...t,
-                open: false,
-              }
+              ...t,
+              open: false,
+            }
             : t
         ),
       }
@@ -79,22 +79,25 @@ function reducer(state, action) {
         ...state,
         toasts: state.toasts.filter((t) => t.id !== action.toastId),
       }
+
+    default:
+      return state
   }
 }
 
 const listeners = []
 
 const toastStore = {
-    getState: () => memoryState,
-    subscribe: (listener) => {
-        listeners.push(listener)
-        return () => {
-            const index = listeners.indexOf(listener)
-            if (index > -1) {
-                listeners.splice(index, 1)
-            }
-        }
+  getState: () => memoryState,
+  subscribe: (listener) => {
+    listeners.push(listener)
+    return () => {
+      const index = listeners.indexOf(listener)
+      if (index > -1) {
+        listeners.splice(index, 1)
+      }
     }
+  }
 }
 
 function addToRemoveQueue(toastId) {

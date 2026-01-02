@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRegions } from '../../hooks/useRegions';
 import { usePermissions } from '@/contexts/PermissionContext';
 import { Button } from '@/components/ui/button';
@@ -15,7 +15,6 @@ import {
     DialogContent,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -27,7 +26,7 @@ import { ShieldAlert, FolderTree, ChevronRight, Edit, Trash2, Plus } from 'lucid
  * Manages administrative regions hierarchy
  */
 const RegionsManager = () => {
-    const { getRegions, createRegion, updateRegion, deleteRegion, loading } = useRegions();
+    const { getRegions, deleteRegion } = useRegions();
     const { hasPermission } = usePermissions();
 
     // State
@@ -42,17 +41,17 @@ const RegionsManager = () => {
     const canUpdate = hasPermission('tenant.region.update');
     const canDelete = hasPermission('tenant.region.delete');
 
+    const loadRegions = useCallback(async () => {
+        const data = await getRegions({ parentId: currentParent?.id || null });
+        setRegions(data || []);
+    }, [currentParent, getRegions]);
+
     // Data Fetching
     useEffect(() => {
         if (canRead) {
             loadRegions();
         }
-    }, [currentParent, canRead]);
-
-    const loadRegions = async () => {
-        const data = await getRegions({ parentId: currentParent?.id || null });
-        setRegions(data || []);
-    };
+    }, [currentParent, canRead, loadRegions]);
 
     // Navigation
     const handleNavigateDown = (region) => {
@@ -71,12 +70,6 @@ const RegionsManager = () => {
         }
     };
 
-    // CRUD Handlers (Placeholder for now as logic was incomplete in original)
-    const handleSave = async (e) => {
-        e.preventDefault();
-        // Implement save logic later
-        setIsModalOpen(false);
-    };
 
     if (!canRead) {
         return (

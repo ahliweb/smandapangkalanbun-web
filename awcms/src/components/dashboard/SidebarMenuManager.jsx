@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Reorder, motion, AnimatePresence } from 'framer-motion';
+import { Reorder, AnimatePresence } from 'framer-motion';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import {
@@ -277,12 +277,12 @@ function SidebarMenuManager() {
 
     if (!canView && !isSuperAdmin) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[400px] bg-white rounded-xl border border-slate-200 p-12 text-center">
-                <div className="p-4 bg-red-50 rounded-full mb-4">
-                    <ShieldAlert className="w-12 h-12 text-red-500" />
+            <div className="flex flex-col items-center justify-center min-h-[400px] bg-card rounded-xl border border-border p-12 text-center">
+                <div className="p-4 bg-destructive/10 rounded-full mb-4">
+                    <ShieldAlert className="w-12 h-12 text-destructive" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-800">Access Restricted</h3>
-                <p className="text-slate-500 mt-2">You do not have permission to view the Sidebar Manager.</p>
+                <h3 className="text-xl font-bold text-foreground">Access Restricted</h3>
+                <p className="text-muted-foreground mt-2">You do not have permission to view the Sidebar Manager.</p>
             </div>
         );
     }
@@ -296,13 +296,13 @@ function SidebarMenuManager() {
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <nav className="flex items-center text-sm text-slate-500 mb-2">
-                        <Link to="/cmspanel" className="hover:text-blue-600 transition-colors">Dashboard</Link>
-                        <ChevronRight className="w-4 h-4 mx-2 text-slate-400" />
-                        <span className="font-medium text-slate-900">Sidebar Manager</span>
+                    <nav className="flex items-center text-sm text-muted-foreground mb-2">
+                        <Link to="/cmspanel" className="hover:text-primary transition-colors">Dashboard</Link>
+                        <ChevronRight className="w-4 h-4 mx-2 text-muted-foreground/50" />
+                        <span className="font-medium text-foreground">Sidebar Manager</span>
                     </nav>
-                    <h1 className="text-2xl font-bold text-slate-900">Sidebar Navigation</h1>
-                    <p className="text-slate-500">Customize the admin sidebar menu order, grouping, and visibility.</p>
+                    <h1 className="text-2xl font-bold text-foreground">Sidebar Navigation</h1>
+                    <p className="text-muted-foreground">Customize the admin sidebar menu order, grouping, and visibility.</p>
                 </div>
 
                 <div className="flex items-center gap-3">
@@ -311,7 +311,7 @@ function SidebarMenuManager() {
                         Refresh
                     </Button>
                     {hasChanges && (
-                        <Button onClick={handleSaveOrder} disabled={isSaving} className="bg-blue-600 hover:bg-blue-700">
+                        <Button onClick={handleSaveOrder} disabled={isSaving}>
                             <Save className="w-4 h-4 mr-2" />
                             {isSaving ? 'Saving...' : 'Save Order'}
                         </Button>
@@ -329,41 +329,41 @@ function SidebarMenuManager() {
                 </div>
 
                 <TabsContent value="items" className="space-y-4">
-                    <div className="bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col min-h-[500px]">
-                        <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                    <div className="bg-card rounded-xl border border-border shadow-sm flex flex-col min-h-[500px]">
+                        <div className="p-4 border-b border-border flex items-center justify-between bg-muted/30">
                             <div className="relative w-full max-w-sm">
-                                <Search className="absolute left-3 top-2.5 w-4 h-4 text-slate-400" />
+                                <Search className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground" />
                                 <Input
                                     placeholder={`Search menu or group... (${minLength} + chars)`}
                                     value={query}
                                     onChange={e => setQuery(e.target.value)}
-                                    className={`pl - 9 pr - 24 bg - white ${!isSearchValid ? 'border-red-300 focus:ring-red-200' : ''} `}
+                                    className={`pl - 9 pr - 24 bg - background ${!isSearchValid ? 'border-destructive focus:ring-destructive/30' : ''} `}
                                 />
                                 <div className="absolute right-3 top-2.5 flex items-center gap-2">
-                                    {(loading || searchLoading) && <Loader2 className="h-4 w-4 animate-spin text-slate-400" />}
+                                    {(loading || searchLoading) && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
                                     {query && (
-                                        <button onClick={clearSearch} className="text-slate-400 hover:text-slate-600">
+                                        <button onClick={clearSearch} className="text-muted-foreground hover:text-foreground">
                                             <X className="h-4 w-4" />
                                         </button>
                                     )}
-                                    <span className={`text - xs font - mono ${query.length > 0 && query.length < minLength ? 'text-red-500 font-bold' : 'text-slate-400'} `}>
+                                    <span className={`text - xs font - mono ${query.length > 0 && query.length < minLength ? 'text-destructive font-bold' : 'text-muted-foreground'} `}>
                                         {query.length}/{minLength}
                                     </span>
                                 </div>
                                 {!isSearchValid && (
-                                    <div className="absolute top-full left-0 mt-1 text-xs text-red-500 font-medium animate-in slide-in-from-top-1 px-1">
+                                    <div className="absolute top-full left-0 mt-1 text-xs text-destructive font-medium animate-in slide-in-from-top-1 px-1">
                                         {searchMessage}
                                     </div>
                                 )}
                             </div>
-                            <div className="text-sm text-slate-500">
+                            <div className="text-sm text-muted-foreground">
                                 {filteredItems.length} items found
                             </div>
                         </div>
 
                         <div className="flex-1 p-6">
                             {loading && items.length === 0 ? (
-                                <div className="flex flex-col items-center justify-center h-64 text-slate-400">
+                                <div className="flex flex-col items-center justify-center h-64 text-muted-foreground">
                                     <RefreshCw className="w-8 h-8 animate-spin mb-2" />
                                     <p>Loading configuration...</p>
                                 </div>
@@ -379,45 +379,45 @@ function SidebarMenuManager() {
                                                     dragListener={canEdit || isSuperAdmin}
                                                     className={`
                                                 flex items - center gap - 4 p - 3 rounded - lg border
-bg - white shadow - sm transition - all
-                                                ${item.is_visible ? 'border-slate-200' : 'border-slate-100 bg-slate-50/50 opacity-75'}
-                                                ${(canEdit || isSuperAdmin) ? 'hover:shadow-md cursor-grab active:cursor-grabbing' : 'cursor-default'}
+bg - card shadow - sm transition - all
+                                                ${item.is_visible ? 'border-border' : 'border-border bg-muted/30 opacity-75'}
+                                                ${(canEdit || isSuperAdmin) ? 'hover:shadow-md cursor-grab active:cursor-grabbing hover:border-primary/50' : 'cursor-default'}
 `}
                                                 >
                                                     {(canEdit || isSuperAdmin) ? (
-                                                        <div className="text-slate-400 hover:text-slate-600 p-1">
+                                                        <div className="text-muted-foreground hover:text-foreground p-1">
                                                             <GripVertical className="w-5 h-5" />
                                                         </div>
                                                     ) : (
                                                         <div className="w-5 h-5" />
                                                     )}
 
-                                                    <div className={`p - 2 rounded - md ${item.is_visible ? 'bg-blue-50 text-blue-600' : 'bg-slate-100 text-slate-400'} `}>
+                                                    <div className={`p - 2 rounded - md ${item.is_visible ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'} `}>
                                                         <Icon className="w-5 h-5" />
                                                     </div>
 
                                                     <div className="flex-1 min-w-0">
                                                         <div className="flex items-center gap-2 mb-1">
-                                                            <span className={`font - medium ${item.is_visible ? 'text-slate-900' : 'text-slate-500 line-through'} truncate`}>
+                                                            <span className={`font - medium ${item.is_visible ? 'text-foreground' : 'text-muted-foreground line-through'} truncate`}>
                                                                 {item.label}
                                                             </span>
-                                                            <Badge variant="outline" className="text-[10px] font-mono text-slate-400">
+                                                            <Badge variant="outline" className="text-[10px] font-mono text-muted-foreground">
                                                                 {item.key}
                                                             </Badge>
                                                         </div>
                                                         <div className="flex items-center gap-2 text-xs">
-                                                            <div className="flex items-center gap-1 text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">
+                                                            <div className="flex items-center gap-1 text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
                                                                 <FolderOpen className="w-3 h-3" />
                                                                 <span className="truncate max-w-[100px]">{item.group_label || 'General'}</span>
                                                             </div>
                                                             {item.permission && (
-                                                                <span className="flex items-center text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-100">
+                                                                <span className="flex items-center text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-100 dark:bg-amber-900/10 dark:text-amber-500 dark:border-amber-900/20">
                                                                     <Settings2 className="w-3 h-3 mr-1" />
                                                                     {item.permission}
                                                                 </span>
                                                             )}
                                                             {item.source === 'extension' && (
-                                                                <span className="flex items-center text-purple-600 bg-purple-50 px-1.5 py-0.5 rounded border border-purple-100">
+                                                                <span className="flex items-center text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-100 dark:bg-indigo-900/10 dark:text-indigo-400 dark:border-indigo-900/20">
                                                                     <Puzzle className="w-3 h-3 mr-1" />
                                                                     Ext
                                                                 </span>
@@ -432,14 +432,14 @@ bg - white shadow - sm transition - all
                                                                 size="sm"
                                                                 onClick={() => handleEdit(item)}
                                                                 disabled={item.source === 'extension'}
-                                                                className={`text - slate - 400 ${item.source === 'extension' ? 'opacity-50 cursor-not-allowed' : 'hover:text-blue-600'} `}
+                                                                className={`text - muted - foreground ${item.source === 'extension' ? 'opacity-50 cursor-not-allowed' : 'hover:text-primary'} `}
                                                                 title={item.source === 'extension' ? "Managed by Extension" : "Edit Item"}
                                                             >
                                                                 <Edit2 className="w-4 h-4" />
                                                             </Button>
                                                         )}
 
-                                                        <div className="flex items-center gap-2 border-l border-slate-200 pl-2">
+                                                        <div className="flex items-center gap-2 border-l border-border pl-2">
                                                             <Label htmlFor={`visible - ${item.id} `} className="sr-only">Visibility</Label>
                                                             <Switch
                                                                 id={`visible - ${item.id} `}
@@ -448,9 +448,9 @@ bg - white shadow - sm transition - all
                                                                 onCheckedChange={(checked) => handleToggleVisibility({ stopPropagation: () => { } }, item)}
                                                             />
                                                             {item.is_visible ? (
-                                                                <Eye className="w-4 h-4 text-slate-400" />
+                                                                <Eye className="w-4 h-4 text-muted-foreground" />
                                                             ) : (
-                                                                <EyeOff className="w-4 h-4 text-slate-300" />
+                                                                <EyeOff className="w-4 h-4 text-muted-foreground/50" />
                                                             )}
                                                         </div>
                                                     </div>
@@ -465,15 +465,15 @@ bg - white shadow - sm transition - all
                 </TabsContent>
 
                 <TabsContent value="groups" className="space-y-4">
-                    <div className="bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col min-h-[500px]">
-                        <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                    <div className="bg-card rounded-xl border border-border shadow-sm flex flex-col min-h-[500px]">
+                        <div className="p-4 border-b border-border flex items-center justify-between bg-muted/30">
                             <div>
-                                <h3 className="text-sm font-medium text-slate-900">Manage Groups</h3>
-                                <p className="text-xs text-slate-500">Drag to reorder groups. This updates the order for all items within.</p>
+                                <h3 className="text-sm font-medium text-foreground">Manage Groups</h3>
+                                <p className="text-xs text-muted-foreground">Drag to reorder groups. This updates the order for all items within.</p>
                             </div>
                             {/* Show Save Button specific to Groups tab if changes exist */}
                             {hasChanges && activeTab === 'groups' && (
-                                <Button onClick={handleSaveGroupOrder} disabled={isSaving} size="sm" className="bg-blue-600 hover:bg-blue-700">
+                                <Button onClick={handleSaveGroupOrder} disabled={isSaving} size="sm">
                                     <Save className="w-4 h-4 mr-2" />
                                     {isSaving ? 'Saving...' : 'Save Group Order'}
                                 </Button>
@@ -486,7 +486,7 @@ bg - white shadow - sm transition - all
                                     }}
                                     size="sm"
                                     variant="outline"
-                                    className="border-green-300 text-green-700 hover:bg-green-50"
+                                    className="border-green-600/30 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/10"
                                 >
                                     <Plus className="w-4 h-4 mr-2" />
                                     Add Group
@@ -501,28 +501,28 @@ bg - white shadow - sm transition - all
                                             key={group.id}
                                             value={group}
                                             drag={!group.isExtension && (canEdit || isSuperAdmin) ? "y" : false}
-                                            className={`flex items-center gap-3 p-3 bg-white border rounded-lg shadow-sm ${group.isExtension ? 'bg-slate-50 border-purple-100' : ''} ${(!group.isExtension && (canEdit || isSuperAdmin)) ? 'cursor-grab active:cursor-grabbing hover:border-blue-300' : ''
+                                            className={`flex items-center gap-3 p-3 bg-card border rounded-lg shadow-sm ${group.isExtension ? 'bg-muted/30 border-dashed border-indigo-200 dark:border-indigo-900/30' : 'border-border'} ${(!group.isExtension && (canEdit || isSuperAdmin)) ? 'cursor-grab active:cursor-grabbing hover:border-primary/50' : ''
                                                 }`}
                                         >
                                             {(!group.isExtension && (canEdit || isSuperAdmin)) ? (
-                                                <div className="text-slate-400 hover:text-slate-600 p-1">
+                                                <div className="text-muted-foreground hover:text-foreground p-1">
                                                     <GripVertical className="w-5 h-5" />
                                                 </div>
                                             ) : (
                                                 <div className="p-1 w-7 flex justify-center">
-                                                    {group.isExtension && <Puzzle className="w-4 h-4 text-purple-400" />}
+                                                    {group.isExtension && <Puzzle className="w-4 h-4 text-indigo-400" />}
                                                 </div>
                                             )}
 
-                                            <div className={`p-2 rounded-md ${group.isExtension ? 'bg-purple-100/50 text-purple-600' : 'bg-slate-100 text-slate-500'}`}>
+                                            <div className={`p-2 rounded-md ${group.isExtension ? 'bg-indigo-100/50 text-indigo-600 dark:bg-indigo-900/20 dark:text-indigo-400' : 'bg-muted text-muted-foreground'}`}>
                                                 <FolderOpen className="w-5 h-5" />
                                             </div>
                                             <div className="flex-1">
                                                 <div className="flex items-center gap-2">
-                                                    <h4 className={`font-medium ${group.isExtension ? 'text-purple-900' : 'text-slate-900'}`}>{group.label}</h4>
-                                                    {group.isExtension && <span className="text-[10px] bg-purple-100 text-purple-700 px-1.5 rounded-full border border-purple-200">Module</span>}
+                                                    <h4 className={`font-medium ${group.isExtension ? 'text-indigo-700 dark:text-indigo-300' : 'text-foreground'}`}>{group.label}</h4>
+                                                    {group.isExtension && <span className="text-[10px] bg-indigo-100 text-indigo-700 px-1.5 rounded-full border border-indigo-200 dark:bg-indigo-900/20 dark:text-indigo-300 dark:border-indigo-800">Module</span>}
                                                 </div>
-                                                <p className="text-xs text-slate-500">Order: {group.order}</p>
+                                                <p className="text-xs text-muted-foreground">Order: {group.order}</p>
                                             </div>
                                             {(canEdit || isSuperAdmin) && (
                                                 <Button
@@ -530,7 +530,7 @@ bg - white shadow - sm transition - all
                                                     size="sm"
                                                     disabled={group.isExtension}
                                                     onClick={() => handleEditGroup(group)}
-                                                    className="text-slate-400 hover:text-blue-600 disabled:opacity-30 disabled:hover:text-slate-400"
+                                                    className="text-muted-foreground hover:text-primary disabled:opacity-30 disabled:hover:text-muted-foreground"
                                                     title={group.isExtension ? "Managed by Extension" : "Edit Group"}
                                                 >
                                                     <Edit2 className="w-4 h-4" />
@@ -597,7 +597,7 @@ bg - white shadow - sm transition - all
 
                         <div className="space-y-2">
                             <Label>Key (Read Only)</Label>
-                            <Input value={editingItem?.key || ''} disabled className="bg-slate-50" />
+                            <Input value={editingItem?.key || ''} disabled className="bg-muted" />
                         </div>
                     </div>
                     <DialogFooter>
@@ -670,7 +670,7 @@ bg - white shadow - sm transition - all
                                 placeholder="10"
                                 min="1"
                             />
-                            <p className="text-[10px] text-slate-500">Lower numbers appear higher in the sidebar.</p>
+                            <p className="text-[10px] text-muted-foreground">Lower numbers appear higher in the sidebar.</p>
                         </div>
                     </div>
                     <DialogFooter>

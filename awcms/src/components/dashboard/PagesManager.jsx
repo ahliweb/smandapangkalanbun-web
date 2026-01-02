@@ -26,13 +26,13 @@ function PagesManager({ onlyVisual = false }) {
       label: 'Type',
       render: (value) => {
         const colors = {
-          homepage: 'bg-blue-100 text-blue-700',
-          header: 'bg-emerald-100 text-emerald-700',
-          footer: 'bg-emerald-100 text-emerald-700',
-          single_page: 'bg-purple-100 text-purple-700',
-          single_post: 'bg-pink-100 text-pink-700',
-          '404': 'bg-red-100 text-red-700',
-          regular: 'bg-slate-100 text-slate-600'
+          homepage: 'bg-primary/10 text-primary border-primary/20',
+          header: 'bg-muted text-muted-foreground border-border',
+          footer: 'bg-muted text-muted-foreground border-border',
+          single_page: 'bg-secondary text-secondary-foreground',
+          single_post: 'bg-secondary text-secondary-foreground',
+          '404': 'bg-destructive/10 text-destructive border-destructive/20',
+          regular: 'bg-card text-card-foreground border-border border'
         };
         const labels = {
           homepage: 'Home',
@@ -44,7 +44,7 @@ function PagesManager({ onlyVisual = false }) {
           regular: 'Page'
         };
         return (
-          <span className={`px-2 py-1 text-xs rounded-full font-medium ${colors[value] || colors.regular}`}>
+          <span className={`px-2 py-0.5 text-xs rounded-full font-medium border ${colors[value] || colors.regular}`}>
             {labels[value] || value || 'Page'}
           </span>
         );
@@ -54,9 +54,9 @@ function PagesManager({ onlyVisual = false }) {
       key: 'editor_type',
       label: 'Editor',
       render: (value) => (
-        <span className={`px-2 py-1 text-xs rounded-full ${value === 'visual'
-          ? 'bg-purple-100 text-purple-700'
-          : 'bg-slate-100 text-slate-600'
+        <span className={`px-2 py-0.5 text-xs rounded-full border ${value === 'visual'
+          ? 'bg-accent/10 text-accent-foreground border-accent/20'
+          : 'bg-muted text-muted-foreground border-border'
           }`}>
           {value === 'visual' ? '🎨 Visual' : '📝 Rich Text'}
         </span>
@@ -127,10 +127,11 @@ function PagesManager({ onlyVisual = false }) {
             e.stopPropagation();
             setVisualBuilderPage(page);
           }}
-          className="h-8 px-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700 shadow-sm transition-all hover:shadow-md"
+          variant="outline"
+          className="h-7 px-2 text-xs border-accent text-accent-foreground hover:bg-accent/10"
           title="Edit with Visual Builder"
         >
-          <Paintbrush className="w-3.5 h-3.5 mr-1.5" />
+          <Paintbrush className="w-3 h-3 mr-1.5" />
           Edit Visual
         </Button>
       );
@@ -173,20 +174,20 @@ function PagesManager({ onlyVisual = false }) {
   return (
     <div className="space-y-6">
       {/* Breadcrumb Navigation */}
-      <nav className="flex items-center text-sm text-slate-500">
-        <Link to="/cmspanel" className="hover:text-blue-600 transition-colors flex items-center gap-1">
+      <nav className="flex items-center text-sm text-muted-foreground">
+        <Link to="/cmspanel" className="hover:text-foreground transition-colors flex items-center gap-1">
           <Home className="w-4 h-4" />
           Dashboard
         </Link>
-        <ChevronRight className="w-4 h-4 mx-2 text-slate-300" />
-        <span className="flex items-center gap-1 text-slate-700 font-medium">
+        <ChevronRight className="w-4 h-4 mx-2 text-muted" />
+        <span className="flex items-center gap-1 text-foreground font-medium">
           <Layers className="w-4 h-4" />
           Pages
         </span>
         {activeTab !== 'pages' && (
           <>
-            <ChevronRight className="w-4 h-4 mx-2 text-slate-300" />
-            <span className="text-blue-600 font-medium capitalize">{tabLabels[activeTab]}</span>
+            <ChevronRight className="w-4 h-4 mx-2 text-muted" />
+            <span className="text-primary font-medium capitalize">{tabLabels[activeTab]}</span>
           </>
         )}
       </nav>
@@ -194,18 +195,18 @@ function PagesManager({ onlyVisual = false }) {
       {/* Enhanced Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         {!onlyVisual && (
-          <div className="bg-white rounded-xl border border-slate-200 p-1.5 shadow-sm mb-6 inline-flex">
+          <div className="bg-muted p-1 rounded-xl mb-6 inline-flex">
             <TabsList className="grid grid-cols-2 gap-1 bg-transparent p-0">
               <TabsTrigger
                 value="pages"
-                className="flex items-center gap-2 px-6 py-2.5 rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-blue-700 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200 font-medium"
+                className="flex items-center gap-2 px-6 py-2.5 rounded-lg data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm transition-all duration-200 font-medium text-muted-foreground"
               >
                 <FileText className="w-4 h-4" />
                 Pages
               </TabsTrigger>
               <TabsTrigger
                 value="categories"
-                className="flex items-center gap-2 px-6 py-2.5 rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-purple-700 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200 font-medium"
+                className="flex items-center gap-2 px-6 py-2.5 rounded-lg data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm transition-all duration-200 font-medium text-muted-foreground"
               >
                 <FolderOpen className="w-4 h-4" />
                 Categories

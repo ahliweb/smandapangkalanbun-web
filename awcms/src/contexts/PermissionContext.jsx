@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { udm } from '@/lib/data/UnifiedDataManager';
-import { supabase } from '@/lib/customSupabaseClient'; // Keep for edge cases/initial load if needed, but aim for UDM
 
 const PermissionContext = createContext(undefined);
 

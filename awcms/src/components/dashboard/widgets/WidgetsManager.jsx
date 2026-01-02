@@ -1,14 +1,6 @@
 import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Layers, Plus, Settings, Trash2, GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
 import {
     Dialog,
     DialogContent,
@@ -20,7 +12,6 @@ import { getWidgets as getRegistryWidgets } from '@/lib/widgetRegistry';
 import WidgetEditor from './WidgetEditor';
 
 const WidgetsManager = () => {
-    const { t } = useTranslation();
     const { templateParts } = useTemplates();
 
     // Filter only widget areas
@@ -57,8 +48,8 @@ const WidgetsManager = () => {
                                     key={area.id}
                                     onClick={() => setSelectedAreaId(area.id)}
                                     className={`w-full text-left px-4 py-2 rounded-md text-sm font-medium transition-colors ${selectedAreaId === area.id
-                                            ? 'bg-indigo-50 text-indigo-700'
-                                            : 'text-slate-600 hover:bg-slate-50'
+                                        ? 'bg-indigo-50 text-indigo-700'
+                                        : 'text-slate-600 hover:bg-slate-50'
                                         }`}
                                 >
                                     {area.name}

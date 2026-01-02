@@ -58,7 +58,7 @@ export const logExtensionAction = async ({ extensionId, extensionSlug, action, d
  * Hook for extension audit operations
  */
 export function useExtensionAudit() {
-    const { tenantId, hasPermission } = usePermissions();
+    const { hasPermission } = usePermissions();
 
     /**
      * Fetch extension logs with filtering

@@ -22,8 +22,7 @@ const RoleEditor = ({ role, onClose, onSave }) => {
   const { toast } = useToast();
   const { hasPermission, isSuperAdmin } = usePermissions();
 
-  // Permission check - only super admin or role.update can edit roles
-  const canEditRoles = isSuperAdmin || hasPermission('tenant.role.update') || hasPermission('platform.role.update');
+
 
   // Form State
   const [formData, setFormData] = useState({
@@ -104,9 +103,6 @@ const RoleEditor = ({ role, onClose, onSave }) => {
 
   const applyTemplate = (templateName) => {
     if (isFullAccessRole) return;
-
-    const templatePermNames = PREDEFINED_TEMPLATES[templateName] || [];
-    const newSet = new Set();
 
     // Filter permissions based on the template
     const targetIds = permissions

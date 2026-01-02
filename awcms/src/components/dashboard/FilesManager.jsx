@@ -52,13 +52,13 @@ function FilesManager() {
       <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0 flex-shrink-0">
         <div className="flex flex-col space-y-1">
           <nav className="flex items-center text-sm mb-3">
-            <Link to="/cmspanel" className="flex items-center gap-1.5 text-slate-500 hover:text-blue-600 transition-colors font-medium">
+            <Link to="/cmspanel" className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors font-medium">
               <FolderClosed className="w-4 h-4" />
               Dashboard
             </Link>
-            <ChevronRight className="w-4 h-4 mx-2 text-slate-300" />
+            <ChevronRight className="w-4 h-4 mx-2 text-muted" />
             <span
-              className={`flex items-center gap-1.5 font-semibold ${showTrash ? 'text-slate-500 hover:text-blue-600 cursor-pointer transition-colors' : 'text-blue-600'}`}
+              className={`flex items-center gap-1.5 font-semibold ${showTrash ? 'text-muted-foreground hover:text-foreground cursor-pointer transition-colors' : 'text-primary'}`}
               onClick={() => setShowTrash(false)}
             >
               <UploadCloud className="w-4 h-4" />
@@ -66,8 +66,8 @@ function FilesManager() {
             </span>
             {showTrash && (
               <>
-                <ChevronRight className="w-4 h-4 mx-2 text-slate-300" />
-                <span className="flex items-center gap-1.5 font-semibold text-red-600">
+                <ChevronRight className="w-4 h-4 mx-2 text-muted" />
+                <span className="flex items-center gap-1.5 font-semibold text-destructive">
                   <Trash2 className="w-4 h-4" />
                   Trash
                 </span>
@@ -75,10 +75,10 @@ function FilesManager() {
             )}
           </nav>
 
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
             {showTrash ? 'Trash Bin' : 'Media Library'}
           </h1>
-          <p className="text-slate-500">
+          <p className="text-muted-foreground">
             {showTrash
               ? 'Manage deleted files. You can restore them or delete them permanently.'
               : 'Manage and organize all your digital assets, images, and documents.'}
@@ -91,7 +91,6 @@ function FilesManager() {
               variant="outline"
               onClick={handleSync}
               disabled={syncing}
-              className="bg-white text-slate-700 hover:bg-slate-50 border-slate-200"
               title="Sync files from Storage Bucket if missing in DB"
             >
               <RefreshCw className={`w-4 h-4 mr-2 ${syncing ? 'animate-spin' : ''}`} />
@@ -100,9 +99,9 @@ function FilesManager() {
           )}
 
           <Button
-            variant="outline"
+            variant={showTrash ? "outline" : "outline"}
             onClick={() => setShowTrash(!showTrash)}
-            className={`transition-colors border-slate-200 ${showTrash ? 'bg-slate-100 text-slate-900' : 'bg-white text-slate-700 hover:bg-slate-50'}`}
+            className={`transition-colors border-border ${showTrash ? 'bg-muted text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
           >
             {showTrash ? (
               <>
@@ -111,7 +110,7 @@ function FilesManager() {
               </>
             ) : (
               <>
-                <Trash2 className="w-4 h-4 mr-2 text-red-500" />
+                <Trash2 className="w-4 h-4 mr-2 text-destructive" />
                 Trash Bin
               </>
             )}
@@ -120,7 +119,7 @@ function FilesManager() {
           {!showTrash && (
             <Dialog open={isUploadOpen} onOpenChange={setIsUploadOpen}>
               <DialogTrigger asChild>
-                <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm border-0">
+                <Button className="shadow-sm">
                   <UploadCloud className="w-4 h-4 mr-2" />
                   Upload Files
                 </Button>
@@ -149,7 +148,7 @@ function FilesManager() {
       )}
 
       {/* Main Content Area */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-card rounded-xl border border-border shadow-sm overflow-hidden">
         <MediaLibrary
           refreshTrigger={refreshTrigger}
           isTrashView={showTrash}

@@ -3,13 +3,6 @@
  * Pre-designed page layouts for quick page creation
  */
 
-const createId = (prefix) => `${prefix}-${Math.random().toString(36).substr(2, 9)}`;
-
-// Helper to create basic block structure
-const block = (type, props, id) => ({
-    type,
-    props: { id, ...props }
-});
 
 // Blank template
 export const blankTemplate = {

@@ -71,15 +71,15 @@ function AuditLogsManager() {
 
     const getActionBadge = (action) => {
         const colors = {
-            create: 'bg-green-100 text-green-800 border-green-200',
-            update: 'bg-blue-100 text-blue-800 border-blue-200',
-            delete: 'bg-red-100 text-red-800 border-red-200',
-            publish: 'bg-purple-100 text-purple-800 border-purple-200',
-            login: 'bg-cyan-100 text-cyan-800 border-cyan-200'
+            create: 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-300',
+            update: 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300',
+            delete: 'bg-destructive/10 text-destructive border-destructive/20',
+            publish: 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900/30 dark:text-purple-300',
+            login: 'bg-cyan-100 text-cyan-800 border-cyan-200 dark:bg-cyan-900/30 dark:text-cyan-300'
         };
 
         const type = action?.split('.')[1] || action;
-        const colorClass = colors[type] || 'bg-slate-100 text-slate-800 border-slate-200';
+        const colorClass = colors[type] || 'bg-muted text-muted-foreground border-border';
 
         return (
             <Badge variant="outline" className={`${colorClass} font-mono text-[10px] uppercase`}>
@@ -91,7 +91,7 @@ function AuditLogsManager() {
     if (!canView) {
         return (
             <div className="p-8 text-center">
-                <p className="text-slate-500">You don't have permission to view audit logs.</p>
+                <p className="text-muted-foreground">You don't have permission to view audit logs.</p>
             </div>
         );
     }
@@ -104,8 +104,8 @@ function AuditLogsManager() {
 
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-slate-900">Audit Trail</h1>
-                    <p className="text-slate-500">Enterprise-grade activity logging and compliance trail.</p>
+                    <h1 className="text-2xl font-bold tracking-tight text-foreground">Audit Trail</h1>
+                    <p className="text-muted-foreground">Enterprise-grade activity logging and compliance trail.</p>
                 </div>
                 <Button variant="outline" onClick={fetchLogs} disabled={loading}>
                     <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
@@ -113,19 +113,19 @@ function AuditLogsManager() {
                 </Button>
             </div>
 
-            <div className="bg-white rounded-lg border shadow-sm p-4 flex items-center gap-4">
+            <div className="bg-card rounded-lg border border-border shadow-sm p-4 flex items-center gap-4">
                 <div className="relative flex-1 max-w-md">
-                    <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+                    <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                     <Input
                         placeholder="Search action or resource..."
-                        className="pl-9"
+                        className="pl-9 bg-background border-input"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
                 </div>
             </div>
 
-            <Card>
+            <Card className="border-border">
                 <CardHeader>
                     <CardTitle>Activity History</CardTitle>
                     <CardDescription>
@@ -135,46 +135,46 @@ function AuditLogsManager() {
                 <CardContent>
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm">
-                            <thead className="bg-slate-50 border-b">
+                            <thead className="bg-muted/50 border-b border-border">
                                 <tr>
-                                    <th className="px-4 py-3 text-left font-medium text-slate-600">Timestamp</th>
-                                    <th className="px-4 py-3 text-left font-medium text-slate-600">User</th>
-                                    <th className="px-4 py-3 text-left font-medium text-slate-600">Action</th>
-                                    <th className="px-4 py-3 text-left font-medium text-slate-600">Resource</th>
-                                    <th className="px-4 py-3 text-left font-medium text-slate-600">Changes</th>
-                                    <th className="px-4 py-3 text-center font-medium text-slate-600">Channel</th>
+                                    <th className="px-4 py-3 text-left font-medium text-muted-foreground">Timestamp</th>
+                                    <th className="px-4 py-3 text-left font-medium text-muted-foreground">User</th>
+                                    <th className="px-4 py-3 text-left font-medium text-muted-foreground">Action</th>
+                                    <th className="px-4 py-3 text-left font-medium text-muted-foreground">Resource</th>
+                                    <th className="px-4 py-3 text-left font-medium text-muted-foreground">Changes</th>
+                                    <th className="px-4 py-3 text-center font-medium text-muted-foreground">Channel</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y">
+                            <tbody className="divide-y divide-border">
                                 {loading ? (
                                     <tr>
-                                        <td colSpan="6" className="p-8 text-center text-slate-400">
+                                        <td colSpan="6" className="p-8 text-center text-muted-foreground">
                                             Loading audit trail...
                                         </td>
                                     </tr>
                                 ) : logs.length === 0 ? (
                                     <tr>
-                                        <td colSpan="6" className="p-8 text-center text-slate-400">
+                                        <td colSpan="6" className="p-8 text-center text-muted-foreground">
                                             No logs found.
                                         </td>
                                     </tr>
                                 ) : (
                                     logs.map((log) => (
-                                        <tr key={log.id} className="hover:bg-slate-50/50 transition-colors">
-                                            <td className="px-4 py-3 text-slate-600 whitespace-nowrap">
+                                        <tr key={log.id} className="hover:bg-muted/50 transition-colors">
+                                            <td className="px-4 py-3 text-muted-foreground whitespace-nowrap">
                                                 {format(new Date(log.created_at), 'MMM dd, yyyy HH:mm:ss')}
                                             </td>
                                             <td className="px-4 py-3">
-                                                <div className="font-medium text-slate-900">
+                                                <div className="font-medium text-foreground">
                                                     {log.user?.full_name || 'Unknown'}
                                                 </div>
-                                                <div className="text-xs text-slate-500">{log.user?.email}</div>
+                                                <div className="text-xs text-muted-foreground">{log.user?.email}</div>
                                             </td>
                                             <td className="px-4 py-3">{getActionBadge(log.action)}</td>
-                                            <td className="px-4 py-3 text-slate-600">
-                                                <div className="font-medium">{log.resource}</div>
+                                            <td className="px-4 py-3 text-muted-foreground">
+                                                <div className="font-medium text-foreground">{log.resource}</div>
                                                 {log.resource_id && (
-                                                    <div className="text-xs text-slate-400">#{log.resource_id}</div>
+                                                    <div className="text-xs text-muted-foreground">#{log.resource_id}</div>
                                                 )}
                                             </td>
                                             <td className="px-4 py-3">
@@ -183,17 +183,17 @@ function AuditLogsManager() {
                                                         variant="ghost"
                                                         size="sm"
                                                         onClick={() => setSelectedLog(log)}
-                                                        className="h-7 px-2 text-xs text-blue-600 hover:text-blue-800"
+                                                        className="h-7 px-2 text-xs text-primary hover:text-primary/80"
                                                     >
                                                         <Eye className="w-3 h-3 mr-1" /> View Diff
                                                     </Button>
                                                 ) : (
-                                                    <span className="text-slate-400 text-xs italic">No modifications</span>
+                                                    <span className="text-muted-foreground text-xs italic">No modifications</span>
                                                 )}
                                             </td>
                                             <td className="px-4 py-3">
                                                 <div
-                                                    className="flex items-center justify-center gap-1 text-slate-500 text-xs uppercase font-semibold"
+                                                    className="flex items-center justify-center gap-1 text-muted-foreground text-xs uppercase font-semibold"
                                                     title={log.user_agent}
                                                 >
                                                     {getChannelIcon(log.channel)}
@@ -209,8 +209,8 @@ function AuditLogsManager() {
 
                     {/* Pagination */}
                     {totalCount > 0 && (
-                        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-4 pt-4 border-t">
-                            <div className="text-sm text-slate-600">
+                        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-4 pt-4 border-t border-border">
+                            <div className="text-sm text-muted-foreground">
                                 Showing {(page - 1) * limit + 1} to {Math.min(page * limit, totalCount)} of {totalCount} logs
                             </div>
                             <div className="flex items-center gap-4">
@@ -220,7 +220,7 @@ function AuditLogsManager() {
                                         setLimit(Number(e.target.value));
                                         setPage(1);
                                     }}
-                                    className="border rounded px-3 py-1.5 text-sm"
+                                    className="border border-input rounded px-3 py-1.5 text-sm bg-background text-foreground"
                                 >
                                     <option value={25}>25 per page</option>
                                     <option value={50}>50 per page</option>
@@ -259,38 +259,38 @@ function AuditLogsManager() {
                     <div className="overflow-y-auto space-y-4 p-1">
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <h4 className="text-xs font-bold text-red-600 uppercase tracking-wider">
+                                <h4 className="text-xs font-bold text-destructive uppercase tracking-wider">
                                     Old Value
                                 </h4>
-                                <pre className="bg-red-50 border border-red-200 p-3 rounded text-xs overflow-x-auto text-red-900 min-h-[150px]">
+                                <pre className="bg-destructive/10 border border-destructive/20 p-3 rounded text-xs overflow-x-auto text-destructive min-h-[150px]">
                                     {selectedLog?.old_value
                                         ? JSON.stringify(JSON.parse(selectedLog.old_value), null, 2)
                                         : 'null'}
                                 </pre>
                             </div>
                             <div className="space-y-2">
-                                <h4 className="text-xs font-bold text-green-600 uppercase tracking-wider">
+                                <h4 className="text-xs font-bold text-green-600 dark:text-green-400 uppercase tracking-wider">
                                     New Value
                                 </h4>
-                                <pre className="bg-green-50 border border-green-200 p-3 rounded text-xs overflow-x-auto text-green-900 min-h-[150px]">
+                                <pre className="bg-green-100 dark:bg-green-900/30 border border-green-200 dark:border-green-800 p-3 rounded text-xs overflow-x-auto text-green-800 dark:text-green-300 min-h-[150px]">
                                     {selectedLog?.new_value
                                         ? JSON.stringify(JSON.parse(selectedLog.new_value), null, 2)
                                         : 'null'}
                                 </pre>
                             </div>
                         </div>
-                        <div className="pt-4 border-t space-y-2 text-sm">
+                        <div className="pt-4 border-t border-border space-y-2 text-sm">
                             <div className="flex justify-between">
-                                <span className="text-slate-500">Action:</span>
-                                <span className="font-medium">{selectedLog?.action}</span>
+                                <span className="text-muted-foreground">Action:</span>
+                                <span className="font-medium text-foreground">{selectedLog?.action}</span>
                             </div>
                             <div className="flex justify-between">
-                                <span className="text-slate-500">Resource:</span>
-                                <span className="font-medium">{selectedLog?.resource}</span>
+                                <span className="text-muted-foreground">Resource:</span>
+                                <span className="font-medium text-foreground">{selectedLog?.resource}</span>
                             </div>
                             <div className="flex justify-between">
-                                <span className="text-slate-500">IP Address:</span>
-                                <span className="font-mono text-xs">{selectedLog?.ip_address || 'N/A'}</span>
+                                <span className="text-muted-foreground">IP Address:</span>
+                                <span className="font-mono text-xs text-foreground">{selectedLog?.ip_address || 'N/A'}</span>
                             </div>
                         </div>
                     </div>

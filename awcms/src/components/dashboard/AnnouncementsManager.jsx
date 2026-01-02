@@ -11,10 +11,10 @@ function AnnouncementsManager() {
             key: 'status',
             label: 'Status',
             render: (value) => (
-                <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${value === 'published' ? 'bg-green-100 text-green-700' :
-                    value === 'draft' ? 'bg-amber-100 text-amber-700' :
-                        value === 'expired' ? 'bg-slate-100 text-slate-600' :
-                            'bg-slate-100 text-slate-600'
+                <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${value === 'published' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
+                    value === 'draft' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' :
+                        value === 'expired' ? 'bg-muted text-muted-foreground' :
+                            'bg-muted text-muted-foreground'
                     }`}>
                     {value || 'draft'}
                 </span>
@@ -24,9 +24,9 @@ function AnnouncementsManager() {
             key: 'priority',
             label: 'Priority',
             render: (value) => (
-                <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${value === 'urgent' ? 'bg-red-100 text-red-700' :
-                    value === 'high' ? 'bg-orange-100 text-orange-700' :
-                        'bg-blue-100 text-blue-700'
+                <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${value === 'urgent' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' :
+                    value === 'high' ? 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400' :
+                        'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
                     }`}>
                     {value || 'normal'}
                 </span>
@@ -65,13 +65,13 @@ function AnnouncementsManager() {
     return (
         <div className="space-y-6">
             {/* Breadcrumb Navigation */}
-            <nav className="flex items-center text-sm text-slate-500">
-                <Link to="/cmspanel" className="hover:text-blue-600 transition-colors flex items-center gap-1">
+            <nav className="flex items-center text-sm text-muted-foreground">
+                <Link to="/cmspanel" className="hover:text-primary transition-colors flex items-center gap-1">
                     <Home className="w-4 h-4" />
                     Dashboard
                 </Link>
-                <ChevronRight className="w-4 h-4 mx-2 text-slate-300" />
-                <span className="flex items-center gap-1 text-slate-700 font-medium">
+                <ChevronRight className="w-4 h-4 mx-2 text-muted-foreground/50" />
+                <span className="flex items-center gap-1 text-foreground font-medium">
                     <Megaphone className="w-4 h-4" />
                     Announcements
                 </span>

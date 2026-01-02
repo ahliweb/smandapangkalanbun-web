@@ -23,7 +23,7 @@ export function useNotifications() {
 
       // For now, let's stick to the current logic but optimize query
       // Count total notifications for user
-      const { count: totalRelevant, error: countError } = await supabase
+      const { error: countError } = await supabase
         .from('notifications')
         .select('id', { count: 'exact', head: true })
         .or(`user_id.eq.${user.id},user_id.is.null`)
@@ -32,7 +32,7 @@ export function useNotifications() {
       if (countError) throw countError;
 
       // Count read notifications
-      const { count: totalRead, error: readError } = await supabase
+      const { error: readError } = await supabase
         .from('notification_readers')
         .select('notification_id', { count: 'exact', head: true })
         .eq('user_id', user.id);
@@ -292,6 +292,7 @@ export function useNotifications() {
     markAllAsRead,
     deleteNotification,
     sendNotification,
-    fetchNotifications
+    fetchNotifications,
+    fetchUnreadCount
   };
 }

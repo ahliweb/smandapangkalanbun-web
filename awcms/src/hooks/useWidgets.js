@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/customSupabaseClient';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -7,7 +7,7 @@ export const useWidgets = (areaId) => {
     const [widgets, setWidgets] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const fetchWidgets = async () => {
+    const fetchWidgets = useCallback(async () => {
         if (!areaId) return;
         setLoading(true);
         try {
@@ -25,7 +25,7 @@ export const useWidgets = (areaId) => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [areaId, toast]);
 
     const addWidget = async (type, config = {}) => {
         if (!areaId) return;
@@ -126,7 +126,7 @@ export const useWidgets = (areaId) => {
 
     useEffect(() => {
         if (areaId) fetchWidgets();
-    }, [areaId]);
+    }, [areaId, fetchWidgets]);
 
     return {
         widgets,

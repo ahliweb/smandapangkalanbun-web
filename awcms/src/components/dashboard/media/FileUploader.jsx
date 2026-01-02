@@ -1,8 +1,7 @@
 
 import React, { useCallback } from 'react';
-import { Upload, File, X, Loader2 } from 'lucide-react';
+import { Upload, Loader2 } from 'lucide-react';
 import { useDropzone } from 'react-dropzone';
-import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 
 import { useToast } from '@/components/ui/use-toast';

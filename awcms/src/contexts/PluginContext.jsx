@@ -150,7 +150,7 @@ export const PluginProvider = ({ children }) => {
         };
 
         loadPlugins();
-    }, []);
+    }, [addAction, addFilter, doAction]);
 
     const value = {
         isLoading,

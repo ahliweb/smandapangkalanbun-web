@@ -33,14 +33,13 @@ const SlugGenerator = ({
     };
 
     // Generate slug based on format
-    const generateSlug = (fmt = format, baseTitle = titleValue) => {
+    const generateSlug = React.useCallback((fmt = format, baseTitle = titleValue) => {
         if (!baseTitle && fmt !== 'custom') return '';
 
         let newSlug = '';
         const date = new Date();
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
         const cleanTitle = sanitizeSlug(baseTitle);
 
         switch (fmt) {
@@ -56,7 +55,7 @@ const SlugGenerator = ({
                 break;
         }
         return newSlug;
-    };
+    }, [format, titleValue, slug]);
 
     // Auto-update slug if user hasn't manually edited and not in custom mode
     useEffect(() => {
@@ -66,7 +65,7 @@ const SlugGenerator = ({
             setIsAvailable(null); // Reset availability status on change
             onSlugChange?.(newSlug);
         }
-    }, [titleValue, format, manualEdit]);
+    }, [titleValue, format, manualEdit, generateSlug, onSlugChange]);
 
     // Handle Format Change
     const handleFormatChange = (value) => {

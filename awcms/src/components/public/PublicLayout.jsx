@@ -9,7 +9,7 @@ import DynamicTemplate from './DynamicTemplate';
 import { usePublicTenant } from '@/hooks/usePublicTenant';
 
 function PublicLayout() {
-  const { tenant, loading } = usePublicTenant();
+  const { tenant } = usePublicTenant();
 
   // Optionally show loader while resolving tenant
   // if (loading) return <div className="h-screen flex items-center justify-center">Loading site...</div>;

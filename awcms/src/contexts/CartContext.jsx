@@ -10,7 +10,6 @@ import { v4 as uuidv4 } from 'uuid';
 
 const CartContext = createContext(null);
 
-const CART_STORAGE_KEY = 'awcms_cart';
 const SESSION_ID_KEY = 'awcms_session_id';
 
 export function CartProvider({ children }) {

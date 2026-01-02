@@ -24,7 +24,6 @@ import { PricingBlock, PricingBlockFields } from './blocks/PricingBlock';
 import { AccordionBlock, AccordionBlockFields } from './blocks/AccordionBlock';
 import { LatestArticlesBlock, LatestArticlesBlockFields } from './blocks/LatestArticlesBlock';
 import { ImageField, MultiImageField } from './fields/ImageField';
-import { ColorPickerField } from './fields/ColorPickerField';
 
 // Puck configuration object
 export const puckConfig = {

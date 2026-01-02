@@ -2,8 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '@/lib/customSupabaseClient';
-import { motion } from 'framer-motion';
-import { Briefcase, Calendar, User, Tag, ArrowLeft } from 'lucide-react';
+import { Calendar, User, Tag, ArrowLeft } from 'lucide-react';
 import SeoHelmet from '@/components/public/SeoHelmet';
 import { Badge } from '@/components/ui/badge';
 

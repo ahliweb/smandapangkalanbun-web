@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { supabase } from '@/lib/customSupabaseClient';
 import { getPluginComponent } from '@/lib/pluginRegistry';
 import { Helmet } from 'react-helmet';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 // Core Components
 import Sidebar from '@/components/dashboard/Sidebar';

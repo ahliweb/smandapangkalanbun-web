@@ -12,7 +12,7 @@ import { usePermissions } from '@/contexts/PermissionContext';
 
 function UserEditor({ user, onClose, onSave }) {
   const { toast } = useToast();
-  const { userRole, tenantId: currentTenantId, isPlatformAdmin } = usePermissions();
+  const { tenantId: currentTenantId, isPlatformAdmin } = usePermissions();
   const [loading, setLoading] = useState(false);
   const [roles, setRoles] = useState([]);
   const [tenants, setTenants] = useState([]);
@@ -43,7 +43,7 @@ function UserEditor({ user, onClose, onSave }) {
       // Default to current tenant for new users
       setFormData(prev => ({ ...prev, tenant_id: currentTenantId || '' }));
     }
-  }, [user, currentTenantId]);
+  }, [user, currentTenantId, isEditing]);
 
   const fetchRoles = async () => {
     const { data } = await supabase

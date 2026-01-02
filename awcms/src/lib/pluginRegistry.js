@@ -126,7 +126,7 @@ export const getExtensionComponent = (key) => {
     return getPluginComponent(mappedKey);
 };
 
-export default {
+const pluginRegistry = {
     getAllPlugins,
     getPlugin,
     getPluginComponent,
@@ -135,3 +135,5 @@ export default {
     getPluginLifecycle,
     getExtensionComponent
 };
+
+export default pluginRegistry;

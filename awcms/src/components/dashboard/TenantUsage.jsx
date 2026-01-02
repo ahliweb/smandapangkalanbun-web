@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '@/lib/customSupabaseClient';
 import { usePermissions } from '@/contexts/PermissionContext';
 import { Progress } from "@/components/ui/progress";
-import { Loader2, Database, Users } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Users, Database } from "lucide-react";
 
 // Limits must match SQL enforcement logic
 const TIERS = {

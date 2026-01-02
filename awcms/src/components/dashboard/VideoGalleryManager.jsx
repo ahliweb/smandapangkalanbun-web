@@ -11,9 +11,9 @@ function VideoGalleryManager() {
             key: 'status',
             label: 'Status',
             render: (value) => (
-                <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${value === 'published' ? 'bg-green-100 text-green-700' :
-                    value === 'draft' ? 'bg-amber-100 text-amber-700' :
-                        'bg-slate-100 text-slate-600'
+                <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${value === 'published' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
+                    value === 'draft' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' :
+                        'bg-muted text-muted-foreground'
                     }`}>
                     {value || 'draft'}
                 </span>
@@ -46,13 +46,13 @@ function VideoGalleryManager() {
     return (
         <div className="space-y-6">
             {/* Breadcrumb Navigation */}
-            <nav className="flex items-center text-sm text-slate-500">
-                <Link to="/cmspanel" className="hover:text-blue-600 transition-colors flex items-center gap-1">
+            <nav className="flex items-center text-sm text-muted-foreground">
+                <Link to="/cmspanel" className="hover:text-primary transition-colors flex items-center gap-1">
                     <Home className="w-4 h-4" />
                     Dashboard
                 </Link>
-                <ChevronRight className="w-4 h-4 mx-2 text-slate-300" />
-                <span className="flex items-center gap-1 text-slate-700 font-medium">
+                <ChevronRight className="w-4 h-4 mx-2 text-muted-foreground/50" />
+                <span className="flex items-center gap-1 text-foreground font-medium">
                     <Video className="w-4 h-4" />
                     Video Gallery
                 </span>

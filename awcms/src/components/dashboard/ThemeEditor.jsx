@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Slider } from '@/components/ui/slider';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowLeft, Save, Loader2, RotateCcw, Monitor, Smartphone, Type, Palette as PaletteIcon, Layout } from 'lucide-react';
+import { ArrowLeft, Save, Loader2, Monitor, Smartphone, Type, Palette as PaletteIcon, Layout } from 'lucide-react';
 import { usePermissions } from '@/contexts/PermissionContext';
 import { shadcnHslToHex, hexToShadcnHsl, applyTheme } from '@/lib/themeUtils';
 
@@ -50,18 +50,7 @@ const ThemeEditor = () => {
         radius: 0.5
     });
 
-    useEffect(() => {
-        fetchTheme();
-    }, [id]);
-
-    // When config changes, update live preview immediately
-    useEffect(() => {
-        if (!loading) {
-            applyTheme(config);
-        }
-    }, [config, loading]);
-
-    const fetchTheme = async () => {
+    const fetchTheme = React.useCallback(async () => {
         setLoading(true);
         const { data, error } = await supabase
             .from('themes')
@@ -84,7 +73,18 @@ const ThemeEditor = () => {
             });
         }
         setLoading(false);
-    };
+    }, [id, navigate, toast]);
+
+    useEffect(() => {
+        fetchTheme();
+    }, [fetchTheme]);
+
+    // When config changes, update live preview immediately
+    useEffect(() => {
+        if (!loading) {
+            applyTheme(config);
+        }
+    }, [config, loading]);
 
     const handleColorChange = (key, hexValue) => {
         const hslValue = hexToShadcnHsl(hexValue);
@@ -145,21 +145,21 @@ const ThemeEditor = () => {
 
     if (loading) return (
         <div className="flex items-center justify-center h-screen">
-            <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+            <Loader2 className="w-8 h-8 animate-spin text-primary" />
         </div>
     );
 
     const ColorRow = ({ label, configKey, description }) => (
-        <div className="flex items-center justify-between py-3 border-b border-slate-100 last:border-0">
+        <div className="flex items-center justify-between py-3 border-b border-border last:border-0">
             <div className="flex flex-col gap-0.5">
-                <Label className="text-sm font-medium text-slate-700">{label}</Label>
-                {description && <span className="text-xs text-slate-400">{description}</span>}
+                <Label className="text-sm font-medium text-foreground">{label}</Label>
+                {description && <span className="text-xs text-muted-foreground">{description}</span>}
             </div>
             <div className="flex items-center gap-3">
-                <span className="text-xs text-slate-400 font-mono bg-slate-50 px-2 py-1 rounded border border-slate-100 uppercase">
+                <span className="text-xs text-muted-foreground font-mono bg-muted px-2 py-1 rounded border border-border uppercase">
                     {shadcnHslToHex(config.colors?.[configKey])}
                 </span>
-                <div className="relative w-9 h-9 rounded-md overflow-hidden border border-slate-200 shadow-sm cursor-pointer transition-transform hover:scale-105 active:scale-95 ring-offset-2 focus-within:ring-2 focus-within:ring-blue-500">
+                <div className="relative w-9 h-9 rounded-md overflow-hidden border border-border shadow-sm cursor-pointer transition-transform hover:scale-105 active:scale-95 ring-offset-2 focus-within:ring-2 focus-within:ring-primary">
                     <input
                         type="color"
                         className="absolute inset-0 w-[150%] h-[150%] -top-[25%] -left-[25%] cursor-pointer p-0 border-0 opacity-0"
@@ -177,28 +177,28 @@ const ThemeEditor = () => {
     );
 
     return (
-        <div className="flex flex-col h-screen bg-slate-50 overflow-hidden">
+        <div className="flex flex-col h-screen bg-muted/30 overflow-hidden">
             {/* Top Bar */}
-            <div className="flex justify-between items-center px-6 py-3 bg-white border-b border-slate-200 shrink-0 shadow-sm z-10">
+            <div className="flex justify-between items-center px-6 py-3 bg-card border-b border-border shrink-0 shadow-sm z-10">
                 <div className="flex items-center gap-4">
-                    <Button variant="ghost" size="icon" onClick={() => navigate('/cmspanel/themes')} className="hover:bg-slate-100">
-                        <ArrowLeft className="w-5 h-5 text-slate-600" />
+                    <Button variant="ghost" size="icon" onClick={() => navigate('/cmspanel/themes')} className="hover:bg-muted">
+                        <ArrowLeft className="w-5 h-5 text-muted-foreground" />
                     </Button>
                     <div className="flex flex-col">
-                        <h1 className="text-lg font-bold text-slate-900 leading-tight">Theme Editor</h1>
-                        <div className="flex items-center gap-2 text-xs text-slate-500">
-                            <span className="font-medium text-blue-600">{name}</span>
+                        <h1 className="text-lg font-bold text-foreground leading-tight">Theme Editor</h1>
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <span className="font-medium text-primary">{name}</span>
                             <span>•</span>
                             <span>Editing Mode</span>
                         </div>
                     </div>
                 </div>
                 <div className="flex items-center gap-3">
-                    <div className="bg-slate-100 rounded-lg p-1 hidden md:flex">
+                    <div className="bg-muted/50 rounded-lg p-1 hidden md:flex">
                         <Button
                             variant="ghost"
                             size="sm"
-                            className={`h-7 px-3 ${previewMode === 'desktop' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500'}`}
+                            className={`h-7 px-3 ${previewMode === 'desktop' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground'}`}
                             onClick={() => setPreviewMode('desktop')}
                         >
                             <Monitor className="w-3.5 h-3.5 mr-1.5" /> Desktop
@@ -206,14 +206,14 @@ const ThemeEditor = () => {
                         <Button
                             variant="ghost"
                             size="sm"
-                            className={`h-7 px-3 ${previewMode === 'mobile' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500'}`}
+                            className={`h-7 px-3 ${previewMode === 'mobile' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground'}`}
                             onClick={() => setPreviewMode('mobile')}
                         >
                             <Smartphone className="w-3.5 h-3.5 mr-1.5" /> Mobile
                         </Button>
                     </div>
-                    <div className="h-6 w-px bg-slate-200 mx-1"></div>
-                    <Button onClick={handleSave} disabled={saving || !canEdit} className="bg-blue-600 hover:bg-blue-700 min-w-[140px]">
+                    <div className="h-6 w-px bg-border mx-1"></div>
+                    <Button onClick={handleSave} disabled={saving || !canEdit} className="min-w-[140px]">
                         {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
                         Save Changes
                     </Button>
@@ -222,11 +222,11 @@ const ThemeEditor = () => {
 
             <div className="flex flex-1 overflow-hidden">
                 {/* Settings Sidebar */}
-                <div className="w-[380px] bg-white border-r border-slate-200 flex flex-col overflow-hidden shrink-0">
-                    <div className="p-4 border-b border-slate-100">
+                <div className="w-[380px] bg-card border-r border-border flex flex-col overflow-hidden shrink-0">
+                    <div className="p-4 border-b border-border">
                         <div className="space-y-3 mb-4">
                             <div className="space-y-1">
-                                <Label className="text-xs uppercase tracking-wider text-slate-500 font-semibold">Info</Label>
+                                <Label className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Info</Label>
                                 <Input value={name} onChange={e => setName(e.target.value)} placeholder="Theme Name" disabled={!canEdit} />
                             </div>
                         </div>
@@ -250,16 +250,16 @@ const ThemeEditor = () => {
                         <Tabs value={activeTab} className="w-full">
                             <TabsContent value="colors" className="mt-0 space-y-6">
                                 <div>
-                                    <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2">Base Colors</h3>
-                                    <div className="bg-white rounded-lg border border-slate-100 shadow-sm p-1 px-3">
+                                    <h3 className="text-xs font-bold text-foreground uppercase tracking-wider mb-2">Base Colors</h3>
+                                    <div className="bg-card rounded-lg border border-border shadow-sm p-1 px-3">
                                         <ColorRow label="Background" configKey="background" description="Page background color" />
                                         <ColorRow label="Foreground" configKey="foreground" description="Main text color" />
                                     </div>
                                 </div>
 
                                 <div>
-                                    <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2">Brand Identity</h3>
-                                    <div className="bg-white rounded-lg border border-slate-100 shadow-sm p-1 px-3">
+                                    <h3 className="text-xs font-bold text-foreground uppercase tracking-wider mb-2">Brand Identity</h3>
+                                    <div className="bg-card rounded-lg border border-border shadow-sm p-1 px-3">
                                         <ColorRow label="Primary" configKey="primary" description="Main brand color" />
                                         <ColorRow label="Primary Text" configKey="primaryForeground" description="Text on primary color" />
                                         <ColorRow label="Secondary" configKey="secondary" description="Accent/muted elements" />
@@ -269,8 +269,8 @@ const ThemeEditor = () => {
                                 </div>
 
                                 <div>
-                                    <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2">UI Elements</h3>
-                                    <div className="bg-white rounded-lg border border-slate-100 shadow-sm p-1 px-3">
+                                    <h3 className="text-xs font-bold text-foreground uppercase tracking-wider mb-2">UI Elements</h3>
+                                    <div className="bg-card rounded-lg border border-border shadow-sm p-1 px-3">
                                         <ColorRow label="Border" configKey="border" description="Borders and dividers" />
                                         <ColorRow label="Input" configKey="input" description="Form inputs" />
                                         <ColorRow label="Card" configKey="card" description="Card backgrounds" />
@@ -281,7 +281,7 @@ const ThemeEditor = () => {
 
                             <TabsContent value="typography" className="mt-0 space-y-6">
                                 <div>
-                                    <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-4">Font Families</h3>
+                                    <h3 className="text-xs font-bold text-foreground uppercase tracking-wider mb-4">Font Families</h3>
                                     <div className="space-y-4">
                                         <div className="space-y-2">
                                             <Label>Headings Font</Label>
@@ -297,7 +297,7 @@ const ThemeEditor = () => {
                                                     ))}
                                                 </SelectContent>
                                             </Select>
-                                            <p className="text-xs text-slate-500">Used for h1, h2, h3, etc.</p>
+                                            <p className="text-xs text-muted-foreground">Used for h1, h2, h3, etc.</p>
                                         </div>
 
                                         <div className="space-y-2">
@@ -314,7 +314,7 @@ const ThemeEditor = () => {
                                                     ))}
                                                 </SelectContent>
                                             </Select>
-                                            <p className="text-xs text-slate-500">Used for paragraphs and UI text.</p>
+                                            <p className="text-xs text-muted-foreground">Used for paragraphs and UI text.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -322,11 +322,11 @@ const ThemeEditor = () => {
 
                             <TabsContent value="layout" className="mt-0 space-y-6">
                                 <div>
-                                    <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-4">Border Radius</h3>
-                                    <div className="bg-white p-4 rounded-lg border border-slate-200">
+                                    <h3 className="text-xs font-bold text-foreground uppercase tracking-wider mb-4">Border Radius</h3>
+                                    <div className="bg-card p-4 rounded-lg border border-border">
                                         <div className="flex justify-between mb-4 items-center">
                                             <Label>Corner Roundness</Label>
-                                            <span className="text-xs font-mono bg-slate-100 px-2 py-1 rounded text-slate-600">{config.radius}rem</span>
+                                            <span className="text-xs font-mono bg-muted px-2 py-1 rounded text-muted-foreground">{config.radius}rem</span>
                                         </div>
                                         <Slider
                                             value={[parseFloat(config.radius || 0.5)]}
@@ -335,7 +335,7 @@ const ThemeEditor = () => {
                                             onValueChange={handleRadiusChange}
                                             disabled={!canEdit}
                                         />
-                                        <div className="flex justify-between mt-2 text-[10px] text-slate-400">
+                                        <div className="flex justify-between mt-2 text-[10px] text-muted-foreground">
                                             <span>Square</span>
                                             <span>Round</span>
                                         </div>
@@ -361,9 +361,9 @@ const ThemeEditor = () => {
                                 <div className="container mx-auto px-6 h-16 flex items-center justify-between">
                                     <div className="font-bold text-xl text-primary font-heading">Brand</div>
                                     <nav className="hidden md:flex gap-6 text-sm font-medium text-muted-foreground">
-                                        <a href="#" className="text-foreground hover:text-primary transition-colors">Home</a>
-                                        <a href="#" className="hover:text-primary transition-colors">Products</a>
-                                        <a href="#" className="hover:text-primary transition-colors">About</a>
+                                        <button className="text-foreground hover:text-primary transition-colors cursor-default">Home</button>
+                                        <button className="hover:text-primary transition-colors cursor-default">Products</button>
+                                        <button className="hover:text-primary transition-colors cursor-default">About</button>
                                     </nav>
                                     <div className="flex gap-2">
                                         <Button size="sm" variant="outline">Log in</Button>
@@ -371,6 +371,7 @@ const ThemeEditor = () => {
                                     </div>
                                 </div>
                             </header>
+
 
                             {/* Hero Section */}
                             <section className="py-20 px-6 text-center bg-secondary/30">

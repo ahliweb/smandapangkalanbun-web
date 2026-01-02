@@ -3,7 +3,7 @@
  */
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, CreditCard, Truck, CheckCircle2, Loader2, MapPin, User } from 'lucide-react';
+import { ArrowLeft, CreditCard, Truck, CheckCircle2, Loader2, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -45,14 +45,7 @@ function CheckoutPage() {
         notes: ''
     });
 
-    useEffect(() => {
-        if (items.length === 0) {
-            navigate('/cart');
-        }
-        fetchPaymentMethods();
-    }, [items, navigate]);
-
-    const fetchPaymentMethods = async () => {
+    const fetchPaymentMethods = React.useCallback(async () => {
         if (!currentTenant?.id) return;
 
         try {
@@ -71,7 +64,14 @@ function CheckoutPage() {
         } catch (error) {
             console.error('Error fetching payment methods:', error);
         }
-    };
+    }, [currentTenant?.id]);
+
+    useEffect(() => {
+        if (items.length === 0) {
+            navigate('/cart');
+        }
+        fetchPaymentMethods();
+    }, [items, navigate, fetchPaymentMethods]);
 
     const handleChange = (field, value) => {
         setFormData(prev => ({ ...prev, [field]: value }));

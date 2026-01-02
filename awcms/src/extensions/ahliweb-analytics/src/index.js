@@ -5,7 +5,7 @@
  * External extensions are loaded dynamically by AWCMS at runtime.
  */
 
-import React from 'react';
+// import React from 'react';
 import AnalyticsDashboard from './components/AnalyticsDashboard';
 import AnalyticsReports from './components/AnalyticsReports';
 import AnalyticsWidget from './components/AnalyticsWidget';

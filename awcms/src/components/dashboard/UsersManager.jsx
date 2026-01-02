@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import ContentTable from '@/components/dashboard/ContentTable';
 import UserEditor from '@/components/dashboard/UserEditor';
 import { usePermissions } from '@/contexts/PermissionContext';
@@ -48,7 +48,7 @@ function UsersManager() {
   const canEdit = hasPermission('tenant.user.update');
   const canDelete = hasPermission('tenant.user.delete');
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     if (!canView) return;
     setLoading(true);
     try {
@@ -91,13 +91,13 @@ function UsersManager() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [canView, isPlatformAdmin, currentTenant, query, currentPage, itemsPerPage, toast]);
 
   useEffect(() => {
     if (activeTab === 'users') {
       fetchUsers();
     }
-  }, [currentPage, itemsPerPage, query, canView, activeTab]);
+  }, [activeTab, fetchUsers]);
 
   const handleEdit = (user) => {
     setSelectedUser(user);
@@ -171,17 +171,17 @@ function UsersManager() {
       key: 'roles',
       label: 'Role',
       render: (r) => {
-        if (!r?.name) return <span className="text-slate-400 text-xs">Guest</span>;
+        if (!r?.name) return <span className="text-muted-foreground text-xs">Guest</span>;
         if (r.name === 'owner') {
           return (
-            <span className="flex items-center gap-1 bg-amber-100 px-2 py-1 rounded-full text-xs font-bold text-amber-700 border border-amber-200">
+            <span className="flex items-center gap-1 bg-amber-500/10 px-2 py-1 rounded-full text-xs font-bold text-amber-600 dark:text-amber-500 border border-amber-500/20">
               <Crown className="w-3 h-3 fill-amber-500 text-amber-500" />
               OWNER
             </span>
           );
         }
         return (
-          <span className="capitalize bg-slate-100 px-2 py-1 rounded-full text-xs font-medium text-slate-700">
+          <span className="capitalize bg-secondary px-2 py-1 rounded-full text-xs font-medium text-secondary-foreground">
             {r.name.replace('_', ' ')}
           </span>
         );
@@ -192,19 +192,19 @@ function UsersManager() {
       key: 'tenant',
       label: 'Tenant',
       render: (_, item) => item.tenant?.name ? (
-        <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded-full text-xs font-medium">
+        <span className="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-medium border border-primary/20">
           {item.tenant.name}
         </span>
-      ) : <span className="text-slate-500 bg-slate-100 px-2 py-1 rounded-full text-xs font-medium">Global</span>
+      ) : <span className="text-muted-foreground bg-muted px-2 py-1 rounded-full text-xs font-medium border border-border">Global</span>
     }] : []),
     { key: 'created_at', label: 'Joined', type: 'date' }
   ];
 
   if (!canView) return (
-    <div className="flex flex-col items-center justify-center min-h-[400px] bg-white rounded-xl border p-12 text-center">
-      <ShieldAlert className="w-12 h-12 text-red-500 mb-4" />
-      <h3 className="text-xl font-bold">Access Denied</h3>
-      <p className="text-slate-500">You do not have permission to view users.</p>
+    <div className="flex flex-col items-center justify-center min-h-[400px] bg-card rounded-xl border border-border p-12 text-center">
+      <ShieldAlert className="w-12 h-12 text-destructive mb-4" />
+      <h3 className="text-xl font-bold text-foreground">Access Denied</h3>
+      <p className="text-muted-foreground">You do not have permission to view users.</p>
     </div>
   );
 
@@ -255,37 +255,37 @@ function UsersManager() {
       ) : (
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           {/* Breadcrumb Navigation */}
-          <nav className="flex items-center text-sm text-slate-500 mb-6">
-            <Link to="/cmspanel" className="hover:text-blue-600 transition-colors flex items-center gap-1">
+          <nav className="flex items-center text-sm text-muted-foreground mb-6">
+            <Link to="/cmspanel" className="hover:text-foreground transition-colors flex items-center gap-1">
               <Home className="w-4 h-4" />
               Dashboard
             </Link>
-            <ChevronRight className="w-4 h-4 mx-2 text-slate-300" />
-            <span className="flex items-center gap-1 text-slate-700 font-medium">
+            <ChevronRight className="w-4 h-4 mx-2 text-muted" />
+            <span className="flex items-center gap-1 text-foreground font-medium">
               <User className="w-4 h-4" />
               Users
             </span>
             {activeTab !== 'users' && (
               <>
-                <ChevronRight className="w-4 h-4 mx-2 text-slate-300" />
-                <span className="text-blue-600 font-medium">Registration Approvals</span>
+                <ChevronRight className="w-4 h-4 mx-2 text-muted" />
+                <span className="text-primary font-medium">Registration Approvals</span>
               </>
             )}
           </nav>
 
           {/* Enhanced Tabs */}
-          <div className="bg-white rounded-xl border border-slate-200 p-1.5 shadow-sm mb-6 inline-flex">
+          <div className="bg-muted p-1 rounded-xl mb-6 inline-flex">
             <TabsList className="grid grid-cols-2 gap-1 bg-transparent p-0">
               <TabsTrigger
                 value="users"
-                className="flex items-center gap-2 px-6 py-2.5 rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-blue-700 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200 font-medium"
+                className="flex items-center gap-2 px-6 py-2.5 rounded-lg data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm transition-all duration-200 font-medium text-muted-foreground"
               >
                 <User className="w-4 h-4" />
                 Active Users
               </TabsTrigger>
               <TabsTrigger
                 value="approvals"
-                className="flex items-center gap-2 px-6 py-2.5 rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500 data-[state=active]:to-amber-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200 font-medium"
+                className="flex items-center gap-2 px-6 py-2.5 rounded-lg data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm transition-all duration-200 font-medium text-muted-foreground"
               >
                 <ShieldAlert className="w-4 h-4" />
                 Approvals
@@ -296,29 +296,29 @@ function UsersManager() {
           <TabsContent value="users" className="space-y-6 mt-0">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div>
-                <h2 className="text-3xl font-bold text-slate-800">Users</h2>
-                <p className="text-slate-600">Manage user accounts and roles.</p>
+                <h2 className="text-3xl font-bold text-foreground">Users</h2>
+                <p className="text-muted-foreground">Manage user accounts and roles.</p>
               </div>
               {canCreate && (
-                <Button onClick={handleCreate} className="bg-blue-600">
+                <Button onClick={handleCreate} className="bg-primary text-primary-foreground hover:bg-primary/90">
                   <Plus className="w-4 h-4 mr-2" /> New User
                 </Button>
               )}
             </div>
 
-            <div className="bg-white p-4 rounded-xl border shadow-sm flex items-center gap-2">
+            <div className="bg-card p-4 rounded-xl border border-border shadow-sm flex items-center gap-2">
               <div className="relative flex-1 max-w-sm">
-                <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+                <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search users..."
                   value={query}
                   onChange={e => setQuery(e.target.value)}
-                  className="pl-9"
+                  className="pl-9 bg-background"
                 />
               </div>
               <div className="flex-1"></div>
-              <Button variant="ghost" size="icon" onClick={fetchUsers} title="Refresh">
-                <RefreshCw className="w-4 h-4 text-slate-500" />
+              <Button variant="ghost" size="icon" onClick={fetchUsers} title="Refresh" className="text-muted-foreground hover:text-foreground">
+                <RefreshCw className="w-4 h-4" />
               </Button>
             </div>
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTenant } from '@/contexts/TenantContext';
 import { usePermissions } from '@/contexts/PermissionContext';
@@ -47,14 +47,7 @@ function EmailSettings() {
 
     const canConfigure = hasPermission('tenant.email.configure');
 
-    useEffect(() => {
-        if (currentTenant?.id) {
-            loadConfig();
-            loadCredits();
-        }
-    }, [currentTenant?.id]);
-
-    const loadConfig = async () => {
+    const loadConfig = useCallback(async () => {
         setLoading(true);
         try {
             const data = await getTenantEmailConfig(currentTenant.id);
@@ -64,9 +57,9 @@ function EmailSettings() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [currentTenant?.id]);
 
-    const loadCredits = async () => {
+    const loadCredits = useCallback(async () => {
         try {
             const result = await checkCredits();
             if (result.status === 'true') {
@@ -75,7 +68,15 @@ function EmailSettings() {
         } catch (error) {
             console.error('Failed to check credits:', error);
         }
-    };
+    }, []);
+
+    useEffect(() => {
+        if (currentTenant?.id) {
+            loadConfig();
+            loadCredits();
+        }
+    }, [currentTenant?.id, loadConfig, loadCredits]);
+
 
     const handleSave = async () => {
         if (!canConfigure) return;

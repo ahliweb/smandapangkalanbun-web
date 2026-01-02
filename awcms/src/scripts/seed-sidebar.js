@@ -1,12 +1,9 @@
 import dotenv from 'dotenv';
-import path from 'path';
+import { createClient } from '@supabase/supabase-js';
 
 // Load .env then .env.local (override)
 dotenv.config({ path: '.env' });
 dotenv.config({ path: '.env.local', override: true });
-
-import { createClient } from '@supabase/supabase-js';
-import { adminIcons } from '../lib/adminIcons.js'; // Ensure this path is correct relative to execution
 
 // Load env vars
 const supabaseUrl = process.env.VITE_SUPABASE_URL;

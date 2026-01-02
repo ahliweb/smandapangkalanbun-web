@@ -74,23 +74,23 @@ const ContentTable = ({
 
   return (
     <div className="space-y-4">
-      <div className="rounded-md border bg-white overflow-hidden">
+      <div className="rounded-md border border-border bg-card overflow-hidden">
         <Table>
-          <TableHeader className="bg-slate-50">
-            <TableRow>
+          <TableHeader className="bg-muted/50">
+            <TableRow className="hover:bg-transparent">
               {columns.map((col) => (
-                <TableHead key={col.key} className={col.className}>
+                <TableHead key={col.key} className={`${col.className} text-muted-foreground`}>
                   {col.label}
                 </TableHead>
               ))}
               {(onEdit || onDelete || onView || extraActions) && (
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="text-right text-muted-foreground">Actions</TableHead>
               )}
             </TableRow>
           </TableHeader>
           <TableBody>
             {data.map((item, index) => (
-              <TableRow key={item.id || index} className="hover:bg-slate-50/50">
+              <TableRow key={item.id || index} className="hover:bg-muted/50 data-[state=selected]:bg-muted">
                 {columns.map((col) => (
                   <TableCell key={`${item.id}-${col.key}`} className={col.className}>
                     {col.render ? (
@@ -98,7 +98,7 @@ const ContentTable = ({
                     ) : col.type === 'date' ? (
                       item[col.key] ? format(new Date(item[col.key]), 'MMM d, yyyy') : '-'
                     ) : col.type === 'boolean' ? (
-                      item[col.key] ? <span className="text-green-600">Yes</span> : <span className="text-red-600">No</span>
+                      item[col.key] ? <span className="text-green-600">Yes</span> : <span className="text-destructive">No</span>
                     ) : (
                       item[col.key]
                     )}
@@ -109,17 +109,17 @@ const ContentTable = ({
                     <div className="flex justify-end gap-2">
                       {extraActions && extraActions(item)}
                       {onView && (
-                        <Button variant="ghost" size="icon" onClick={() => onView(item)} className="h-8 w-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50">
+                        <Button variant="ghost" size="icon" onClick={() => onView(item)} className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-primary/10">
                           <Eye className="w-4 h-4" />
                         </Button>
                       )}
                       {onEdit && (
-                        <Button variant="ghost" size="icon" onClick={() => onEdit(item)} className="h-8 w-8 text-slate-600 hover:text-blue-600 hover:bg-slate-100">
+                        <Button variant="ghost" size="icon" onClick={() => onEdit(item)} className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-primary/10">
                           <Edit className="w-4 h-4" />
                         </Button>
                       )}
                       {onDelete && (
-                        <Button variant="ghost" size="icon" onClick={() => onDelete(item)} className="h-8 w-8 text-slate-400 hover:text-red-600 hover:bg-red-50">
+                        <Button variant="ghost" size="icon" onClick={() => onDelete(item)} className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10">
                           <Trash2 className="w-4 h-4" />
                         </Button>
                       )}

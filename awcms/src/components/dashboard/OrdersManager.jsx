@@ -11,7 +11,7 @@ function OrdersManager() {
             label: 'Order #',
             className: 'font-mono text-xs',
             render: (val) => (
-                <span className="bg-slate-100 px-2 py-1 rounded">
+                <span className="bg-muted px-2 py-1 rounded text-muted-foreground">
                     #{val?.substring(0, 8)}
                 </span>
             )
@@ -21,12 +21,12 @@ function OrdersManager() {
             label: 'Customer',
             render: (val, row) => (
                 <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                        <User className="w-4 h-4 text-blue-600" />
+                    <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                        <User className="w-4 h-4 text-primary" />
                     </div>
                     <div className="flex flex-col">
-                        <span className="font-medium text-sm">{val?.full_name || val?.email || 'Guest'}</span>
-                        <span className="text-xs text-slate-400">{val?.email}</span>
+                        <span className="font-medium text-sm text-foreground">{val?.full_name || val?.email || 'Guest'}</span>
+                        <span className="text-xs text-muted-foreground">{val?.email}</span>
                     </div>
                 </div>
             )
@@ -35,7 +35,7 @@ function OrdersManager() {
             key: 'total_amount',
             label: 'Total',
             render: (val) => (
-                <span className="font-semibold text-green-600">
+                <span className="font-semibold text-green-600 dark:text-green-400">
                     {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(val)}
                 </span>
             )
@@ -45,13 +45,13 @@ function OrdersManager() {
             label: 'Order Status',
             render: (value) => {
                 const statusConfig = {
-                    pending: { bg: 'bg-amber-100', text: 'text-amber-700', icon: '⏳' },
-                    paid: { bg: 'bg-blue-100', text: 'text-blue-700', icon: '💳' },
-                    processing: { bg: 'bg-purple-100', text: 'text-purple-700', icon: '📦' },
-                    shipped: { bg: 'bg-cyan-100', text: 'text-cyan-700', icon: '🚚' },
-                    completed: { bg: 'bg-green-100', text: 'text-green-700', icon: '✅' },
-                    cancelled: { bg: 'bg-red-100', text: 'text-red-700', icon: '❌' },
-                    refunded: { bg: 'bg-slate-100', text: 'text-slate-700', icon: '↩️' }
+                    pending: { bg: 'bg-amber-100 dark:bg-amber-900/30', text: 'text-amber-700 dark:text-amber-400', icon: '⏳' },
+                    paid: { bg: 'bg-blue-100 dark:bg-blue-900/30', text: 'text-blue-700 dark:text-blue-400', icon: '💳' },
+                    processing: { bg: 'bg-purple-100 dark:bg-purple-900/30', text: 'text-purple-700 dark:text-purple-400', icon: '📦' },
+                    shipped: { bg: 'bg-cyan-100 dark:bg-cyan-900/30', text: 'text-cyan-700 dark:text-cyan-400', icon: '🚚' },
+                    completed: { bg: 'bg-green-100 dark:bg-green-900/30', text: 'text-green-700 dark:text-green-400', icon: '✅' },
+                    cancelled: { bg: 'bg-red-100 dark:bg-red-900/30', text: 'text-red-700 dark:text-red-400', icon: '❌' },
+                    refunded: { bg: 'bg-muted', text: 'text-muted-foreground', icon: '↩️' }
                 };
                 const config = statusConfig[value] || statusConfig.pending;
                 return (
@@ -67,10 +67,10 @@ function OrdersManager() {
             label: 'Payment',
             render: (val) => {
                 const config = {
-                    paid: { bg: 'bg-green-100', text: 'text-green-700' },
-                    unpaid: { bg: 'bg-red-100', text: 'text-red-700' },
-                    partial: { bg: 'bg-amber-100', text: 'text-amber-700' },
-                    refunded: { bg: 'bg-slate-100', text: 'text-slate-600' }
+                    paid: { bg: 'bg-green-100 dark:bg-green-900/30', text: 'text-green-700 dark:text-green-400' },
+                    unpaid: { bg: 'bg-red-100 dark:bg-red-900/30', text: 'text-red-700 dark:text-red-400' },
+                    partial: { bg: 'bg-amber-100 dark:bg-amber-900/30', text: 'text-amber-700 dark:text-amber-400' },
+                    refunded: { bg: 'bg-muted', text: 'text-muted-foreground' }
                 };
                 const style = config[val] || config.unpaid;
                 return (
@@ -84,9 +84,9 @@ function OrdersManager() {
             key: 'tracking_number',
             label: 'Tracking',
             render: (val) => val ? (
-                <span className="font-mono text-xs bg-slate-100 px-2 py-1 rounded">{val}</span>
+                <span className="font-mono text-xs bg-muted px-2 py-1 rounded text-muted-foreground">{val}</span>
             ) : (
-                <span className="text-slate-300 text-xs">-</span>
+                <span className="text-muted-foreground/50 text-xs">-</span>
             )
         },
         {
@@ -136,13 +136,13 @@ function OrdersManager() {
     return (
         <div className="space-y-6">
             {/* Breadcrumb Navigation */}
-            <nav className="flex items-center text-sm text-slate-500">
-                <Link to="/cmspanel" className="hover:text-blue-600 transition-colors flex items-center gap-1">
+            <nav className="flex items-center text-sm text-muted-foreground">
+                <Link to="/cmspanel" className="hover:text-primary transition-colors flex items-center gap-1">
                     <Home className="w-4 h-4" />
                     Dashboard
                 </Link>
-                <ChevronRight className="w-4 h-4 mx-2 text-slate-300" />
-                <span className="flex items-center gap-1 text-slate-700 font-medium">
+                <ChevronRight className="w-4 h-4 mx-2 text-muted-foreground/50" />
+                <span className="flex items-center gap-1 text-foreground font-medium">
                     <ShoppingCart className="w-4 h-4" />
                     Orders
                 </span>

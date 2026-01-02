@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { LayoutTemplate } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import TemplatesList from './templates/TemplatesList';
 import TemplatePartsList from './templates/TemplatePartsList';
@@ -9,8 +8,6 @@ import TemplateLanguageManager from './templates/TemplateLanguageManager';
 import { usePermissions } from '@/contexts/PermissionContext';
 
 const TemplatesManager = () => {
-    const { t } = useTranslation();
-    const { hasPermission } = usePermissions();
 
     return (
         <div className="p-6 max-w-7xl mx-auto space-y-6">

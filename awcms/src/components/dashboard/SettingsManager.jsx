@@ -7,7 +7,7 @@ function SettingsManager() {
     const columns = [
         { key: 'key', label: 'Setting Key', className: 'font-mono font-medium' },
         { key: 'value', label: 'Value', className: 'truncate max-w-[200px]' },
-        { key: 'description', label: 'Description', className: 'text-slate-500 text-xs' }
+        { key: 'description', label: 'Description', className: 'text-muted-foreground text-xs' }
     ];
 
     const formFields = [
@@ -30,13 +30,13 @@ function SettingsManager() {
     return (
         <div className="space-y-6">
             {/* Breadcrumb Navigation */}
-            <nav className="flex items-center text-sm text-slate-500">
-                <Link to="/cmspanel" className="hover:text-blue-600 transition-colors flex items-center gap-1">
+            <nav className="flex items-center text-sm text-muted-foreground">
+                <Link to="/cmspanel" className="hover:text-foreground transition-colors flex items-center gap-1">
                     <Home className="w-4 h-4" />
                     Dashboard
                 </Link>
-                <ChevronRight className="w-4 h-4 mx-2 text-slate-300" />
-                <span className="flex items-center gap-1 text-slate-700 font-medium">
+                <ChevronRight className="w-4 h-4 mx-2 text-muted" />
+                <span className="flex items-center gap-1 text-foreground font-medium">
                     <Settings className="w-4 h-4" />
                     Settings
                 </span>

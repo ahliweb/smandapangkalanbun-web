@@ -6,7 +6,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/customSupabaseClient';
 import { useToast } from '@/components/ui/use-toast';
 import { useTenant } from '@/contexts/TenantContext'; // Import TenantContext
-import { usePermissions } from '@/contexts/PermissionContext';
 
 export function useMedia() {
     const { toast } = useToast();

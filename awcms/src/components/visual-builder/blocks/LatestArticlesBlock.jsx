@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/lib/customSupabaseClient';
-import { Loader2, Calendar, User, ArrowRight, AlertCircle, Image as ImageIcon } from 'lucide-react';
+import { Loader2, Calendar, ArrowRight, AlertCircle, Image as ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';

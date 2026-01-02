@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FolderOpen, X, Image as ImageIcon, Trash2 } from 'lucide-react';
+import { FolderOpen, X, Trash2 } from 'lucide-react';
 import MediaLibrary from '@/components/dashboard/media/MediaLibrary';
 import { supabase } from '@/lib/customSupabaseClient';
 
@@ -52,7 +52,7 @@ export const ImageField = ({ field, value, onChange, name }) => {
                 <div className="relative group w-full h-32 rounded-lg overflow-hidden border border-slate-200 bg-slate-100">
                     <img
                         src={value}
-                        alt="Preview"
+                        alt="Selected"
                         className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
@@ -166,7 +166,7 @@ export const MultiImageField = ({ field, value, onChange, name }) => {
                         >
                             <img
                                 src={url}
-                                alt={`Image ${index + 1}`}
+                                alt={`Item ${index + 1}`}
                                 className="w-full h-full object-cover"
                             />
                             <button
@@ -216,7 +216,9 @@ export const MultiImageField = ({ field, value, onChange, name }) => {
     );
 };
 
-export default {
+const ImageFieldFields = {
     ImageField,
     MultiImageField
 };
+
+export default ImageFieldFields;

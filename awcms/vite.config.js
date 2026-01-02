@@ -1,5 +1,6 @@
 import path from 'node:path';
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 import { defineConfig, loadEnv } from 'vite';
 
 export default defineConfig(({ mode }) => {
@@ -12,7 +13,7 @@ export default defineConfig(({ mode }) => {
 		: true; // Default to true (allow all) if not set
 
 	return {
-		plugins: [react()],
+		plugins: [react(), tailwindcss()],
 
 		// Development server configuration
 		server: {

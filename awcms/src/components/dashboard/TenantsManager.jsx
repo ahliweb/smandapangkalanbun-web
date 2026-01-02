@@ -5,7 +5,7 @@ import { usePermissions } from '@/contexts/PermissionContext';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/lib/customSupabaseClient';
 import { Button } from '@/components/ui/button';
-import { Plus, Building, RefreshCw, Trash2, Edit, Calendar, DollarSign, Mail, FileText, Globe, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Plus, Building, RefreshCw, DollarSign, Mail, FileText, Globe, ChevronLeft, ChevronRight } from 'lucide-react';
 import { format } from 'date-fns';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -66,13 +66,7 @@ function TenantsManager() {
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [tenantToDelete, setTenantToDelete] = useState(null);
 
-    useEffect(() => {
-        if (isPlatformAdmin) {
-            fetchTenants();
-        }
-    }, [isPlatformAdmin]);
-
-    const fetchTenants = async () => {
+    const fetchTenants = React.useCallback(async () => {
         setLoading(true);
         try {
             const { data, error } = await supabase
@@ -89,7 +83,13 @@ function TenantsManager() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [toast]);
+
+    useEffect(() => {
+        if (isPlatformAdmin) {
+            fetchTenants();
+        }
+    }, [isPlatformAdmin, fetchTenants]);
 
     const handleCreate = () => {
         setEditingTenant(null);
@@ -236,13 +236,13 @@ function TenantsManager() {
 
     const columns = [
         { key: 'name', label: 'Name', className: 'font-semibold' },
-        { key: 'slug', label: 'Slug', className: 'text-slate-500 font-mono text-xs' },
+        { key: 'slug', label: 'Slug', className: 'text-muted-foreground font-mono text-xs' },
         {
             key: 'status',
             label: 'Status',
             render: (status) => (
-                <span className={`px-2 py-1 rounded-full text-xs font-bold ${status === 'active' ? 'bg-green-100 text-green-700' :
-                    status === 'suspended' ? 'bg-red-100 text-red-700' : 'bg-slate-100 text-slate-700'
+                <span className={`px-2 py-1 rounded-full text-xs font-bold ${status === 'active' ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300' :
+                    status === 'suspended' ? 'bg-destructive/10 text-destructive' : 'bg-muted text-muted-foreground'
                     }`}>
                     {status.toUpperCase()}
                 </span>
@@ -252,7 +252,7 @@ function TenantsManager() {
             key: 'subscription_tier',
             label: 'Plan',
             render: (tier) => (
-                <span className="uppercase text-xs font-bold text-blue-600 border border-blue-200 px-2 py-0.5 rounded bg-blue-50">
+                <span className="uppercase text-xs font-bold text-primary border border-primary/20 px-2 py-0.5 rounded bg-primary/10">
                     {tier}
                 </span>
             )
@@ -261,19 +261,19 @@ function TenantsManager() {
             key: 'created_at',
             label: 'Created',
             render: (date) => date ? (
-                <span className="text-xs text-slate-500">{format(new Date(date), 'dd MMM yyyy')}</span>
+                <span className="text-xs text-muted-foreground">{format(new Date(date), 'dd MMM yyyy')}</span>
             ) : '-'
         },
         {
             key: 'subscription_expires_at',
             label: 'Expires',
             render: (date, row) => {
-                if (!date) return <span className="text-xs text-slate-400">-</span>;
+                if (!date) return <span className="text-xs text-muted-foreground">-</span>;
                 const expDate = new Date(date);
                 const isExpired = expDate < new Date();
                 const isExpiringSoon = expDate < new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
                 return (
-                    <span className={`text-xs font-medium ${isExpired ? 'text-red-600' : isExpiringSoon ? 'text-amber-600' : 'text-green-600'}`}>
+                    <span className={`text-xs font-medium ${isExpired ? 'text-destructive' : isExpiringSoon ? 'text-amber-600 dark:text-amber-400' : 'text-green-600 dark:text-green-400'}`}>
                         {format(expDate, 'dd MMM yyyy')}
                     </span>
                 );
@@ -283,12 +283,12 @@ function TenantsManager() {
             key: 'billing_amount',
             label: 'Billing',
             render: (amount, row) => {
-                if (!amount) return <span className="text-xs text-slate-400">-</span>;
+                if (!amount) return <span className="text-xs text-muted-foreground">-</span>;
                 const currencySymbols = { IDR: 'Rp', USD: '$', EUR: '€', SGD: 'S$', MYR: 'RM' };
                 const symbol = currencySymbols[row.currency] || row.currency || '$';
                 const cycleLabel = row.billing_cycle === 'yearly' ? '/yr' : row.billing_cycle === 'monthly' ? '/mo' : '';
                 return (
-                    <span className="text-xs text-slate-600 font-medium">
+                    <span className="text-xs text-muted-foreground font-medium">
                         {symbol}{parseFloat(amount).toLocaleString()}{cycleLabel}
                     </span>
                 );
@@ -296,53 +296,59 @@ function TenantsManager() {
         }
     ];
 
-    if (!isPlatformAdmin) return <div className="p-8 text-center text-slate-500">Access Denied: Platform Admins Only</div>;
+    if (!isPlatformAdmin) return (
+        <div className="flex flex-col items-center justify-center min-h-[400px] bg-card rounded-xl border border-border p-12 text-center">
+            <Building className="w-12 h-12 text-muted-foreground mb-4" />
+            <h3 className="text-xl font-bold text-foreground">Access Denied</h3>
+            <p className="text-muted-foreground">Platform Admins Only</p>
+        </div>
+    );
 
     return (
         <div className="space-y-6">
             {/* Breadcrumb Navigation */}
-            <nav className="flex items-center text-sm text-slate-500">
-                <a href="/cmspanel" className="hover:text-blue-600 transition-colors flex items-center gap-1">
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+            <nav className="flex items-center text-sm text-muted-foreground">
+                <a href="/cmspanel" className="hover:text-foreground transition-colors flex items-center gap-1">
+                    <RefreshCw className="w-4 h-4" /> {/* Fallback icon */}
                     Dashboard
                 </a>
-                <svg className="w-4 h-4 mx-2 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-                <span className="flex items-center gap-1 text-slate-700 font-medium">
+                <span className="w-4 h-4 mx-2 text-muted">/</span>
+                <span className="flex items-center gap-1 text-foreground font-medium">
                     <Building className="w-4 h-4" />
                     Tenants
                 </span>
             </nav>
 
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-card p-6 rounded-xl border border-border shadow-sm">
                 <div>
-                    <h2 className="text-3xl font-bold text-slate-800 flex items-center gap-2">
-                        <Building className="w-8 h-8 text-blue-600" />
+                    <h2 className="text-3xl font-bold text-foreground flex items-center gap-2">
+                        <Building className="w-8 h-8 text-primary" />
                         Tenants
                     </h2>
-                    <p className="text-slate-500 mt-1">Manage platform tenants, subscriptions, and domains.</p>
+                    <p className="text-muted-foreground mt-1">Manage platform tenants, subscriptions, and domains.</p>
                 </div>
                 <div className="flex gap-2">
-                    <Button variant="ghost" onClick={fetchTenants} title="Refresh">
+                    <Button variant="ghost" onClick={fetchTenants} title="Refresh" className="text-muted-foreground hover:text-foreground">
                         <RefreshCw className="w-4 h-4" />
                     </Button>
-                    <Button onClick={handleCreate} className="bg-blue-600 hover:bg-blue-700">
+                    <Button onClick={handleCreate} className="bg-primary text-primary-foreground hover:bg-primary/90">
                         <Plus className="w-4 h-4 mr-2" /> New Tenant
                     </Button>
                 </div>
             </div>
 
-            <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                <div className="p-4 border-b border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+            <div className="bg-card rounded-xl border border-border shadow-sm overflow-hidden">
+                <div className="p-4 border-b border-border bg-muted/20 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
                     <Input
                         placeholder="Search tenants..."
                         value={query}
                         onChange={e => setQuery(e.target.value)}
-                        className="max-w-sm bg-white"
+                        className="max-w-sm bg-background border-input"
                     />
                     <div className="flex items-center gap-2">
-                        <span className="text-sm text-slate-500">Show:</span>
+                        <span className="text-sm text-muted-foreground">Show:</span>
                         <Select value={String(itemsPerPage)} onValueChange={(v) => { setItemsPerPage(Number(v)); setCurrentPage(1); }}>
-                            <SelectTrigger className="w-[70px] h-8 bg-white">
+                            <SelectTrigger className="w-[70px] h-8 bg-background border-input">
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -363,8 +369,8 @@ function TenantsManager() {
                 />
                 {/* Pagination Controls */}
                 {totalPages > 1 && (
-                    <div className="flex items-center justify-between px-4 py-3 border-t border-slate-100 bg-slate-50/50">
-                        <div className="text-sm text-slate-500">
+                    <div className="flex items-center justify-between px-4 py-3 border-t border-border bg-muted/20">
+                        <div className="text-sm text-muted-foreground">
                             Showing {startIndex + 1} - {Math.min(endIndex, filteredTenants.length)} of {filteredTenants.length} tenants
                         </div>
                         <div className="flex items-center gap-1">
@@ -451,7 +457,7 @@ function TenantsManager() {
                             <div className="grid gap-2">
                                 <Label>Status</Label>
                                 <Select value={formData.status} onValueChange={v => setFormData({ ...formData, status: v })}>
-                                    <SelectTrigger><SelectValue /></SelectTrigger>
+                                    <SelectTrigger className="bg-background border-input"><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="active">Active</SelectItem>
                                         <SelectItem value="suspended">Suspended</SelectItem>
@@ -462,7 +468,7 @@ function TenantsManager() {
                             <div className="grid gap-2">
                                 <Label>Subscription</Label>
                                 <Select value={formData.subscription_tier} onValueChange={v => setFormData({ ...formData, subscription_tier: v })}>
-                                    <SelectTrigger><SelectValue /></SelectTrigger>
+                                    <SelectTrigger className="bg-background border-input"><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="free">Free</SelectItem>
                                         <SelectItem value="pro">Pro</SelectItem>
@@ -473,9 +479,9 @@ function TenantsManager() {
                         </div>
 
                         {/* Billing Section */}
-                        <div className="pt-4 border-t border-slate-100">
-                            <h4 className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
-                                <DollarSign className="w-4 h-4" /> Billing Information
+                        <div className="pt-4 border-t border-border">
+                            <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                                <DollarSign className="w-4 h-4 text-muted-foreground" /> Billing Information
                             </h4>
                             <div className="grid grid-cols-4 gap-4">
                                 <div className="grid gap-2">
@@ -498,7 +504,7 @@ function TenantsManager() {
                                 <div className="grid gap-2">
                                     <Label>Currency</Label>
                                     <Select value={formData.currency} onValueChange={v => setFormData({ ...formData, currency: v })}>
-                                        <SelectTrigger><SelectValue /></SelectTrigger>
+                                        <SelectTrigger className="bg-background border-input"><SelectValue /></SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="IDR">IDR (Rupiah)</SelectItem>
                                             <SelectItem value="USD">USD (Dollar)</SelectItem>
@@ -511,7 +517,7 @@ function TenantsManager() {
                                 <div className="grid gap-2">
                                     <Label>Cycle</Label>
                                     <Select value={formData.billing_cycle} onValueChange={v => setFormData({ ...formData, billing_cycle: v })}>
-                                        <SelectTrigger><SelectValue /></SelectTrigger>
+                                        <SelectTrigger className="bg-background border-input"><SelectValue /></SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="monthly">Monthly</SelectItem>
                                             <SelectItem value="yearly">Yearly</SelectItem>
@@ -523,9 +529,9 @@ function TenantsManager() {
 
                             {/* Locale / Language */}
                             <div className="grid gap-2 mt-4">
-                                <Label className="flex items-center gap-1"><Globe className="w-3 h-3" /> Default Language</Label>
+                                <Label className="flex items-center gap-1"><Globe className="w-3 h-3 text-muted-foreground" /> Default Language</Label>
                                 <Select value={formData.locale} onValueChange={v => setFormData({ ...formData, locale: v })}>
-                                    <SelectTrigger className="max-w-[200px]"><SelectValue /></SelectTrigger>
+                                    <SelectTrigger className="max-w-[200px] bg-background border-input"><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="id">🇮🇩 Bahasa Indonesia</SelectItem>
                                         <SelectItem value="en">🇺🇸 English</SelectItem>
@@ -539,13 +545,13 @@ function TenantsManager() {
                         </div>
 
                         {/* Contact & Notes */}
-                        <div className="pt-4 border-t border-slate-100">
-                            <h4 className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
-                                <FileText className="w-4 h-4" /> Administrative Notes
+                        <div className="pt-4 border-t border-border">
+                            <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                                <FileText className="w-4 h-4 text-muted-foreground" /> Administrative Notes
                             </h4>
                             <div className="grid gap-4">
                                 <div className="grid gap-2">
-                                    <Label className="flex items-center gap-1"><Mail className="w-3 h-3" /> Contact Email</Label>
+                                    <Label className="flex items-center gap-1"><Mail className="w-3 h-3 text-muted-foreground" /> Contact Email</Label>
                                     <Input
                                         type="email"
                                         value={formData.contact_email}
@@ -559,7 +565,7 @@ function TenantsManager() {
                                         value={formData.notes}
                                         onChange={e => setFormData({ ...formData, notes: e.target.value })}
                                         placeholder="Internal notes about this tenant..."
-                                        className="flex min-h-[80px] w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                                     />
                                 </div>
                             </div>
