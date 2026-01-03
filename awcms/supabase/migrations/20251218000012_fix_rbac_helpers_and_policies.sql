@@ -36,104 +36,123 @@ BEGIN
 END;
 $function$;
 
+COMMIT; -- Commit functions first
+
 -- 2. Update Articles Policies
-DROP POLICY IF EXISTS "articles_select_policy" ON public.articles;
-CREATE POLICY "articles_select_policy" ON public.articles
-    FOR SELECT
-    TO public
-    USING (
-        (status = 'published' AND deleted_at IS NULL) OR
-        (
-            auth.role() = 'authenticated' AND (
-                (tenant_id = current_tenant_id()) OR -- Tenant Scope
-                is_platform_admin() -- Global Scope
-            )
-        )
-    );
+DO $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'articles') THEN
+        EXECUTE 'DROP POLICY IF EXISTS "articles_select_policy" ON public.articles';
+        EXECUTE 'CREATE POLICY "articles_select_policy" ON public.articles
+            FOR SELECT
+            TO public
+            USING (
+                (status = ''published'' AND deleted_at IS NULL) OR
+                (
+                    auth.role() = ''authenticated'' AND (
+                        (tenant_id = current_tenant_id()) OR -- Tenant Scope
+                        is_platform_admin() -- Global Scope
+                    )
+                )
+            )';
 
-DROP POLICY IF EXISTS "articles_update_policy" ON public.articles;
-CREATE POLICY "articles_update_policy" ON public.articles
-    FOR UPDATE
-    TO public
-    USING (
-        auth.role() = 'authenticated' AND (
-            (tenant_id = current_tenant_id() AND is_admin_or_above()) OR
-            (created_by = auth.uid()) OR -- Own content
-            is_platform_admin()
-        )
-    );
+        EXECUTE 'DROP POLICY IF EXISTS "articles_update_policy" ON public.articles';
+        EXECUTE 'CREATE POLICY "articles_update_policy" ON public.articles
+            FOR UPDATE
+            TO public
+            USING (
+                auth.role() = ''authenticated'' AND (
+                    (tenant_id = current_tenant_id() AND is_admin_or_above()) OR
+                    (created_by = auth.uid()) OR -- Own content
+                    is_platform_admin()
+                )
+            )';
 
-DROP POLICY IF EXISTS "articles_delete_policy" ON public.articles;
-CREATE POLICY "articles_delete_policy" ON public.articles
-    FOR DELETE
-    TO public
-    USING (
-        auth.role() = 'authenticated' AND (
-            (tenant_id = current_tenant_id() AND is_super_admin()) OR -- super_admin allows specific role in tenant
-            is_platform_admin()
-        )
-    );
+        EXECUTE 'DROP POLICY IF EXISTS "articles_delete_policy" ON public.articles';
+        EXECUTE 'CREATE POLICY "articles_delete_policy" ON public.articles
+            FOR DELETE
+            TO public
+            USING (
+                auth.role() = ''authenticated'' AND (
+                    (tenant_id = current_tenant_id() AND is_super_admin()) OR -- super_admin allows specific role in tenant
+                    is_platform_admin()
+                )
+            )';
+    END IF;
+END $$;
 
 -- 3. Update Files Policies
--- Fix 'files_update_owner' which restricted to exactly 'super_admin' string
-DROP POLICY IF EXISTS "files_update_owner" ON public.files;
-CREATE POLICY "files_update_owner" ON public.files
-    FOR UPDATE
-    TO public
-    USING (
-        (auth.uid() = uploaded_by) OR 
-        (
-             (tenant_id = current_tenant_id() AND is_super_admin()) OR -- includes super_super_admin via helper, but safer to be specific
-             is_platform_admin() -- Ensure platform admin bypass
-        )
-    );
+DO $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'files') THEN
+        -- Fix 'files_update_owner' which restricted to exactly 'super_admin' string
+        EXECUTE 'DROP POLICY IF EXISTS "files_update_owner" ON public.files';
+        EXECUTE 'CREATE POLICY "files_update_owner" ON public.files
+            FOR UPDATE
+            TO public
+            USING (
+                (auth.uid() = uploaded_by) OR 
+                (
+                     (tenant_id = current_tenant_id() AND is_super_admin()) OR -- includes super_super_admin via helper, but safer to be specific
+                     is_platform_admin() -- Ensure platform admin bypass
+                )
+            )';
+    END IF;
+END $$;
 
 -- 4. Update Products Policies (Fix explicit role check)
-DROP POLICY IF EXISTS "products_delete_policy" ON public.products;
-CREATE POLICY "products_delete_policy" ON public.products
-    FOR DELETE
-    TO authenticated
-    USING (
-        (created_by = auth.uid()) OR
-        (tenant_id = current_tenant_id() AND is_super_admin()) OR -- Uses updated helper
-        is_platform_admin()
-    );
+DO $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'products') THEN
+        EXECUTE 'DROP POLICY IF EXISTS "products_delete_policy" ON public.products';
+        EXECUTE 'CREATE POLICY "products_delete_policy" ON public.products
+            FOR DELETE
+            TO authenticated
+            USING (
+                (created_by = auth.uid()) OR
+                (tenant_id = current_tenant_id() AND is_super_admin()) OR -- Uses updated helper
+                is_platform_admin()
+            )';
 
-DROP POLICY IF EXISTS "products_update_policy" ON public.products;
-CREATE POLICY "products_update_policy" ON public.products
-    FOR UPDATE
-    TO authenticated
-    USING (
-        (created_by = auth.uid()) OR
-        (tenant_id = current_tenant_id() AND is_admin_or_above()) OR -- Uses updated helper
-        is_platform_admin()
-    )
-    WITH CHECK (true);
+        EXECUTE 'DROP POLICY IF EXISTS "products_update_policy" ON public.products';
+        EXECUTE 'CREATE POLICY "products_update_policy" ON public.products
+            FOR UPDATE
+            TO authenticated
+            USING (
+                (created_by = auth.uid()) OR
+                (tenant_id = current_tenant_id() AND is_admin_or_above()) OR -- Uses updated helper
+                is_platform_admin()
+            )
+            WITH CHECK (true)';
+    END IF;
+END $$;
 
 -- 5. Update Pages Policies (Fix hardcoded array)
-DROP POLICY IF EXISTS "pages_delete_policy" ON public.pages;
-CREATE POLICY "pages_delete_policy" ON public.pages
-    FOR DELETE
-    TO public
-    USING (
-        auth.role() = 'authenticated' AND (
-            (created_by = auth.uid()) OR 
-            (tenant_id = current_tenant_id() AND is_super_admin()) OR
-            is_platform_admin()
-        )
-    );
+DO $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'pages') THEN
+        EXECUTE 'DROP POLICY IF EXISTS "pages_delete_policy" ON public.pages';
+        EXECUTE 'CREATE POLICY "pages_delete_policy" ON public.pages
+            FOR DELETE
+            TO public
+            USING (
+                auth.role() = ''authenticated'' AND (
+                    (created_by = auth.uid()) OR 
+                    (tenant_id = current_tenant_id() AND is_super_admin()) OR
+                    is_platform_admin()
+                )
+            )';
 
-DROP POLICY IF EXISTS "pages_update_policy" ON public.pages;
-CREATE POLICY "pages_update_policy" ON public.pages
-    FOR UPDATE
-    TO public
-    USING (
-        auth.role() = 'authenticated' AND (
-            (created_by = auth.uid()) OR
-            (tenant_id = current_tenant_id() AND is_admin_or_above()) OR
-            is_platform_admin()
-        )
-    );
-
-
-COMMIT;
+        EXECUTE 'DROP POLICY IF EXISTS "pages_update_policy" ON public.pages';
+        EXECUTE 'CREATE POLICY "pages_update_policy" ON public.pages
+            FOR UPDATE
+            TO public
+            USING (
+                auth.role() = ''authenticated'' AND (
+                    (created_by = auth.uid()) OR
+                    (tenant_id = current_tenant_id() AND is_admin_or_above()) OR
+                    is_platform_admin()
+                )
+            )';
+    END IF;
+END $$;

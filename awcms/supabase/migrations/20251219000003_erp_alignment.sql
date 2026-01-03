@@ -2,156 +2,87 @@
 -- Generated based on docs/ABAC_SYSTEM.md and ERP Architecture
 
 -- 1. Ensure Roles Exist
-INSERT INTO public.roles (name, description, is_system) VALUES
-('owner', 'System Owner - Supreme Authority', true),
-('author', 'Content Creator', true),
-('member', 'Registered User', true),
-('subscriber', 'Premium User', true)
-ON CONFLICT (name) DO NOTHING;
-
--- 2. Define New Permissions (Granular)
 DO $$
 DECLARE
-  perm text;
-  perms text[] := ARRAY[
-    -- Platform Scope
-    'platform.tenant.create', 'platform.tenant.read', 'platform.tenant.update', 'platform.tenant.delete', 'platform.tenant.restore', 'platform.tenant.delete_permanent',
-    'platform.setting.read', 'platform.setting.update',
-    'platform.module.create', 'platform.module.read', 'platform.module.update',
-    'platform.billing.read', 'platform.billing.update',
-    'platform.user.create', 'platform.user.read', 'platform.user.update', 'platform.user.delete', 'platform.user.restore', 'platform.user.delete_permanent',
-
-    -- Tenant Scope
-    'tenant.post.create', 'tenant.post.read', 'tenant.post.update', 'tenant.post.publish', 'tenant.post.delete', 'tenant.post.restore', 'tenant.post.delete_permanent',
-    'tenant.page.create', 'tenant.page.read', 'tenant.page.update', 'tenant.page.publish', 'tenant.page.delete', 'tenant.page.restore', 'tenant.page.delete_permanent',
-    'tenant.media.create', 'tenant.media.read', 'tenant.media.update', 'tenant.media.delete', 'tenant.media.restore', 'tenant.media.delete_permanent',
-    'tenant.user.create', 'tenant.user.read', 'tenant.user.update', 'tenant.user.publish', 'tenant.user.delete', 'tenant.user.restore',
-    'tenant.setting.read', 'tenant.setting.update',
-    'tenant.profile.read', 'tenant.profile.update',
-    'tenant.theme.manage', -- Added for ThemesManager legacy mapping
-
-    -- Public/Consumption Scope
-    'content.read', 'content.comment', 'content.like'
-  ];
+    default_tenant_id UUID;
 BEGIN
-  FOREACH perm IN ARRAY perms LOOP
-    INSERT INTO public.permissions (name, description, module, resource, action)
-    VALUES (
-      perm, 
-      'ERP Standard Permission', 
-      split_part(perm, '.', 1), 
-      split_part(perm, '.', 1), 
-      split_part(perm, '.', array_length(string_to_array(perm, '.'), 1))
-    )
-    ON CONFLICT (name) DO UPDATE SET
-        module = EXCLUDED.module,
-        resource = EXCLUDED.resource,
-        action = EXCLUDED.action;
-  END LOOP;
-END;
-$$;
-
--- 3. Map Roles to Permissions
-CREATE OR REPLACE FUNCTION grant_perm(role_name text, perm_keys text[]) RETURNS void AS $$
-DECLARE
-  r_id uuid;
-  p_key text;
-  p_id uuid;
-BEGIN
-  SELECT id INTO r_id FROM roles WHERE name = role_name;
-  IF r_id IS NOT NULL THEN
-    FOREACH p_key IN ARRAY perm_keys LOOP
-        SELECT id INTO p_id FROM permissions WHERE name = p_key; -- Changed from key to name to match schema
-        IF p_id IS NOT NULL THEN
-            INSERT INTO role_permissions (role_id, permission_id) VALUES (r_id, p_id) ON CONFLICT DO NOTHING;
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'roles' AND table_schema = 'public') 
+       AND EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'tenants' AND table_schema = 'public') THEN
+        
+        -- Get primary tenant for system roles
+        SELECT id INTO default_tenant_id FROM public.tenants WHERE slug = 'primary' LIMIT 1;
+        
+        IF default_tenant_id IS NOT NULL THEN
+            INSERT INTO public.roles (name, description, is_system, tenant_id) VALUES
+            ('owner', 'System Owner - Supreme Authority', true, default_tenant_id),
+            ('author', 'Content Creator', true, default_tenant_id),
+            ('member', 'Registered User', true, default_tenant_id),
+            ('subscriber', 'Premium User', true, default_tenant_id)
+            ON CONFLICT (name) DO NOTHING;
         END IF;
-    END LOOP;
-  END IF;
-END;
-$$ LANGUAGE plpgsql;
+    END IF;
+END $$;
 
+-- 2. Define Permissions (Resource-based)
+-- Uses dynamic sql to avoid errors if tables missing
 DO $$
+DECLARE
+    perm text[]; -- Array slice
+    perms text[][] := ARRAY[
+        ['articles.read', 'Can read articles'],
+        ['articles.create', 'Can create articles'],
+        ['articles.edit', 'Can edit any article'],
+        ['articles.delete', 'Can delete any article'],
+        ['articles.publish', 'Can publish articles'],
+        ['pages.read', 'Can read pages'],
+        ['pages.manage', 'Can manage pages'],
+        ['users.read', 'Can read user profiles'],
+        ['users.manage', 'Can manage users'],
+        ['roles.read', 'Can view roles'],
+        ['roles.manage', 'Can manage roles'],
+        ['settings.manage', 'Can manage system settings']
+    ];
 BEGIN
-    -- OWNER: Platform.* (Limited), Tenant.* (All), Content.*
-    PERFORM grant_perm('owner', ARRAY[
-        'platform.tenant.create', 'platform.tenant.read', 'platform.tenant.update', 'platform.tenant.delete', 'platform.tenant.restore', 'platform.tenant.delete_permanent',
-        'platform.module.create', 'platform.module.read', 'platform.module.update',
-        'platform.user.create', 'platform.user.read', 'platform.user.update', 'platform.user.delete', 'platform.user.restore', 'platform.user.delete_permanent',
-        'tenant.post.create', 'tenant.post.read', 'tenant.post.update', 'tenant.post.publish', 'tenant.post.delete', 'tenant.post.restore', 'tenant.post.delete_permanent',
-        'tenant.page.create', 'tenant.page.read', 'tenant.page.update', 'tenant.page.publish', 'tenant.page.delete', 'tenant.page.restore', 'tenant.page.delete_permanent',
-        'tenant.media.create', 'tenant.media.read', 'tenant.media.update', 'tenant.media.delete', 'tenant.media.restore', 'tenant.media.delete_permanent',
-        'tenant.user.create', 'tenant.user.read', 'tenant.user.update', 'tenant.user.publish', 'tenant.user.delete', 'tenant.user.restore',
-        'tenant.setting.read', 'tenant.setting.update',
-        'tenant.theme.manage',
-        'content.read', 'content.comment', 'content.like'
-    ]);
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'permissions' AND table_schema = 'public') THEN
+        
+        FOREACH perm SLICE 1 IN ARRAY perms
+        LOOP
+            -- Using split_part to populate NOT NULL columns (module, resource, action) from the permission name (e.g. 'articles.read')
+            EXECUTE 'INSERT INTO public.permissions (name, description, module, resource, action) 
+                     VALUES ($1, $2, split_part($1, ''.'', 1), split_part($1, ''.'', 1), split_part($1, ''.'', 2)) 
+                     ON CONFLICT (name) DO NOTHING' 
+            USING perm[1], perm[2];
+        END LOOP;
+    END IF;
+END $$;
 
-    -- SUPER ADMIN: Platform.* (Subset), Tenant.* (All)
-    PERFORM grant_perm('super_admin', ARRAY[
-        'platform.tenant.create', 'platform.tenant.read', 'platform.tenant.update', 'platform.tenant.delete', 'platform.tenant.restore', 'platform.tenant.delete_permanent',
-        'platform.module.create', 'platform.module.read', 'platform.module.update',
-        'tenant.post.create', 'tenant.post.read', 'tenant.post.update', 'tenant.post.publish', 'tenant.post.delete', 'tenant.post.restore', 'tenant.post.delete_permanent',
-        'tenant.page.create', 'tenant.page.read', 'tenant.page.update', 'tenant.page.publish', 'tenant.page.delete', 'tenant.page.restore', 'tenant.page.delete_permanent',
-        'tenant.media.create', 'tenant.media.read', 'tenant.media.update', 'tenant.media.delete', 'tenant.media.restore', 'tenant.media.delete_permanent',
-        'tenant.user.create', 'tenant.user.read', 'tenant.user.update', 'tenant.user.publish', 'tenant.user.delete', 'tenant.user.restore',
-        'tenant.setting.read', 'tenant.setting.update',
-        'tenant.theme.manage',
-        'content.read', 'content.comment', 'content.like'
-    ]);
 
-    -- ADMIN (Tenant): Tenant.* (Selected)
-    PERFORM grant_perm('admin', ARRAY[
-        'tenant.post.create', 'tenant.post.read', 'tenant.post.update', 'tenant.post.publish', 'tenant.post.delete', 'tenant.post.restore',
-        'tenant.page.create', 'tenant.page.read', 'tenant.page.update', 'tenant.page.publish', 'tenant.page.delete', 'tenant.page.restore',
-        'tenant.media.create', 'tenant.media.read', 'tenant.media.update', 'tenant.media.delete', 'tenant.media.restore', 
-        'tenant.user.create', 'tenant.user.read', 'tenant.user.update', 'tenant.user.publish', 'tenant.user.delete', 'tenant.user.restore',
-        'tenant.setting.read', 'tenant.setting.update',
-        'tenant.theme.manage',
-        'content.read', 'content.comment', 'content.like'
-    ]);
+-- 3. Assign Permissions to Roles (Seed Logic)
+-- Using dynamic SQL for safety
+DO $$
+DECLARE
+    role_name text;
+    perm_code text;
+    v_role_id uuid;
+    v_perm_id uuid;
+BEGIN
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'roles' AND table_schema = 'public') 
+       AND EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'permissions' AND table_schema = 'public') 
+       AND EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'role_permissions' AND table_schema = 'public') THEN
 
-    -- EDITOR (Tenant)
-    PERFORM grant_perm('editor', ARRAY[
-        'tenant.post.create', 'tenant.post.read', 'tenant.post.update', 'tenant.post.publish', 'tenant.post.delete',
-        'tenant.media.create', 'tenant.media.read', 'tenant.media.update',
-        'tenant.page.create', 'tenant.page.read', 'tenant.page.update',
-        'content.read', 'content.comment', 'content.like'
-    ]);
+        -- Author (Articles)
+        SELECT id INTO v_role_id FROM public.roles WHERE name = 'author' LIMIT 1;
+        IF v_role_id IS NOT NULL THEN
+            FOR perm_code IN SELECT unnest(ARRAY['articles.read', 'articles.create', 'articles.edit', 'pages.read'])
+            LOOP
+                -- Lookup using 'name' column
+                SELECT id INTO v_perm_id FROM public.permissions WHERE name = perm_code LIMIT 1;
+                IF v_perm_id IS NOT NULL THEN
+                    EXECUTE 'INSERT INTO public.role_permissions (role_id, permission_id) VALUES ($1, $2) ON CONFLICT DO NOTHING'
+                    USING v_role_id, v_perm_id;
+                END IF;
+            END LOOP;
+        END IF;
 
-    -- AUTHOR (Tenant)
-    PERFORM grant_perm('author', ARRAY[
-        'tenant.post.create', 'tenant.post.read', 'tenant.post.update', -- Logic U-own handled in Context
-        'tenant.media.create', 'tenant.media.read',
-        'content.read'
-    ]);
-
-    -- MEMBER
-    PERFORM grant_perm('member', ARRAY[
-        'content.read', 'content.comment',
-        'tenant.profile.read', 'tenant.profile.update'
-    ]);
-
-    -- SUBSCRIBER
-    PERFORM grant_perm('subscriber', ARRAY[
-        'content.read'
-    ]);
-
-    -- PUBLIC
-    PERFORM grant_perm('public', ARRAY[
-        'content.read'
-    ]);
-END;
-$$;
-
-DROP FUNCTION grant_perm;
-
--- 4. Map Legacy Admin Menus to New Keys
-UPDATE public.admin_menus SET permission = 'tenant.post.read' WHERE permission = 'view_posts';
-UPDATE public.admin_menus SET permission = 'tenant.page.read' WHERE permission = 'view_pages';
-UPDATE public.admin_menus SET permission = 'tenant.media.read' WHERE permission = 'manage_media';
-UPDATE public.admin_menus SET permission = 'tenant.user.read' WHERE permission = 'view_users';
-UPDATE public.admin_menus SET permission = 'tenant.setting.read' WHERE permission = 'view_settings';
-UPDATE public.admin_menus SET permission = 'tenant.theme.manage' WHERE permission = 'manage_themes';
-UPDATE public.admin_menus SET permission = 'platform.tenant.read' WHERE permission = 'manage_tenants';
--- Visual Builder mapping
-UPDATE public.admin_menus SET permission = 'tenant.page.read' WHERE permission = 'view_visual_builder';
+    END IF;
+END $$;

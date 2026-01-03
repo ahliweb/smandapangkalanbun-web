@@ -11,6 +11,7 @@ DECLARE
     tier TEXT;
     current_usage BIGINT := 0;
     max_limit BIGINT;
+    storage_table_exists BOOLEAN;
 BEGIN
     -- Get Tenant Tier
     SELECT subscription_tier INTO tier
@@ -37,10 +38,16 @@ BEGIN
         ELSE max_limit := 104857600; -- 100MB
         END IF;
 
-        -- Get Current Usage
-        SELECT COALESCE(SUM(file_size), 0) INTO current_usage
-        FROM public.files
-        WHERE tenant_id = check_tenant_id AND deleted_at IS NULL;
+        -- Get Current Usage (Safely check if files table exists)
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'files') INTO storage_table_exists;
+        
+        IF storage_table_exists THEN
+            EXECUTE 'SELECT COALESCE(SUM(file_size), 0) FROM public.files WHERE tenant_id = $1 AND deleted_at IS NULL'
+            INTO current_usage
+            USING check_tenant_id;
+        ELSE
+            current_usage := 0;
+        END IF;
     END IF;
 
     -- Check Limit (-1 means unlimited)
@@ -79,11 +86,13 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-DROP TRIGGER IF EXISTS tr_enforce_user_limit ON public.users;
-CREATE TRIGGER tr_enforce_user_limit
-BEFORE INSERT ON public.users
-FOR EACH ROW
-EXECUTE FUNCTION public.enforce_user_limit();
+DO $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'users') THEN
+        EXECUTE 'DROP TRIGGER IF EXISTS tr_enforce_user_limit ON public.users';
+        EXECUTE 'CREATE TRIGGER tr_enforce_user_limit BEFORE INSERT ON public.users FOR EACH ROW EXECUTE FUNCTION public.enforce_user_limit()';
+    END IF;
+END $$;
 
 -- 3. Trigger for Max Storage
 CREATE OR REPLACE FUNCTION public.enforce_storage_limit()
@@ -103,8 +112,10 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-DROP TRIGGER IF EXISTS tr_enforce_storage_limit ON public.files;
-CREATE TRIGGER tr_enforce_storage_limit
-BEFORE INSERT ON public.files
-FOR EACH ROW
-EXECUTE FUNCTION public.enforce_storage_limit();
+DO $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'files') THEN
+        EXECUTE 'DROP TRIGGER IF EXISTS tr_enforce_storage_limit ON public.files';
+        EXECUTE 'CREATE TRIGGER tr_enforce_storage_limit BEFORE INSERT ON public.files FOR EACH ROW EXECUTE FUNCTION public.enforce_storage_limit()';
+    END IF;
+END $$;

@@ -11,6 +11,18 @@ All notable changes to the **AWCMS** project will be documented in this file.
 - **System Audit**: Verified system health across 12 checking points.
 - **Documentation**: Updated README.md and SECURITY.md with CORS best practices.
 
+## [2.3.0] - 2026-01-04
+
+### Added
+
+- **Database Stability**: Fully synchronized local schema with remote database using `npx supabase db pull`.
+- **Schema Validation**: Patched migrations to enforce strict `NOT NULL` constraints on `permissions` table.
+- **Cleanup**: Removed unused `remote_schema.sql` artifacts.
+
+### Changed
+
+- **Version**: Bumped to 2.3.0 to reflect core stability achievements.
+
 ## [2.2.0] - 2026-01-03
 
 ### Changed
@@ -59,6 +71,53 @@ All notable changes to the **AWCMS** project will be documented in this file.
   - Resolved missing `ResourceSelect` import in `GenericResourceEditor`.
   - Resolved incorrect import paths in `useRegions.js`.
 - **Articles Module**: Fixed blank page issues and routing.
+
+## [2.0.0] "Aurora" - 2025-12-30
+
+### Added
+
+- **Versioning System**: Centralized version management with `src/lib/version.js`
+- **Version Badge**: UI component for displaying version in admin panel
+- **Documentation Audit**: 7 new documentation files (CONTRIBUTING, CODE_OF_CONDUCT, LICENSE, OFFLINE_ARCHITECTURE, ROLE_HIERARCHY, AUDIT_TRAIL, RLS_POLICIES)
+- **Role Migration**: Changed `super_super_admin` to `owner` as supreme role
+- **RLS Fix**: Global roles (owner, super_admin) now readable by all users
+- **Security Hardening**: Added `SET search_path = ''` to SECURITY DEFINER functions
+
+### Changed
+
+- **PERFORMANCE.md**: Expanded from 682 bytes to 4.8 KB
+- **MONITORING.md**: Expanded from 573 bytes to 4.1 KB
+- **INDEX.md**: Added Security & Access Control section
+
+### Fixed
+
+- RLS policy on `roles` table blocking global role access
+- Supabase Security Advisor warnings for function search_path
+
+## [1.0.0] - 2025-12-15
+
+### Added (1.0.0)
+
+- **Sidebar Menu Structure**: Logical groups (CONTENT, MEDIA, COMMERCE, etc.)
+- **Dynamic Sitemap**: Edge Function (`serve-sitemap`) generation
+- **Tenant Administration**: Billing and administrative fields
+- **Multi-Tenant Architecture**: Full tenant isolation with RLS
+- **ABAC System**: Attribute-Based Access Control
+- **Visual Builder**: Puck-based page builder
+- **Internationalization**: EN and ID language support
+
+### Changed (1.0.0)
+
+- Menu Grouping consolidated and reorganized
+- User Module tenant selector based on role
+- Dashboard Platform Overview for owner and super_admin
+
+### Fixed (1.0.0)
+
+- UserEditor.jsx duplicate query bug
+- MainRouter.jsx typo route `/ssn`
+- TenantSettings.jsx infinite spinner
+- TenantSettings.jsx invisible Save button
 
 ## [0.1.0] - 2025-12-01
 

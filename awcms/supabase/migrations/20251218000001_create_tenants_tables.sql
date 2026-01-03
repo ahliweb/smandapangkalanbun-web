@@ -87,6 +87,7 @@ BEGIN
     -- Users
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'users' AND column_name = 'tenant_id') THEN
         ALTER TABLE public.users ADD COLUMN tenant_id UUID REFERENCES public.tenants(id);
+        ALTER TABLE public.users ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ DEFAULT NULL;
         UPDATE public.users SET tenant_id = default_tenant_id WHERE tenant_id IS NULL; -- This fires trigger, which now works!
         ALTER TABLE public.users ALTER COLUMN tenant_id SET NOT NULL;
         CREATE INDEX idx_users_tenant_id ON public.users(tenant_id);
@@ -143,7 +144,9 @@ BEGIN
     END IF;
 
     -- Backfill Audit Logs (Now that trigger is updated and handled, we can backfill old nulls)
-    UPDATE public.audit_logs SET tenant_id = default_tenant_id WHERE tenant_id IS NULL;
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'audit_logs') THEN
+        UPDATE public.audit_logs SET tenant_id = default_tenant_id WHERE tenant_id IS NULL;
+    END IF;
 
 END $$;
 
@@ -173,6 +176,21 @@ BEGIN
     RETURN _tenant_id;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER STABLE;
+
+CREATE OR REPLACE FUNCTION public.is_admin_or_above()
+RETURNS boolean
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $function$
+BEGIN
+    RETURN EXISTS (
+        SELECT 1 FROM public.users u 
+        JOIN public.roles r ON u.role_id = r.id 
+        WHERE u.id = auth.uid() 
+        AND r.name IN ('admin', 'super_admin', 'super_super_admin')
+    );
+END;
+$function$;
 
 -- 7. Create 'super_super_admin' Role
 DO $$
@@ -225,12 +243,16 @@ USING (
 );
 
 -- Audit Logs
-DROP POLICY IF EXISTS "Admins view audit logs" ON public.audit_logs;
-CREATE POLICY "Admins view audit logs" ON public.audit_logs
-    FOR SELECT TO authenticated
-    USING (
-        (tenant_id = public.current_tenant_id() AND (SELECT name FROM public.roles WHERE id = (SELECT role_id FROM public.users WHERE id = auth.uid())) IN ('super_admin', 'admin'))
-        Or (tenant_id IS NULL AND public.is_platform_admin())
-        OR public.is_platform_admin()
-    );
-
+DO $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'audit_logs') THEN
+        DROP POLICY IF EXISTS "Admins view audit logs" ON public.audit_logs;
+        CREATE POLICY "Admins view audit logs" ON public.audit_logs
+            FOR SELECT TO authenticated
+            USING (
+                (tenant_id = public.current_tenant_id() AND (SELECT name FROM public.roles WHERE id = (SELECT role_id FROM public.users WHERE id = auth.uid())) IN ('super_admin', 'admin'))
+                Or (tenant_id IS NULL AND public.is_platform_admin())
+                OR public.is_platform_admin()
+            );
+    END IF;
+END $$;

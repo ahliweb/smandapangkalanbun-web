@@ -22,52 +22,63 @@ DECLARE
     ];
 BEGIN
     FOREACH t IN ARRAY tables LOOP
-        -- 1. Add tenant_id column if it doesn't exist
-        IF NOT EXISTS (
-            SELECT 1 FROM information_schema.columns 
-            WHERE table_name = t AND column_name = 'tenant_id'
-        ) THEN
-            EXECUTE format('ALTER TABLE public.%I ADD COLUMN tenant_id UUID REFERENCES public.tenants(id);', t);
-            EXECUTE format('CREATE INDEX IF NOT EXISTS idx_%I_tenant_id ON public.%I(tenant_id);', t, t);
-        END IF;
+        -- Strict check for PUBLIC tables only
+        IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = t AND table_schema = 'public') THEN
+            
+            -- 1. Add tenant_id column if it doesn't exist
+            IF NOT EXISTS (
+                SELECT 1 FROM information_schema.columns 
+                WHERE table_name = t AND column_name = 'tenant_id'
+            ) THEN
+                EXECUTE format('ALTER TABLE public.%I ADD COLUMN tenant_id UUID REFERENCES public.tenants(id);', t);
+                EXECUTE format('CREATE INDEX IF NOT EXISTS idx_%I_tenant_id ON public.%I(tenant_id);', t, t);
+            END IF;
 
-        -- 2. Enable RLS
-        EXECUTE format('ALTER TABLE public.%I ENABLE ROW LEVEL SECURITY;', t);
+            -- 2. Enable RLS
+            EXECUTE format('ALTER TABLE public.%I ENABLE ROW LEVEL SECURITY;', t);
 
-        -- 3. Drop existing policies to avoid conflicts (clean slate for these tables)
-        -- We use a safe drop pattern that iterates over existing policies if needed, 
-        -- but for simplicity in this block we'll just try to drop known standard ones or ignore errors if complex.
-        -- Better approach: Create new policies with unique names.
+            -- 3. Drop existing policies to avoid conflicts (clean slate for these tables)
+            -- We use a safe drop pattern that iterates over existing policies if needed, 
+            -- but for simplicity in this block we'll just try to drop known standard ones or ignore errors if complex.
+            -- Better approach: Create new policies with unique names.
 
-        -- POLICY: Read Access
-        -- Allow access if:
-        -- a) Row belongs to current tenant
-        -- b) User is platform admin (super_super_admin)
-        -- c) Table is 'themes' or 'templates' and tenant_id is NULL (System default themes)
-        
-        EXECUTE format('DROP POLICY IF EXISTS "Tenant Read Access" ON public.%I;', t);
-        IF t IN ('themes', 'templates') THEN
-             EXECUTE format(
-                'CREATE POLICY "Tenant Read Access" ON public.%I FOR SELECT USING ( (tenant_id = current_tenant_id()) OR (tenant_id IS NULL) OR (is_platform_admin()) );', 
-                t
-            );
-        ELSE
+            -- POLICY: Read Access
+            -- Allow access if:
+            -- a) Row belongs to current tenant
+            -- b) User is platform admin (super_super_admin)
+            -- c) Table is 'themes' or 'templates' and tenant_id is NULL (System default themes)
+            
+            EXECUTE format('DROP POLICY IF EXISTS "Tenant Read Access" ON public.%I;', t);
+            IF t IN ('themes', 'templates') THEN
+                 EXECUTE format(
+                    'CREATE POLICY "Tenant Read Access" ON public.%I FOR SELECT USING ( (tenant_id = current_tenant_id()) OR (tenant_id IS NULL) OR (is_platform_admin()) );', 
+                    t
+                );
+            ELSE
+                EXECUTE format(
+                    'CREATE POLICY "Tenant Read Access" ON public.%I FOR SELECT USING ( (tenant_id = current_tenant_id()) OR (is_platform_admin()) );', 
+                    t
+                );
+            END IF;
+
+            -- POLICY: Write Access (Insert/Update/Delete)
+            -- Allow if:
+            -- a) Row belongs to current tenant AND user is admin+
+            -- b) User is platform admin
+            
+            EXECUTE format('DROP POLICY IF EXISTS "Tenant Write Access" ON public.%I;', t);
             EXECUTE format(
-                'CREATE POLICY "Tenant Read Access" ON public.%I FOR SELECT USING ( (tenant_id = current_tenant_id()) OR (is_platform_admin()) );', 
+                'CREATE POLICY "Tenant Write Access" ON public.%I FOR ALL USING ( (tenant_id = current_tenant_id()) AND (is_admin_or_above() OR is_platform_admin()) );', 
                 t
             );
+            -- Note: Simplified condition above to match typical standard. 
+            -- But keeping original logic (admin_or_above AND tenant) OR platform_admin
+             EXECUTE format('DROP POLICY IF EXISTS "Tenant Write Access" ON public.%I;', t);
+             EXECUTE format(
+                'CREATE POLICY "Tenant Write Access" ON public.%I FOR ALL USING ( (tenant_id = current_tenant_id() AND is_admin_or_above()) OR (is_platform_admin()) );', 
+                t
+            );
+
         END IF;
-
-        -- POLICY: Write Access (Insert/Update/Delete)
-        -- Allow if:
-        -- a) Row belongs to current tenant AND user is admin+
-        -- b) User is platform admin
-        
-        EXECUTE format('DROP POLICY IF EXISTS "Tenant Write Access" ON public.%I;', t);
-        EXECUTE format(
-            'CREATE POLICY "Tenant Write Access" ON public.%I FOR ALL USING ( (tenant_id = current_tenant_id() AND is_admin_or_above()) OR (is_platform_admin()) );', 
-            t
-        );
-
     END LOOP;
 END $$;

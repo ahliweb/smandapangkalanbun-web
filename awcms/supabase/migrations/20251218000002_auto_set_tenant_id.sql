@@ -1,5 +1,6 @@
 -- Migration: 20251218_auto_set_tenant_id
 -- Description: Create trigger to automatically set tenant_id from current_tenant_id() if not provided.
+-- Force Refresh: Safe Record Loop with Dynamic SQL (Cache Cleared)
 
 -- 1. Create the trigger function
 CREATE OR REPLACE FUNCTION public.set_tenant_id()
@@ -13,11 +14,11 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- 2. Apply trigger to all multi-tenant tables
+-- 2. Apply trigger to all multi-tenant tables (Safe Version)
 DO $$
 DECLARE
-    t text;
-    tables text[] := ARRAY[
+    r record;
+    target_tables text[] := ARRAY[
         -- Core
         'articles', 'pages', 'files', 'products', 'orders',
         -- Marketing
@@ -31,9 +32,17 @@ DECLARE
         'photo_gallery', 'video_gallery'
     ];
 BEGIN
-    FOREACH t IN ARRAY tables LOOP
-        -- Drop if exists to avoid duplication errors during re-runs
-        EXECUTE format('DROP TRIGGER IF EXISTS trg_set_tenant_id ON public.%I;', t);
+    -- Iterate only over tables that actually exist to avoid "relation does not exist" errors
+    -- This allows the migration to run even if some tables haven't been created yet (dependency ordering robustness)
+    -- We cast table_name to text to be explicit to avoid any ambiguity
+    FOR r IN 
+        SELECT table_name::text 
+        FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = ANY(target_tables)
+    LOOP
+        -- Drop if exists
+        EXECUTE format('DROP TRIGGER IF EXISTS trg_set_tenant_id ON public.%I;', r.table_name);
         
         -- Create Trigger
         EXECUTE format(
@@ -41,7 +50,7 @@ BEGIN
              BEFORE INSERT ON public.%I
              FOR EACH ROW
              EXECUTE FUNCTION public.set_tenant_id();',
-            t
+            r.table_name
         );
     END LOOP;
 END $$;
