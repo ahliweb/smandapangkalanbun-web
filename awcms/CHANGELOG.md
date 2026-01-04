@@ -12,6 +12,7 @@ All notable changes to the **AWCMS** project will be documented in this file.
 - **Public Portal**: Added missing `@/lib/utils.ts` with `cn` function for class name merging.
 - **Public Portal**: Installed `@measured/puck` dependency required by Card component.
 - **Card Component**: Added required `render` property to `CardConfig` for Puck ComponentConfig compliance.
+- **Domain Alias**: Fixed `get_tenant_id_by_host` RPC to properly map `tenant-public.domain.tld` to `tenant.domain.tld`.
 
 ## [2.6.0] "Clarity" - 2026-01-04
 
