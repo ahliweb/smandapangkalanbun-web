@@ -5,6 +5,12 @@ All notable changes to the **AWCMS** project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.5.1] - 2026-01-04
+
+### Changed
+
+- **CI/CD Pipeline**: Updated Flutter from `3.38.3` to `3.38.5` (Dart 3.10.4).
+
 ## [2.5.0] "Catalyst" - 2026-01-04
 
 ### Changed
