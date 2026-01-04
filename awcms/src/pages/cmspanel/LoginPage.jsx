@@ -100,44 +100,24 @@ const LoginPage = () => {
     setVerificationError('');
 
     try {
-      // 1. Verify Turnstile token (Security Check)
+      // 1. Validate Turnstile Token presence
       const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
-      // We skip ONLY if on localhost. If widget errors in prod, we FAIL OPEN or CLOSED?
-      // Security decision: Fail CLOSED in production. User must pass CAPTCHA.
-
-      if (!isLocalhost) {
-        if (!turnstileToken) {
-          // If widget errored, we might want to tell them.
-          if (turnstileError) {
-            throw new Error('Security check failed to load. Please refresh the page.');
-          }
-          throw new Error('Please complete the security check (CAPTCHA).');
+      // Ensure we have a token before attempting login (unless strictly dev mode bypassing it, but Supabase will likely reject if protection is on)
+      if (!turnstileToken && !isLocalhost) {
+        if (turnstileError) {
+          throw new Error('Security check failed to load. Please refresh the page.');
         }
-
-        // Verify with server
-        const { data: verifyData, error: verifyError } = await supabase.functions.invoke('verify-turnstile', {
-          body: { token: turnstileToken }
-        });
-
-        if (verifyError || !verifyData?.success) {
-          console.error('[Login] Turnstile server error:', verifyData?.error || verifyError);
-
-          // Reset the token so they can try again
-          setTurnstileToken('');
-          if (window.turnstileReset) window.turnstileReset();
-
-          throw new Error(verifyData?.error || 'Security verification failed. Please try again.');
-        }
-        console.log('[Login] Security verification passed.');
-      } else {
-        console.log('[Login] Dev mode: Skipping security verification.');
+        throw new Error('Please complete the security check (CAPTCHA).');
       }
 
       // 1. Authenticate with Supabase Auth
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
+        options: {
+          captchaToken: turnstileToken,
+        },
       });
 
       if (error) {
