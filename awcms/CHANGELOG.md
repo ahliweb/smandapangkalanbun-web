@@ -11,6 +11,21 @@ All notable changes to the **AWCMS** project will be documented in this file.
 - **System Audit**: Verified system health across 12 checking points.
 - **Documentation**: Updated README.md and SECURITY.md with CORS best practices.
 
+## [2.3.1] - 2026-01-04
+
+### Changed
+
+- **Version**: Bumped to 2.3.1 (Patch) to reflect bug fixes and dev-tooling enhancements.
+- **Documentation**: Corrected component reference consistency in `VISUAL_BUILDER.md`.
+
+### Fixed
+
+- **Offline Architecture (CRITICAL)**: Implemented missing `schema.js` and `applySchema` logic in `db.js`, fixing a critical gap where local SQLite tables were not initialized.
+- **Testing Framework**: Established comprehensive automated testing infrastructure using `vitest`, `jsdom`, and `@testing-library`, enabling verifying core system logic.
+- **Unit Tests**:
+  - `PermissionContext.test.jsx`: Added verification for ABAC logic, RBAC fallback, and `super_admin` policies.
+  - `UnifiedDataManager.test.js`: Added verification for offline/online toggle and data fetching delegation.
+
 ## [2.3.0] - 2026-01-04
 
 ### Added
