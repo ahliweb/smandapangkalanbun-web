@@ -47,8 +47,9 @@ AWCMS implements multiple layers of security to protect your application and dat
 ├─────────────────────────────────────────────────────────────┤
 │  4. DATABASE LAYER                                          │
 │     • PostgreSQL roles                                      │
-│     • Column-level permissions                              │
-│     • Encrypted at rest                                     │
+│     * Column-level permissions                              │
+│     * Encrypted at rest                                     │
+│     * Secure 'search_path' for functions                    │
 └─────────────────────────────────────────────────────────────┘
 ```
 

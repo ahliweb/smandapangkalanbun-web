@@ -83,7 +83,7 @@ kill -9 <PID>
 **Problem:** PGRST errors
 
 | Error | Meaning | Solution |
-|-------|---------|----------|
+| :--- | :--- | :--- |
 | PGRST116 | Row not found | Check if record exists |
 | 42501 | RLS violation | Check RLS policies |
 | 23505 | Unique violation | Duplicate key exists |
@@ -99,7 +99,51 @@ kill -9 <PID>
 3. Correct URL in `.env.local`
 4. No firewall blocking
 
----
+5. No firewall blocking
+
+### Security Check Failed (Turnstile)
+
+**Problem:** Error 600010: Invalid Site Key during login
+
+**Checks:**
+
+1. **Environment:** Ensure you are using the correct `VITE_TURNSTILE_SITE_KEY`.
+    * **Localhost:** Must use Cloudflare Test Key: `1x00000000000000000000AA`
+    * **Production:** Must use the valid Site Key registered for your domain.
+2. **Code Hardcoding:** Check `LoginPage.jsx` for any hardcoded keys overriding the environment variable.
+
+### Public Portal 500 Error
+
+**Problem:** "An unexpected error occurred" on non-home pages
+
+**Cause:** Supabase client initialization failure in Cloudflare Workers.
+
+**Solution:**
+
+Ensure you are passing the **runtime environment variables** to the Supabase client:
+
+```javascript
+/* src/pages/[...slug].astro */
+const { runtime } = Astro.locals;
+const env = runtime?.env || {}; // Access Cloudflare env vars
+const supabase = createScopedClient(..., env);
+```
+
+### Database Migration Mismatch
+
+**Problem:** Local history differs from remote migration list
+
+**Solution:**
+
+Use `repair_migrations.sh` or manually repair:
+
+```bash
+# 1. Fetch remote migration list
+supabase migration list --remote
+
+# 2. Repair reverted versions locally
+supabase migration repair <version> --status reverted
+```
 
 ## Build Issues
 
@@ -225,9 +269,9 @@ If issues persist:
 
 When reporting issues:
 
-- AWCMS version
-- Node.js version
-- Browser and version
-- Error messages (full)
-- Steps to reproduce
-- Expected vs actual behavior
+* AWCMS version
+* Node.js version
+* Browser and version
+* Error messages (full)
+* Steps to reproduce
+* Expected vs actual behavior

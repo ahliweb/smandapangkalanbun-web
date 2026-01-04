@@ -11,6 +11,10 @@ AWCMS uses environment variables for configuration. Create a `.env.local` file i
 # Supabase Configuration (Required)
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+# Cloudflare Turnstile (Required for Login)
+VITE_TURNSTILE_SITE_KEY=1x00000000000000000000AA # Use Test Key for Localhost
+
 ```
 
 ### Optional Variables
@@ -25,6 +29,14 @@ VITE_DEFAULT_LOCALE=en
 
 # Multi-Tenancy (Development)
 VITE_DEV_TENANT_SLUG=demo-tenant # Simulates subdomain in localhost
+
+### Cloudflare Runtime (Public Portal)
+
+For the Astro-based Public Portal running on Cloudflare Pages, environment variables are accessed via `Astro.locals.runtime.env`. Ensure these are set in the Cloudflare Dashboard:
+
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
+
 ```
 
 ---
@@ -157,7 +169,7 @@ USING (auth.uid() = id);
 Configure bucket policies in Supabase Dashboard:
 
 | Bucket | Public | Purpose |
-|--------|--------|---------|
+| :--- | :--- | :--- |
 | avatars | Yes | User profile pictures |
 | articles | Yes | Article featured images |
 | files | No | Private file uploads |
@@ -215,7 +227,7 @@ Cache-Control: no-cache
 ## Development vs Production
 
 | Feature | Development | Production |
-|---------|-------------|------------|
+| :--- | :--- | :--- |
 | Source Maps | Enabled | Disabled |
 | HMR | Enabled | N/A |
 | Minification | Disabled | Enabled |

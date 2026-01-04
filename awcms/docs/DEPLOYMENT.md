@@ -9,7 +9,7 @@ AWCMS is a **Monorepo** containing two distinct applications. You will deploy th
 **Recommended Host**: Cloudflare Pages
 **Why**: Native support for Astro Edge SSR and high performance.
 
-### Setup Steps
+### Public Portal Setup
 
 1. Log in to [Cloudflare Dashboard](https://dash.cloudflare.com) > **Workers & Pages**.
 2. Click **Create Application** > **Connect to Git**.
@@ -33,7 +33,7 @@ AWCMS is a **Monorepo** containing two distinct applications. You will deploy th
 **Recommended Host**: Cloudflare Pages
 **Why**: Keeps deployment in a single platform and works well for React SPAs.
 
-### Setup Steps
+### Admin Panel Setup
 
 1. Log in to [Cloudflare Dashboard](https://dash.cloudflare.com) > **Workers & Pages**.
 2. Click **Create Application** > **Connect to Git**.
@@ -49,7 +49,7 @@ AWCMS is a **Monorepo** containing two distinct applications. You will deploy th
 5. **Environment Variables**:
     * `VITE_SUPABASE_URL`: Your Supabase Project URL.
     * `VITE_SUPABASE_ANON_KEY`: Your Supabase Anon Key.
-    * `VITE_TURNSTILE_SITE_KEY`: Your Cloudflare Turnstile Site Key.
+    * `VITE_TURNSTILE_SITE_KEY`: Your **Production** Cloudflare Turnstile Site Key (Do not use the Test Key).
     * `NODE_VERSION`: `20` (Required for Vite v5+)
 6. Click **Save and Deploy**.
 
