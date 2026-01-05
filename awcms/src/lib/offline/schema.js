@@ -15,7 +15,7 @@ export const CORE_SCHEMA = [
     config TEXT,
     created_at TEXT,
     updated_at TEXT
-  );`,
+  )`,
 
   // Users (Auth Context)
   `CREATE TABLE IF NOT EXISTS users (
@@ -27,7 +27,7 @@ export const CORE_SCHEMA = [
     tenant_id TEXT,
     created_at TEXT,
     updated_at TEXT
-  );`,
+  )`,
 
   // Articles (Content)
   `CREATE TABLE IF NOT EXISTS articles (
@@ -50,7 +50,7 @@ export const CORE_SCHEMA = [
     deleted_at TEXT,
     _sync_status TEXT DEFAULT 'synced',
     _last_synced_at TEXT
-  );`,
+  )`,
 
   // Pages (Content)
   `CREATE TABLE IF NOT EXISTS pages (
@@ -68,7 +68,7 @@ export const CORE_SCHEMA = [
     puck_layout_jsonb TEXT,
     _sync_status TEXT DEFAULT 'synced',
     _last_synced_at TEXT
-  );`,
+  )`,
 
   // Files (Media)
   `CREATE TABLE IF NOT EXISTS files (
@@ -83,7 +83,7 @@ export const CORE_SCHEMA = [
     updated_at TEXT,
     _sync_status TEXT DEFAULT 'synced',
     _last_synced_at TEXT
-  );`
+  )`
 ];
 
 /**
