@@ -128,7 +128,7 @@ const PublicRegisterPage = () => {
 
                             <div className="pt-2">
                                 <Turnstile
-                                    siteKey="1x00000000000000000000AA"
+                                    siteKey="0x4AAAAAACKcJKttH3wXulvJ"
                                 />
                             </div>
                         </div>
