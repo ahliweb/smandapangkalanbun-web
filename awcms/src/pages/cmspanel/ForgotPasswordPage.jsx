@@ -37,13 +37,22 @@ const ForgotPasswordPage = () => {
           throw new Error('Please complete the security verification.');
         }
 
-        // Manual verification removed - handled by Supabase Auth
+        const { data: verifyData, error: verifyError } = await supabase.functions.invoke('verify-turnstile', {
+          body: { token: turnstileToken }
+        });
+
+        if (verifyError || !verifyData?.success) {
+          // Reset Turnstile widget on failure
+          setTurnstileToken('');
+          if (window.turnstileReset) {
+            window.turnstileReset();
+          }
+          throw new Error(verifyData?.error || 'Security verification failed. Please try again.');
+        }
       }
 
-      // Proceed with password reset
-      const { error } = await resetPassword(email, {
-        captchaToken: turnstileToken
-      });
+      // Proceed with password reset (without passing token again)
+      const { error } = await resetPassword(email);
       if (error) {
         // Reset Turnstile on error
         setTurnstileToken('');

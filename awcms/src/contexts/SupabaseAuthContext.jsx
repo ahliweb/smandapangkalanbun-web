@@ -200,11 +200,10 @@ export const AuthProvider = ({ children }) => {
     }
   }, [clearLocalAuth]);
 
-  const resetPassword = useCallback(async (email, options = {}) => {
+  const resetPassword = useCallback(async (email) => {
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/cmspanel/update-password`,
-        captchaToken: options.captchaToken,
       });
       if (error) throw error;
       return { error: null };
