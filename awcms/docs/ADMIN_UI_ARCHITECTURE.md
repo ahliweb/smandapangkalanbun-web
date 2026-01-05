@@ -48,11 +48,11 @@ Main wrapper that handles permission checks and tenant context.
 </AdminPageLayout>
 ```
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `requiredPermission` | `string` | Permission required to view page |
-| `loading` | `boolean` | Show loading skeleton |
-| `showTenantBadge` | `boolean` | Show tenant context (default: true for platform admins) |
+| Prop                 | Type      | Description                                              |
+| -------------------- | --------- | -------------------------------------------------------- |
+| `requiredPermission` | `string`  | Permission required to view page                         |
+| `loading`            | `boolean` | Show loading skeleton                                    |
+| `showTenantBadge`    | `boolean` | Show tenant context (default: true for platform admins)  |
 
 ---
 
@@ -75,13 +75,13 @@ Standardized header with breadcrumbs and ABAC-filtered actions.
 />
 ```
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `title` | `string` | Page title |
-| `description` | `string` | Page description |
-| `icon` | `Component` | Lucide icon component |
-| `breadcrumbs` | `Array<{label, href?, icon?}>` | Breadcrumb items |
-| `actions` | `Array<{label, onClick, icon?, variant?, permission?}>` | Action buttons |
+| Prop          | Type                                               | Description              |
+| ------------- | -------------------------------------------------- | ------------------------ |
+| `title`       | `string`                                           | Page title               |
+| `description` | `string`                                           | Page description         |
+| `icon`        | `Component`                                        | Lucide icon component    |
+| `breadcrumbs` | `Array<{label, href?, icon?}>`                     | Breadcrumb items         |
+| `actions`     | `Array<{label, onClick, icon?, variant?, perm?}>`  | Action buttons           |
 
 ---
 
@@ -103,9 +103,9 @@ Standardized tabs with gradient styling.
 </PageTabs>
 ```
 
-| Color Options |
-|---------------|
-| `blue`, `purple`, `emerald`, `amber`, `rose`, `slate` |
+| Color Options                                          |
+| ------------------------------------------------------ |
+| `blue`, `purple`, `emerald`, `amber`, `rose`, `slate`  |
 
 ---
 
@@ -197,17 +197,17 @@ The template automatically handles tenant context:
 
 ## Permission Conventions
 
-| Scope | Format | Example |
-|-------|--------|---------|
-| Tenant | `tenant.{module}.{action}` | `tenant.articles.create` |
+| Scope    | Format                       | Example                    |
+| -------- | ---------------------------- | -------------------------- |
+| Tenant   | `tenant.{module}.{action}`   | `tenant.articles.create`   |
 | Platform | `platform.{module}.{action}` | `platform.template.manage` |
 
 ### Template-Specific Permissions
 
-| Permission | Roles | Description |
-|------------|-------|-------------|
-| `platform.template.read` | owner, super_admin | View templates |
-| `platform.template.update` | owner, super_admin | Edit templates |
+| Permission                 | Roles              | Description     |
+| -------------------------- | ------------------ | --------------- |
+| `platform.template.read`   | owner, super_admin | View templates  |
+| `platform.template.update` | owner, super_admin | Edit templates  |
 | `platform.template.manage` | owner, super_admin | Full management |
 
 ---
