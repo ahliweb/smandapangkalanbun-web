@@ -5,7 +5,7 @@ const corsHeaders = {
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-application-name",
 };
 
-serve(async (req) => {
+serve(async (req: Request) => {
     // Handle CORS preflight
     if (req.method === "OPTIONS") {
         return new Response("ok", { headers: corsHeaders });
@@ -68,8 +68,9 @@ serve(async (req) => {
         }
     } catch (error) {
         console.error("[Turnstile] Error:", error);
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
         return new Response(
-            JSON.stringify({ success: false, error: error.message }),
+            JSON.stringify({ success: false, error: errorMessage }),
             { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
     }
