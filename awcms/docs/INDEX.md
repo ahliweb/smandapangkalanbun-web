@@ -1,71 +1,101 @@
 # 📚 Documentation Index
 
-Welcome to the AWCMS documentation. This index provides a roadmap to help you navigate the available documentation.
+Welcome to the AWCMS documentation. This index provides a roadmap to navigate all available documentation.
+
+---
 
 ## 🌟 Core Standards (Start Here)
 
-* [**AWCMS Core Standards**](CORE_STANDARDS.md) - The 5 Pillars of AWCMS Architecture.
+* [AWCMS Core Standards](00-core/CORE_STANDARDS.md) - The 5 Pillars of AWCMS Architecture
+* [System Architecture](00-core/ARCHITECTURE.md) - High-level system design
+* [Multi-Tenancy](00-core/MULTI_TENANCY.md) - Tenant isolation and resolution
+* [Security Model](00-core/SECURITY.md) - OWASP alignment and security layers
 
-## 🚀 Getting Started
+---
 
-* [Installation Guide](INSTALLATION.md): Step-by-step instructions to set up the project.
-* [Configuration](CONFIGURATION.md): Environment variables and system settings.
-* [Folder Structure](FOLDER_STRUCTURE.md): Explanation of the project's file organization.
+## 📖 Guides
 
-## 🏗️ Core Concepts
+### Getting Started
 
-* [System Architecture](ARCHITECTURE.md): High-level overview of the system design.
-* [Public Portal Architecture](PUBLIC_PORTAL_ARCHITECTURE.md): Architecture specific to the public frontend.
-* [Tech Stack](TECH_STACK.md): List of technologies and libraries used.
-* [Multi-Tenancy](MULTI_TENANCY.md): How the multi-tenant SaaS architecture works.
-* [Offline Architecture](OFFLINE_ARCHITECTURE.md): Offline-first design with UDM and SQLite.
-* [Architectural Recommendations](ARCHITECTURAL_RECOMMENDATIONS.md): Best practices and guidelines.
+* [Installation Guide](01-guides/INSTALLATION.md) - Project setup instructions
+* [Configuration](01-guides/CONFIGURATION.md) - Environment variables and settings
+* [Troubleshooting](01-guides/TROUBLESHOOTING.md) - Common issues and solutions
 
-## 📦 Modules & Features
+### Deployment
 
-* [Modules Guide](MODULES_GUIDE.md): Overview of all available system modules.
-* [Articles Module](ARTICLES_MODULE.md): Details on the article management system.
-* [Visual Builder](VISUAL_BUILDER.md): Guide to using the visual page builder (Puck).
-* [Menu System](MENU_SYSTEM.md): Managing sidebar and frontend menus.
-* [User Management](USER_MANAGEMENT.md): Managing users, roles, and profiles.
-* [Internationalization (i18n)](INTERNATIONALIZATION.md): Multi-language support details.
-* [Theming](THEMING.md): Tenant-specific theming and branding.
-* [Extensions](EXTENSIONS.md): Plugin and extension architecture.
-* [Template System](TEMPLATE_SYSTEM.md): Template architecture and APIs.
-* [Template Migration](TEMPLATE_MIGRATION.md): Migration guide for templates.
+* [Deployment Guide](01-guides/DEPLOYMENT.md) - General deployment instructions
+* [Cloudflare Deployment](01-guides/CLOUDFLARE_DEPLOYMENT.md) - Cloudflare Pages setup
+* [CI/CD Pipeline](01-guides/CI_CD.md) - GitHub Actions workflow
 
-## 🔐 Security & Access Control
+### Development
 
-* [ABAC System](ABAC_SYSTEM.md): Attribute-Based Access Control and Permissions.
-* [Role Hierarchy](ROLE_HIERARCHY.md): Role levels and permission matrix.
-* [RLS Policies](RLS_POLICIES.md): Row Level Security implementation per table.
-* [Audit Trail](AUDIT_TRAIL.md): System action logging and compliance.
-* [Security](SECURITY.md): Security best practices and implementations.
+* [Mobile Development](01-guides/MOBILE_DEVELOPMENT.md) - Flutter mobile app
+* [Testing Guide](01-guides/TESTING.md) - Testing strategies
+* [Contributing](01-guides/CONTRIBUTING.md) - Contribution guidelines
 
-## 💻 Development & API
+---
 
-* [API Documentation](API_DOCUMENTATION.md): Supabase API usage and patterns.
-* [Database Schema](DATABASE_SCHEMA.md): Database tables, relationships, and RLS.
-* [Email Integration](EMAIL_INTEGRATION.md): Mailketing email service integration.
-* [Component Guide](COMPONENT_GUIDE.md): Reusable UI components library.
-* [Mobile Development](MOBILE_DEVELOPMENT.md): Guide for mobile-responsive development.
-* [Agents & AI](AGENTS.md): Integration with AI agents.
-* [Testing](TESTING.md): Testing strategies and commands.
+## 📚 Reference
 
-## ⚙️ Operations & Deployment
+* [AI Agents Guide](02-reference/AGENTS.md) - AI-assisted development rules
+* [Database Schema](02-reference/DATABASE_SCHEMA.md) - Tables and relationships
+* [API Documentation](02-reference/API_DOCUMENTATION.md) - Supabase API patterns
+* [RLS Policies](02-reference/RLS_POLICIES.md) - Row Level Security implementation
+* [Folder Structure](02-reference/FOLDER_STRUCTURE.md) - Project organization
+* [Tech Stack](02-reference/TECH_STACK.md) - Technologies and libraries
 
-* [Deployment Guide](DEPLOYMENT.md): General deployment instructions.
-* [Cloudflare Deployment](CLOUDFLARE_DEPLOYMENT.md): Specific guide for Cloudflare Pages.
-* [Scalability Guide](SCALABILITY_GUIDE.md): Preparing the system for high traffic.
-* [Monitoring](MONITORING.md): System monitoring, logging, and observability.
-* [Performance](PERFORMANCE.md): Performance optimization strategies.
-* [Troubleshooting](TROUBLESHOOTING.md): Common issues and solutions.
-* [CI/CD Pipeline](CI_CD.md): GitHub Actions workflow documentation.
+---
+
+## 📦 Features
+
+### Security & Access Control
+
+* [ABAC System](03-features/ABAC_SYSTEM.md) - Attribute-Based Access Control
+* [Role Hierarchy](03-features/ROLE_HIERARCHY.md) - Role definitions and matrix
+* [Audit Trail](03-features/AUDIT_TRAIL.md) - System action logging
+* [User Management](03-features/USER_MANAGEMENT.md) - Users and profiles
+
+### Content Management
+
+* [Articles Module](03-features/ARTICLES_MODULE.md) - Article management
+* [Visual Builder](03-features/VISUAL_BUILDER.md) - Puck page builder
+* [Template System](03-features/TEMPLATE_SYSTEM.md) - Template architecture
+* [Template Migration](03-features/TEMPLATE_MIGRATION.md) - Migration guide
+* [Menu System](03-features/MENU_SYSTEM.md) - Navigation management
+
+### UI & Theming
+
+* [Component Guide](03-features/COMPONENT_GUIDE.md) - UI components library
+* [Admin UI Architecture](03-features/ADMIN_UI_ARCHITECTURE.md) - Admin panel structure
+* [Public Portal Architecture](03-features/PUBLIC_PORTAL_ARCHITECTURE.md) - Frontend architecture
+* [Theming](03-features/THEMING.md) - Tenant branding
+* [Internationalization](03-features/INTERNATIONALIZATION.md) - Multi-language support
+
+### Extensions & Modules
+
+* [Extensions](03-features/EXTENSIONS.md) - Plugin architecture
+* [Modules Guide](03-features/MODULES_GUIDE.md) - Available modules
+* [Email Integration](03-features/EMAIL_INTEGRATION.md) - Mailketing service
+
+### Operations
+
+* [Performance](03-features/PERFORMANCE.md) - Optimization strategies
+* [Scalability Guide](03-features/SCALABILITY_GUIDE.md) - High traffic preparation
+* [Monitoring](03-features/MONITORING.md) - Logging and observability
+* [Offline Architecture](03-features/OFFLINE_ARCHITECTURE.md) - Offline-first design
+* [Versioning](03-features/VERSIONING.md) - Semantic versioning
+
+---
+
+## 🔒 Compliance
+
+* [Compliance Mapping](04-compliance/COMPLIANCE_MAP.md) - ISO 27001, UU PDP, PP PSTE alignment
+
+---
 
 ## 🤝 Project Info
 
-* [Contributing](CONTRIBUTING.md): Guidelines for contributing to the project.
-* [Code of Conduct](CODE_OF_CONDUCT.md): Community standards.
-* [Versioning](VERSIONING.md): Semantic versioning and release process.
-* [Changelog](../CHANGELOG.md): History of changes and updates.
-* [License](LICENSE.md): Project license information.
+* [Code of Conduct](CODE_OF_CONDUCT.md) - Community standards
+* [License](LICENSE.md) - Project license
+* [Changelog](../CHANGELOG.md) - History of changes
+* [Architectural Recommendations](ARCHITECTURAL_RECOMMENDATIONS.md) - Best practices
