@@ -301,6 +301,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                 const SizedBox(height: 16),
 
+                // Create Account Button
+                TextButton(
+                  onPressed: () => _showRegister(context),
+                  child: const Text('Create Account'),
+                ),
                 // Back Button
                 TextButton(
                   onPressed: () => context.canPop()
@@ -312,6 +317,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  void _showRegister(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Row(
+          children: [
+            Icon(Icons.info_outlined, color: Colors.white),
+            SizedBox(width: 12),
+            Text('Contact admin to create an account'),
+          ],
+        ),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Theme.of(context).colorScheme.primary,
       ),
     );
   }
