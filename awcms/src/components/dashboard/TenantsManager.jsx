@@ -5,7 +5,7 @@ import { usePermissions } from '@/contexts/PermissionContext';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/lib/customSupabaseClient';
 import { Button } from '@/components/ui/button';
-import { Plus, Building, RefreshCw, DollarSign, Mail, FileText, Globe, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Plus, Building, RefreshCw, DollarSign, Mail, FileText, Globe, ChevronLeft, ChevronRight, Radio } from 'lucide-react';
 import { format } from 'date-fns';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -62,6 +62,13 @@ function TenantsManager() {
         contact_email: ''
     });
 
+    // Channel domains state
+    const [channelDomains, setChannelDomains] = useState({
+        web_public: '',
+        mobile: '',
+        esp32: ''
+    });
+
     // Delete state
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [tenantToDelete, setTenantToDelete] = useState(null);
@@ -110,7 +117,7 @@ function TenantsManager() {
         setShowEditor(true);
     };
 
-    const handleEdit = (tenant) => {
+    const handleEdit = async (tenant) => {
         setEditingTenant(tenant);
         setFormData({
             name: tenant.name,
@@ -126,6 +133,22 @@ function TenantsManager() {
             notes: tenant.notes || '',
             contact_email: tenant.contact_email || ''
         });
+
+        // Fetch channel domains
+        try {
+            const { data: channels } = await supabase
+                .from('tenant_channels')
+                .select('channel, domain')
+                .eq('tenant_id', tenant.id)
+                .in('channel', ['web_public', 'mobile', 'esp32']);
+
+            const domains = { web_public: '', mobile: '', esp32: '' };
+            channels?.forEach(c => { domains[c.channel] = c.domain || ''; });
+            setChannelDomains(domains);
+        } catch (err) {
+            console.error('Failed to load channels:', err);
+        }
+
         setShowEditor(true);
     };
 
@@ -179,6 +202,28 @@ function TenantsManager() {
             }
 
             if (error) throw error;
+
+            // Save channel domains for existing tenant
+            if (editingTenant) {
+                for (const channel of ['web_public', 'mobile', 'esp32']) {
+                    if (channelDomains[channel]) {
+                        // Upsert channel domain
+                        const { error: channelError } = await supabase
+                            .from('tenant_channels')
+                            .upsert({
+                                tenant_id: editingTenant.id,
+                                channel,
+                                domain: channelDomains[channel].toLowerCase().trim(),
+                                base_path: channel === 'web_public' ? `/awcms-public/${editingTenant.slug}/` :
+                                    channel === 'mobile' ? `/awcms-mobile/${editingTenant.slug}/` :
+                                        `/awcms-esp32/${editingTenant.slug}/`,
+                                is_primary: true,
+                                is_active: true
+                            }, { onConflict: 'tenant_id,channel,is_primary' });
+                        if (channelError) console.error('Channel upsert error:', channelError);
+                    }
+                }
+            }
 
             toast({ title: 'Success', description: `Tenant ${editingTenant ? 'updated' : 'created'} successfully` });
             setShowEditor(false);
@@ -570,6 +615,45 @@ function TenantsManager() {
                                 </div>
                             </div>
                         </div>
+
+                        {/* Channel Domains Section */}
+                        {editingTenant && (
+                            <div className="pt-4 border-t border-border">
+                                <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                                    <Radio className="w-4 h-4 text-muted-foreground" /> Channel Domains
+                                </h4>
+                                <p className="text-xs text-muted-foreground mb-3">Configure domain mappings for each channel.</p>
+                                <div className="space-y-3">
+                                    <div className="grid grid-cols-[120px_1fr] gap-2 items-center">
+                                        <Label className="text-xs font-medium">Web Public</Label>
+                                        <Input
+                                            value={channelDomains.web_public}
+                                            onChange={e => setChannelDomains({ ...channelDomains, web_public: e.target.value })}
+                                            placeholder="primarypublic.example.com"
+                                            className="text-sm"
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-[120px_1fr] gap-2 items-center">
+                                        <Label className="text-xs font-medium">Mobile</Label>
+                                        <Input
+                                            value={channelDomains.mobile}
+                                            onChange={e => setChannelDomains({ ...channelDomains, mobile: e.target.value })}
+                                            placeholder="primarymobile.example.com"
+                                            className="text-sm"
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-[120px_1fr] gap-2 items-center">
+                                        <Label className="text-xs font-medium">ESP32</Label>
+                                        <Input
+                                            value={channelDomains.esp32}
+                                            onChange={e => setChannelDomains({ ...channelDomains, esp32: e.target.value })}
+                                            placeholder="primaryesp32.example.com"
+                                            className="text-sm"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                     <DialogFooter>
                         <Button variant="outline" onClick={() => setShowEditor(false)}>Cancel</Button>
