@@ -91,6 +91,6 @@ If resolved from host, the user is redirected to the canonical path-based URL.
 
 ## 📚 Documentation
 
-* [Migration Guide](../awcms/docs/01-guides/MIGRATION.md) - URL structure changes
-* [Deployment Guide](../awcms/docs/01-guides/DEPLOYMENT.md) - Cloudflare Pages setup
-* [Main Documentation](../awcms/docs/INDEX.md) - Full documentation index
+* [Migration Guide](../../awcms/docs/01-guides/MIGRATION.md) - URL structure changes
+* [Deployment Guide](../../awcms/docs/01-guides/DEPLOYMENT.md) - Cloudflare Pages setup
+* [Main Documentation](../../awcms/docs/INDEX.md) - Full documentation index
