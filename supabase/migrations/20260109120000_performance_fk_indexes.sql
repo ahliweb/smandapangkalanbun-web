@@ -42,3 +42,9 @@ COMMENT ON INDEX idx_two_factor_audit_logs_user_id IS 'Performance: Index for FK
 COMMENT ON INDEX idx_two_factor_audit_logs_tenant_id IS 'Performance: Index for tenant isolation';
 COMMENT ON INDEX idx_widgets_tenant_id IS 'Performance: Index for tenant isolation';
 COMMENT ON INDEX idx_widgets_area_id IS 'Performance: Index for FK constraint lookups';
+
+-- notifications: Add index on created_by FK (missing)
+CREATE INDEX IF NOT EXISTS idx_notifications_created_by 
+  ON public.notifications(created_by);
+
+COMMENT ON INDEX idx_notifications_created_by IS 'Performance: Index for FK constraint lookups';
