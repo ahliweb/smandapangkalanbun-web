@@ -11,8 +11,7 @@ export function stripHtml(html) {
         const doc = new DOMParser().parseFromString(html, 'text/html');
         return doc.body.textContent || "";
     } catch (e) {
-        console.warn('DOMParser failed, falling back to simple regex', e);
-        // Fallback for non-browser environments (though this is client-side code)
-        return html.replace(/<[^>]*>/g, '');
+        console.warn('DOMParser failed', e);
+        return "";
     }
 }

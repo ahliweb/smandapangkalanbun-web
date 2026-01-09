@@ -12,6 +12,9 @@ on:
 env:
   NODE_VERSION: '20'
 
+permissions:
+  contents: read
+
 jobs:
   # ============================================
   # Lint & Test - Admin Panel
