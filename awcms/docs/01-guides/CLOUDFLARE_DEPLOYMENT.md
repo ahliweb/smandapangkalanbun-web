@@ -14,16 +14,16 @@ This repository is set up as a **Monorepo**. For deployment on Cloudflare Pages,
 
 This is the React-based CMS dashboard for tenant administration.
 
-### 1. Create Cloudflare Pages Project
+### 1. Create Admin Project
 
 1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com)
 2. Navigate to **Pages** → **Create a project** → **Connect to Git**
 3. Select your repository
 
-### 2. Configure Build Settings
+### 2. Configure Admin Build
 
 | Setting | Value |
-|---------|-------|
+| :--- | :--- |
 | **Project Name** | e.g., `awcms-admin` |
 | **Framework preset** | Vite |
 | **Build command** | `npm run build` |
@@ -31,17 +31,17 @@ This is the React-based CMS dashboard for tenant administration.
 | **Root directory** | `awcms` |
 | **Node.js version** | 20.x |
 
-### 3. Environment Variables
+### 3. Admin Environment Variables
 
 Add these in **Settings** → **Environment Variables**:
 
 | Variable | Value |
-|----------|-------|
+| :--- | :--- |
 | `VITE_SUPABASE_URL` | `https://your-project.supabase.co` |
 | `VITE_SUPABASE_ANON_KEY` | `your-anon-key` |
 | `NODE_VERSION` | `20` |
 
-### 4. Deploy
+### 4. Deploy Admin
 
 Click **Save and Deploy**. This will deploy the Admin Panel.
 
@@ -51,33 +51,33 @@ Click **Save and Deploy**. This will deploy the Admin Panel.
 
 This is the Astro-based public frontend for your tenants.
 
-### 1. Create Cloudflare Pages Project
+### 1. Create Public Project
 
 1. Go to **Pages** → **Create a project** → **Connect to Git**
 2. Select **the same repository** again
 
-### 2. Configure Build Settings
+### 2. Configure Public Build
 
 | Setting | Value |
-|---------|-------|
+| :--- | :--- |
 | **Project Name** | e.g., `awcms-public` |
 | **Framework preset** | Astro |
-| **Build command** | `npm run build` |
+| **Build command** | `npm run build` (Proxies to `primary` folder) |
 | **Build output directory** | `dist` |
 | **Root directory** | `awcms-public` |
 | **Node.js version** | 20.x |
 
-### 3. Environment Variables
+### 3. Public Environment Variables
 
 Add these in **Settings** → **Environment Variables**:
 
 | Variable | Value |
-|----------|-------|
+| :--- | :--- |
 | `PUBLIC_SUPABASE_URL` | `https://your-project.supabase.co` |
 | `PUBLIC_SUPABASE_ANON_KEY` | `your-anon-key` |
 | `NODE_VERSION` | `20` |
 
-### 4. Deploy
+### 4. Deploy Public
 
 Click **Save and Deploy**. This will deploy the Public Portal.
 

@@ -46,7 +46,7 @@ Runs on the React admin application (`awcms/`).
 
 ### 2. Lint & Build - Public Portal
 
-Runs on the Astro public site (`awcms-public/`).
+Runs on the Astro public site (`awcms-public/primary`).
 
 | Step | Command | Purpose |
 | :--- | :--- | :--- |
@@ -55,7 +55,7 @@ Runs on the Astro public site (`awcms-public/`).
 
 ### 3. Build - Mobile App
 
-Runs on the Flutter mobile application (`awcms-mobile/`).
+Runs on the Flutter mobile application (`awcms-mobile/primary`).
 
 | Step | Command | Purpose |
 | :--- | :--- | :--- |

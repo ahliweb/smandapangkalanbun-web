@@ -225,13 +225,17 @@ awcms/
 │   ├── src/
 │   ├── docs/           # Core Documentation
 │   └── ...
-├── awcms-public/       # Public Portal (Astro + React 19)
-│   ├── src/
-│   │   ├── pages/      # Astro Routes
-│   │   ├── components/ # Registry & Renderers
-│   │   └── middleware.ts # Tenant Resolution
-│   └── ...
+├── awcms-public/       # Public Portal Root
+│   ├── primary/        # Astro Application Source
+│   │   ├── src/
+│   │   └── package.json
+│   └── package.json    # Cloudflare Build Proxy
+├── awcms-mobile/       # Mobile App Root
+│   └── primary/        # Flutter Application Source
+│       ├── lib/
+│       └── pubspec.yaml
 └── ...
+
 ```
 
 ---

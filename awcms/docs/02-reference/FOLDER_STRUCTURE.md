@@ -7,26 +7,19 @@ AWCMS follows a standard React application structure optimized for scalability a
 
 ---
 
-## Root Directory
+## Root Directory (Monorepo)
 
 ```text
-awcms/
-├── 📁 docs/              # Documentation (41 files)
-├── 📁 public/            # Static assets
-│   ├── logo.svg          # AWCMS logo
-│   ├── favicon.svg       # Browser favicon
-│   └── .htaccess         # Apache rewrite rules
-├── 📁 src/               # Source code (main application)
-├── 📁 dist/              # Production build output
-├── 📄 index.html         # HTML entry point
-├── 📄 package.json       # Dependencies & scripts
-├── 📄 vite.config.js     # Vite configuration
-├── 📄 postcss.config.js  # PostCSS configuration
-├── 📄 .env.example       # Environment template
-├── 📄 .env.local         # Local environment (not committed)
-├── 📄 .gitignore         # Git ignore rules
-├── 📄 .nvmrc             # Node version specification
-└── 📄 README.md          # Project overview
+awcms-dev/              # Monorepo Root
+├── awcms/              # Admin Panel (React 18 + Vite)
+│   ├── docs/
+│   ├── src/
+│   └── package.json
+├── awcms-public/       # Public Portal
+│   ├── primary/        # Astro App (v5 + React 19)
+│   └── package.json    # Cloudflare Proxy
+└── awcms-mobile/       # Mobile App
+    └── primary/        # Flutter Source
 ```
 
 > **Note:** TailwindCSS 4.0 no longer requires `tailwind.config.js` - configuration is done via CSS.
