@@ -18,7 +18,7 @@ AWCMS is a **Monorepo** containing two distinct applications. You will deploy th
     * **Project Name**: `your-brand-portal`
     * **Production Branch**: `main`
     * **Framework Preset**: Select `Astro`
-    * **Root Directory**: `/awcms-public` (⚠️ Important: Do not leave empty)
+    * **Root Directory**: `/awcms-public/primary` (⚠️ Required: The actual Astro project is in the `primary` subfolder)
     * **Build Command**: `npm run build`
     * **Output Directory**: `dist`
 5. **Environment Variables**:
@@ -90,7 +90,7 @@ Typically lives on a secure subdomain like `admin.yoursite.com` or `app.yoursite
 
 ## 5. Mobile Application (`awcms-mobile`)
 
-The mobile app is a Flutter project located in `/awcms-mobile`.
+The mobile app is a Flutter project located in `/awcms-mobile/primary`.
 
 **Prerequisites**:
 
@@ -106,7 +106,7 @@ The mobile app is a Flutter project located in `/awcms-mobile`.
 2. **Build for Stores**:
 
    ```bash
-   cd awcms-mobile
+   cd awcms-mobile/primary
    
    # Android App Bundle (Play Store)
    flutter build appbundle --release

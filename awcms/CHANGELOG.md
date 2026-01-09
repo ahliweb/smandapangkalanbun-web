@@ -5,6 +5,25 @@ All notable changes to the **AWCMS** project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.9.2] "Clarity" - 2026-01-09
+
+### Documentation
+
+- **Comprehensive Audit**: Full enterprise documentation audit covering 48 docs across 4 categories.
+- **DEPLOYMENT.md**: Fixed `awcms-public` and `awcms-mobile` root directory paths to reference `primary` subfolder.
+- **Docs Coverage Map**: Verified alignment for multi-tenancy, ABAC, RLS, workflow engine, audit trail, and compliance.
+- **Standards Verification**: Confirmed CORE_STANDARDS.md, ABAC_SYSTEM.md, AUDIT_TRAIL.md, RLS_POLICIES.md, and COMPLIANCE_MAP.md accurately reflect implementation.
+
+### Fixed
+
+- **React Version**: Downgraded `react` and `react-dom` in `awcms-public/primary` from 19.x to 18.3.1 for strict compliance.
+- **Lockfile Sync**: Regenerated `package-lock.json` to resolve Cloudflare `npm ci` build failure.
+
+### Security
+
+- Verified all XSS sanitization patterns documented in SECURITY.md match `@/utils/sanitize` implementation.
+- Confirmed RLS policies on all tenant-scoped tables enforce deny-by-default model.
+
 ## [2.9.0] "Navigator" - 2026-01-08
 
 ### Added

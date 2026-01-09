@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.9.2] - 2026-01-09
+
+### Documentation
+
+- **Enterprise Audit**: Comprehensive documentation audit of 48 files across core, guides, reference, and features.
+- **Drift Fixes**: Corrected `awcms-public/primary` and `awcms-mobile/primary` paths in DEPLOYMENT.md.
+- **Verified**: CORE_STANDARDS.md, ABAC_SYSTEM.md, AUDIT_TRAIL.md, RLS_POLICIES.md, COMPLIANCE_MAP.md.
+
+### Fixed
+
+- **React 18.3.1**: Downgraded `awcms-public/primary` to comply with strict version constraint.
+- **Lockfile**: Synced `package-lock.json` for Cloudflare CI.
+
 ## [2.9.1] - 2026-01-09
 
 ### Security
@@ -13,7 +26,7 @@ All notable changes to this project will be documented in this file.
 - **CI/CD Fixes**: Corrected GitHub Actions workflow paths for caching (`awcms-public/primary`) and Flutter build (`awcms-mobile/primary`).
 - **Cloudflare Support**: Added proxy configuration to support `awcms-public` build without root directory changes.
 
-### Documentation
+### Docs
 
 - **Folder Structure**: Updated docs to reflect the specific `primary` subdirectory structure for public and mobile apps.
 - **Audited**: Verified alignment between documentation claims and codebase implementation.
