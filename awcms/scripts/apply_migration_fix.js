@@ -1,12 +1,14 @@
 
+import 'dotenv/config';
 import { createClient } from '@supabase/supabase-js';
 
-// Credentials extracted from .env.local
-const supabaseUrl = 'https://imveukxxtdwjgwsafwfl.supabase.co';
-const supabaseServiceKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImltdmV1a3h4dGR3amd3c2Fmd2ZsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NDgwNTQ2NCwiZXhwIjoyMDgwMzgxNDY0fQ.Frr49_TePnOOnI6vW-jUBUY_lf6d721YrKXRtngYXXM';
+// Credentials extracted from .env
+const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || 'https://imveukxxtdwjgwsafwfl.supabase.co';
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseUrl || !supabaseServiceKey) {
-    console.error('Missing Credentials');
+if (!supabaseServiceKey) {
+    console.error('Error: SUPABASE_SERVICE_ROLE_KEY is missing in .env');
+    console.error('Please add it to your .env file (do NOT commit .env).');
     process.exit(1);
 }
 

@@ -1,10 +1,6 @@
 
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = 'https://imveukxxtdwjgwsafwfl.supabase.co';
-const supabaseServiceKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImltdmV1a3h4dGR3amd3c2Fmd2ZsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NDgwNTQ2NCwiZXhwIjoyMDgwMzgxNDY0fQ.Frr49_TePnOOnI6vW-jUBUY_lf6d721YrKXRtngYXXM';
-
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+// This script prints instructions for manual RLS fix.
+// No DB connection required.
 
 // NOTE: This script cannot execute DDL (CREATE POLICY).
 // For this fix to take effect, the migration SQL MUST be run in Supabase Dashboard SQL Editor.
