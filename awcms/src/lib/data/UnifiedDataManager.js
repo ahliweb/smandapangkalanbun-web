@@ -135,17 +135,20 @@ class UnifiedDataManager {
             }
 
             // WRITE Operation (Insert/Update/Delete)
-            // 1. Queue for Sync (Remote)
-            await syncEngine.queueMutation(
-                this.table,
-                this.query.type.toUpperCase(),
-                this.query.payload || { id: this._extractIdFromFilters() }
-            );
-
-            // 2. Optimistic Update (Local)
-            const localResult = await this._executeLocalWrite();
-
-            resolve(localResult);
+            if (isOnline) {
+                // When online, use Supabase directly for reliable writes
+                const result = await this._executeRemoteWrite();
+                resolve(result);
+            } else {
+                // When offline, queue for sync and update local
+                await syncEngine.queueMutation(
+                    this.table,
+                    this.query.type.toUpperCase(),
+                    this.query.payload || { id: this._extractIdFromFilters() }
+                );
+                const localResult = await this._executeLocalWrite();
+                resolve(localResult);
+            }
 
         } catch (error) {
             reject(error);
@@ -173,6 +176,37 @@ class UnifiedDataManager {
                 builder = builder.range(this.query.range.from, this.query.range.to);
             }
 
+            return builder;
+        }
+
+        return { data: null, error: null };
+    }
+
+    async _executeRemoteWrite() {
+        let builder = supabase.from(this.table);
+
+        // INSERT
+        if (this.query.type === 'insert') {
+            return builder.insert(this.query.payload);
+        }
+
+        // UPDATE
+        if (this.query.type === 'update') {
+            builder = builder.update(this.query.payload);
+            this.query.filters.forEach(f => {
+                if (f.operator === '=') builder = builder.eq(f.column, f.value);
+                if (f.operator === '!=') builder = builder.neq(f.column, f.value);
+            });
+            return builder;
+        }
+
+        // DELETE
+        if (this.query.type === 'delete') {
+            builder = builder.delete();
+            this.query.filters.forEach(f => {
+                if (f.operator === '=') builder = builder.eq(f.column, f.value);
+                if (f.operator === '!=') builder = builder.neq(f.column, f.value);
+            });
             return builder;
         }
 

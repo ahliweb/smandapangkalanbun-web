@@ -74,6 +74,7 @@ function PhotoGalleryManager() {
                 formFields={formFields}
                 permissionPrefix="photo_gallery"
                 showBreadcrumbs={false}
+                customSelect="*"
             />
         </div>
     );
