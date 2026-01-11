@@ -1,8 +1,9 @@
 ---
 import '../styles/global.css';
-import Navbar from '../components/Navbar.astro';
-import Footer from '../components/Footer.astro';
-import { tenantUrl, absoluteTenantUrl } from '../lib/url';
+import Header from '../templates/awtemplate01/components/layout/Header.astro';
+import Footer from '../templates/awtemplate01/components/layout/Footer.astro';
+import { tenantUrl } from '../lib/url';
+import { createScopedClient } from '../lib/supabase';
 
 interface Props {
   title: string;
@@ -14,10 +15,55 @@ const { title, description, tenantSlug } = Astro.props;
 
 // Get tenant_slug from props or locals
 const resolvedTenantSlug = tenantSlug || Astro.locals.tenant_slug || 'primary';
+const { tenant_id, runtime } = Astro.locals;
+const env = runtime?.env || {};
 
 // Build canonical URL
 const canonicalPath = tenantUrl(resolvedTenantSlug, Astro.url.pathname.replace(`/${resolvedTenantSlug}`, '') || '/');
 const canonicalUrl = new URL(canonicalPath, Astro.url.origin).href;
+
+// Initialize Scoped Client
+const supabase = createScopedClient({
+    'x-tenant-id': tenant_id
+}, env);
+
+// Fetch Data (Tenant Name & Menu)
+let menuItems = [];
+let brandName = "AWCMS";
+
+if (tenant_id && supabase) {
+    // 1. Get Tenant Name
+    const { data: tenantData } = await supabase
+        .from('tenants')
+        .select('name')
+        .eq('id', tenant_id)
+        .single();
+    
+    if (tenantData) {
+        brandName = tenantData.name;
+    }
+
+    // 2. Get Main Menu
+    const { data: menuData } = await supabase
+        .from('menus')
+        .select('id')
+        .eq('tenant_id', tenant_id)
+        .eq('slug', 'main')
+        .eq('is_active', true)
+        .single();
+    
+    if (menuData) {
+        const { data: items } = await supabase
+            .from('menu_items')
+            .select('label, url, parent_id, order')
+            .eq('menu_id', menuData.id)
+            .order('order');
+        
+        if (items) {
+            menuItems = items;
+        }
+    }
+}
 ---
 
 <!doctype html>
@@ -39,11 +85,11 @@ const canonicalUrl = new URL(canonicalPath, Astro.url.origin).href;
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:type" content="website" />
   </head>
-  <body class="bg-white min-h-screen flex flex-col font-sans antialiased text-slate-900">
-    <Navbar tenantSlug={resolvedTenantSlug} />
+  <body class="bg-white min-h-screen flex flex-col font-sans antialiased text-slate-900 awtemplate01-root">
+    <Header siteName={brandName} menuItems={menuItems} tenantSlug={resolvedTenantSlug} />
     <main class="flex-1">
       <slot />
     </main>
-    <Footer tenantSlug={resolvedTenantSlug} />
+    <Footer siteName={brandName} tenantSlug={resolvedTenantSlug} />
   </body>
 </html>

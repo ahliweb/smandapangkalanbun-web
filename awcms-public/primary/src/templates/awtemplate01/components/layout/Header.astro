@@ -1,20 +1,29 @@
 ---
-/**
- * awtemplate01 Header
- * Site header with logo and navigation
- */
+import { tenantUrl } from '../../../../lib/url';
+
+export interface MenuItem {
+    label: string;
+    url: string;
+    children?: MenuItem[];
+}
+
 export interface Props {
     siteName?: string;
     logoUrl?: string;
+    menuItems?: MenuItem[];
+    tenantSlug?: string;
 }
 
-const { siteName = 'AWCMS', logoUrl } = Astro.props;
+const { siteName = 'AWCMS', logoUrl, menuItems = [], tenantSlug = 'primary' } = Astro.props;
+
+// Helper to build URL
+const getUrl = (path: string) => tenantUrl(tenantSlug, path);
 ---
 
 <header class="awt01-header sticky top-0 z-50 backdrop-blur-sm bg-background/95 border-b border-border">
     <div class="awt01-container flex items-center justify-between h-full">
         <!-- Logo / Site Name -->
-        <a href="/" class="flex items-center gap-3 font-bold text-xl text-foreground hover:text-primary transition-colors">
+        <a href={getUrl('/')} class="flex items-center gap-3 font-bold text-xl text-foreground hover:text-primary transition-colors">
             {logoUrl ? (
                 <img src={logoUrl} alt={siteName} class="h-8 w-auto" />
             ) : (
@@ -24,10 +33,22 @@ const { siteName = 'AWCMS', logoUrl } = Astro.props;
 
         <!-- Navigation -->
         <nav class="hidden md:flex items-center gap-6">
-            <a href="/" class="text-foreground/80 hover:text-foreground transition-colors font-medium">Home</a>
-            <a href="/about" class="text-foreground/80 hover:text-foreground transition-colors font-medium">About</a>
-            <a href="/services" class="text-foreground/80 hover:text-foreground transition-colors font-medium">Services</a>
-            <a href="/contact" class="text-foreground/80 hover:text-foreground transition-colors font-medium">Contact</a>
+            {menuItems.length > 0 ? (
+                menuItems.map((item) => (
+                    <a 
+                        href={getUrl(item.url)} 
+                        class="text-foreground/80 hover:text-foreground transition-colors font-medium"
+                    >
+                        {item.label}
+                    </a>
+                ))
+            ) : (
+                <>
+                    <a href={getUrl('/')} class="text-foreground/80 hover:text-foreground transition-colors font-medium">Home</a>
+                    <a href={getUrl('/articles')} class="text-foreground/80 hover:text-foreground transition-colors font-medium">Articles</a>
+                    <a href={getUrl('/contact')} class="text-foreground/80 hover:text-foreground transition-colors font-medium">Contact</a>
+                </>
+            )}
         </nav>
 
         <!-- Mobile Menu Button -->
@@ -45,10 +66,22 @@ const { siteName = 'AWCMS', logoUrl } = Astro.props;
     <!-- Mobile Menu -->
     <div id="mobile-menu" class="hidden md:hidden border-t border-border bg-background">
         <nav class="awt01-container py-4 flex flex-col gap-2">
-            <a href="/" class="py-2 text-foreground/80 hover:text-foreground transition-colors font-medium">Home</a>
-            <a href="/about" class="py-2 text-foreground/80 hover:text-foreground transition-colors font-medium">About</a>
-            <a href="/services" class="py-2 text-foreground/80 hover:text-foreground transition-colors font-medium">Services</a>
-            <a href="/contact" class="py-2 text-foreground/80 hover:text-foreground transition-colors font-medium">Contact</a>
+            {menuItems.length > 0 ? (
+                menuItems.map((item) => (
+                    <a 
+                        href={getUrl(item.url)} 
+                        class="py-2 text-foreground/80 hover:text-foreground transition-colors font-medium"
+                    >
+                        {item.label}
+                    </a>
+                ))
+            ) : (
+                <>
+                    <a href={getUrl('/')} class="py-2 text-foreground/80 hover:text-foreground transition-colors font-medium">Home</a>
+                    <a href={getUrl('/articles')} class="py-2 text-foreground/80 hover:text-foreground transition-colors font-medium">Articles</a>
+                    <a href={getUrl('/contact')} class="py-2 text-foreground/80 hover:text-foreground transition-colors font-medium">Contact</a>
+                </>
+            )}
         </nav>
     </div>
 </header>
