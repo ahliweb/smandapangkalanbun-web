@@ -71,7 +71,7 @@ found 0 vulnerabilities ✓
 - [ ] Categories and tags work
 - [ ] SEO fields save correctly
 
-### RBAC
+### ABAC
 
 - [ ] Super admin sees all menus
 - [ ] Regular user sees limited menus

@@ -38,7 +38,7 @@ Welcome to the AWCMS documentation. This index provides a roadmap to navigate al
 
 ## 📚 Reference
 
-* [AI Agents Guide](02-reference/AGENTS.md) - AI-assisted development rules
+* [AI Agents Guide](../../AGENTS.md) - AI-assisted development rules
 * [Database Schema](02-reference/DATABASE_SCHEMA.md) - Tables and relationships
 * [API Documentation](02-reference/API_DOCUMENTATION.md) - Supabase API patterns
 * [RLS Policies](02-reference/RLS_POLICIES.md) - Row Level Security implementation

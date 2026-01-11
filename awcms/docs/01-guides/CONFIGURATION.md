@@ -3,9 +3,13 @@
 
 ## Environment Variables
 
-AWCMS uses environment variables for configuration. Create a `.env.local` file in the project root.
+AWCMS uses environment variables for configuration. The Admin Panel (`awcms`) uses `.env.local`, while the Public Portal (`awcms-public/primary`) uses `.env` (or Cloudflare Pages environment variables).
 
-### Required Variables
+### Admin Panel (`awcms`)
+
+Create `.env.local` in `awcms/`.
+
+**Required variables**
 
 ```env
 # Supabase Configuration (Required)
@@ -14,10 +18,9 @@ VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 # Cloudflare Turnstile (Required for Login)
 VITE_TURNSTILE_SITE_KEY=1x00000000000000000000AA # Use Test Key for Localhost
-
 ```
 
-### Optional Variables
+**Optional variables**
 
 ```env
 # Admin/Server Operations (Optional - Use with caution)
@@ -29,15 +32,31 @@ VITE_DEFAULT_LOCALE=en
 
 # Multi-Tenancy (Development)
 VITE_DEV_TENANT_SLUG=demo-tenant # Simulates subdomain in localhost
+```
+
+### Public Portal (`awcms-public/primary`)
+
+Create `.env` in `awcms-public/primary/`.
+
+**Required variables**
+
+```env
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key
+```
+
+**Optional variables**
+
+```env
+VITE_DEV_TENANT_HOST=localhost # Overrides host-based tenant resolution in dev
+```
 
 ### Cloudflare Runtime (Public Portal)
 
-For the Astro-based Public Portal running on Cloudflare Pages, environment variables are accessed via `Astro.locals.runtime.env`. Ensure these are set in the Cloudflare Dashboard:
+For the Astro-based Public Portal running on Cloudflare Pages, environment variables are read from `context.locals.runtime.env` in `awcms-public/primary/src/middleware.ts`. Ensure these are set in the Cloudflare Dashboard:
 
 - `VITE_SUPABASE_URL`
 - `VITE_SUPABASE_ANON_KEY`
-
-```
 
 ---
 
@@ -78,11 +97,13 @@ export default defineConfig({
 
 ---
 
-## Tailwind CSS Configuration (v4.0)
+## Tailwind CSS Configuration
 
-TailwindCSS 4.0 uses CSS-based configuration instead of `tailwind.config.js`.
+### Admin Panel (TailwindCSS 4.1)
 
-Configuration is done in `src/index.css`:
+TailwindCSS 4.x uses CSS-based configuration instead of `tailwind.config.js`.
+
+Configuration is done in `awcms/src/index.css`:
 
 ```css
 @import "tailwindcss";
@@ -107,7 +128,11 @@ Configuration is done in `src/index.css`:
 - Dark mode is handled via CSS variables and `.dark` class
 - Animations via `tailwindcss-animate` plugin still work
 
-> **Note:** `tailwind.config.js` is no longer needed in TailwindCSS 4.0
+> **Note:** `tailwind.config.js` is not required for the Admin Panel under TailwindCSS 4.x.
+
+### Public Portal (TailwindCSS 3.4)
+
+The Public Portal uses TailwindCSS 3.x and keeps configuration in `awcms-public/primary/tailwind.config.mjs`, with global styles in `awcms-public/primary/src/styles/global.css`.
 
 ---
 

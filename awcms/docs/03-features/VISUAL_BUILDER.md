@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Visual Page Builder allows users to create complex, responsive layouts using a drag-and-drop interface. It is built on top of [Puck](https://github.com/measured/puck) and integrated deeply with AWCMS's media library and RBAC system.
+The Visual Page Builder allows users to create complex, responsive layouts using a drag-and-drop interface. It is built on top of [Puck](https://github.com/measuredco/puck) and integrated deeply with AWCMS's media library and ABAC system.
 
 ## Key Components
 
@@ -75,8 +75,8 @@ The Visual Builder outputs a **JSON Payload** stored in `puck_layout_jsonb`. The
 
 ### Rendering Engine (`awcms-public`)
 
-- **Registry**: `src/components/registry.tsx` (Zod-validated white-list).
-- **Renderer**: `src/components/PuckRenderer.tsx` (Maps JSON -> Astro/React Components).
+- **Registry**: `awcms-public/primary/src/components/registry.tsx` (Zod-validated whitelist).
+- **Renderer**: `awcms-public/primary/src/components/PuckRenderer.tsx` (Maps JSON -> Astro/React Components).
 
 > **Security Note**: The Public Portal ignores any blocks NOT in the registry, preventing unauthorized component injection.
 

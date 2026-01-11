@@ -31,7 +31,7 @@ This is a **Server-Side Rendered (SSR)** Astro application deployed to Cloudflar
 ### Installation
 
 ```bash
-cd awcms-public
+cd awcms-public/primary
 npm install
 ```
 
@@ -63,7 +63,7 @@ VITE_DEV_TENANT_HOST=localhost  # For local development
 │   ├── layouts/        # Page layouts
 │   ├── lib/            # Utilities (supabase, url builder)
 │   ├── pages/
-│   │   ├── index.astro           # Root redirect
+│   │   ├── index.astro           # Host-based root page
 │   │   └── [tenant]/
 │   │       └── [...slug].astro   # Tenant-scoped pages
 │   ├── styles/         # Global CSS
@@ -79,7 +79,7 @@ The middleware resolves tenants in this order:
 1. **Path Parameter** (Primary): Extracts tenant slug from URL path (`/{tenant}/...`)
 2. **Host Header** (Fallback): Looks up tenant by domain/subdomain
 
-If resolved from host, the user is redirected to the canonical path-based URL.
+If resolved from host, content is served directly without a tenant path prefix (legacy domains remain supported).
 
 ## 🛠️ Commands
 

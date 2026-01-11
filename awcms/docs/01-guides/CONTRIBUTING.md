@@ -10,7 +10,7 @@ Thank you for your interest in contributing to AWCMS! This document provides gui
 
 - Node.js 20.x or higher
 - npm 10.x or higher
-- Basic understanding of React 18, Supabase, and TailwindCSS
+- Basic understanding of React 18, Supabase, and TailwindCSS (Admin uses TailwindCSS 4; Public uses TailwindCSS 3)
 
 ### Development Setup
 
@@ -52,9 +52,9 @@ npm run dev
 
 ### Code Style
 
-- **Language**: JavaScript ES2022+ (NO TypeScript in Admin Panel)
+- **Language**: JavaScript ES2022+ in Admin Panel; TypeScript/TSX in Public Portal
 - **React**: Functional components with hooks only
-- **Styling**: TailwindCSS 4 utilities only
+- **Styling**: TailwindCSS 4 utilities in Admin Panel; TailwindCSS 3 utilities in Public Portal
 - **Formatting**: Use Prettier with default settings
 
 ### Component Guidelines

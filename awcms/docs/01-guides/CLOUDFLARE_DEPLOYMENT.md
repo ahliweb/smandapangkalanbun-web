@@ -64,7 +64,7 @@ This is the Astro-based public frontend for your tenants.
 | **Framework preset** | Astro |
 | **Build command** | `npm run build` (Proxies to `primary` folder) |
 | **Build output directory** | `dist` |
-| **Root directory** | `awcms-public` |
+| **Root directory** | `awcms-public` (proxy build runs in `primary/`) |
 | **Node.js version** | 20.x |
 
 ### 3. Public Environment Variables
@@ -73,8 +73,8 @@ Add these in **Settings** → **Environment Variables**:
 
 | Variable | Value |
 | :--- | :--- |
-| `PUBLIC_SUPABASE_URL` | `https://your-project.supabase.co` |
-| `PUBLIC_SUPABASE_ANON_KEY` | `your-anon-key` |
+| `VITE_SUPABASE_URL` | `https://your-project.supabase.co` |
+| `VITE_SUPABASE_ANON_KEY` | `your-anon-key` |
 | `NODE_VERSION` | `20` |
 
 ### 4. Deploy Public

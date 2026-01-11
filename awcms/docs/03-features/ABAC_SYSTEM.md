@@ -7,7 +7,7 @@ AWCMS implements a comprehensive ABAC (Attribute-Based Access Control) system th
 
 ---
 
-## RBAC Architecture
+## ABAC Architecture
 
 ```text
 ┌──────────────────────────────────────────────────────────────┐
@@ -378,7 +378,7 @@ USING (
 
 ## 🛡️ ABAC & Policy Engine (ERP Standard)
 
-Starting from v2.5, AWCMS introduces Attribute-Based Access Control (ABAC) alongside RBAC to support fine-grained, context-aware restrictions.
+Starting from v2.5, AWCMS introduces Attribute-Based Access Control (ABAC) to support fine-grained, context-aware restrictions.
 
 ### Policy Structure
 
@@ -403,7 +403,7 @@ Policies are defined as JSON objects linked to Roles via the `role_policies` tab
 2. **Global Policies**: Checked first.
 3. **Role Policies**: Checked next.
 4. **Logic**:
-   * Default is **ALLOW** (RBAC foundation).
+   * Default is **ALLOW** (ABAC foundation).
    * Policies act as **DENY** overrides (Restrictive model).
    * If *any* policy matches the action/resource AND conditions evaluate to true, access is **DENIED**.
 

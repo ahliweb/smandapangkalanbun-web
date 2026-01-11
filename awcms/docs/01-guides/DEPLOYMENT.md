@@ -22,8 +22,8 @@ AWCMS is a **Monorepo** containing two distinct applications. You will deploy th
     * **Build Command**: `npm run build`
     * **Output Directory**: `dist`
 5. **Environment Variables**:
-    * `PUBLIC_SUPABASE_URL`: Your Supabase Project URL.
-    * `PUBLIC_SUPABASE_ANON_KEY`: Your Supabase Anon Key.
+    * `VITE_SUPABASE_URL`: Your Supabase Project URL.
+    * `VITE_SUPABASE_ANON_KEY`: Your Supabase Anon Key.
 6. Click **Save and Deploy**.
 
 ---
@@ -80,7 +80,7 @@ To allow tenants to use subdomains (e.g., `tenant1.yoursite.com`) or custom doma
 3. **AWCMS Configuration**:
     * Go to Admin Panel > **Tenants**.
     * Edit a Tenant -> Update **Subdomain** or **Custom Domain** field.
-    * The Public Portal Middleware (`src/middleware.ts`) will automatically resolve the host.
+    * The Public Portal Middleware (`awcms-public/primary/src/middleware.ts`) will automatically resolve the host.
 
 ### For Admin Panel
 

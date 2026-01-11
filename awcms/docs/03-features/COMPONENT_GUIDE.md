@@ -208,7 +208,7 @@ import GenericContentManager from '@/components/dashboard/GenericContentManager'
 **Features:**
 
 - **Automatic Multi-Tenancy**: Automatically filters queries by `tenant_id`.
-- **RBAC Integration**: Checks permissions before rendering actions.
+- **ABAC Integration**: Checks permissions before rendering actions.
 - **Search & Pagination**: Built-in server-side handling.
 
 ### GenericResourceEditor
@@ -359,7 +359,7 @@ function ArticleList() {
 
 1. Use Tailwind CSS utilities
 2. Follow shadcn/ui conventions
-3. Use CSS variables for theming (TailwindCSS 4.0)
+3. Use CSS variables for theming (TailwindCSS 4.1, Admin Panel)
 4. Keep components responsive by default
 5. Use `cn()` utility for conditional classes
 

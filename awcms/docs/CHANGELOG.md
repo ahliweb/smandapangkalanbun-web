@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+## [2.9.7] - 2026-01-11
+
+### Documentation
+
+- Updated stack/version references, Tailwind 4 vs 3 split, and public portal paths across guides and reference docs.
+- Refreshed mobile and ESP32 documentation to match current folder layout and dependency versions.
+- Corrected public portal routing/middleware behavior and Cloudflare deployment env var naming.
+
 ## [2.9.3] - 2026-01-09
 
 ### Fixed

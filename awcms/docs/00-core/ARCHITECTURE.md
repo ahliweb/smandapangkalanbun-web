@@ -2,7 +2,7 @@
 
 ## Overview
 
-AWCMS utilizes a **Headless SPA Architecture** where the frontend is completely decoupled from the backend, communicating exclusively via API calls to Supabase.
+AWCMS uses a **Headless, multi-frontend architecture**: the Admin Panel is a React SPA, and the Public Portal is an Astro app (SSR/Islands). Both frontends are decoupled from the backend and communicate exclusively via Supabase APIs and RPCs.
 
 ---
 
@@ -20,7 +20,7 @@ graph TD
         PublicPortal[Astro App]
         Middleware[Tenant Middleware]
         PublicPortal --> Middleware
-        Middleware -->|Resolve Host| RPC[Supabase RPC]
+        Middleware -->|Resolve Path/Host| RPC[Supabase RPC]
         registry[Component Registry]
         PublicPortal -.-> registry
     end
@@ -72,7 +72,7 @@ src/
 ├── contexts/
 │   ├── TenantContext.jsx     # Domain resolution
 │   ├── ThemeContext.jsx      # Dynamic branding
-│   └── PermissionContext.jsx # RBAC + Limits
+│   └── PermissionContext.jsx # ABAC + Limits
 ```
 
 ### 2. State Management Layer
@@ -81,7 +81,7 @@ src/
 
 src/contexts/
 ├── SupabaseAuthContext.jsx   # Authentication state
-├── PermissionContext.jsx     # RBAC permissions
+├── PermissionContext.jsx     # ABAC permissions
 └── ThemeContext.jsx          # Theme preferences
 ```
 
@@ -90,7 +90,7 @@ src/contexts/
 ```text
 src/lib/
 ├── customSupabaseClient.js   # Public client (RLS enforced)
-├── tenantUtils.js            # Resolution helpers
+├── supabaseAdmin.js          # Service-role client (admin operations)
 └── utils.js                  # Shared logic
 ```
 
@@ -103,8 +103,10 @@ src/lib/
 
 ## Data Flow
 
+### Admin Panel (SPA)
+
 ```text
-User Request (subdomain.awcms.com)
+User Request (tenant domain / subdomain)
     │
     ▼
 TenantResolution (App.jsx)
@@ -119,6 +121,27 @@ Supabase Client
     ├── Request + Explicit TenantID (For Filtering/Creation)
     ▼
 Database (RLS Policy: tenant_id = current_tenant_id AND Application Filter)
+```
+
+### Public Portal (Astro SSR)
+
+```text
+User Request (/{tenant}/{slug})
+    │
+    ▼
+Tenant Resolution (middleware.ts)
+    │
+    ├── Resolve slug from path (primary)
+    ├── Fallback to host lookup (legacy)
+    └── Set locals.tenant_id + locals.tenant_slug
+    │
+    ▼
+Supabase Client (runtime env)
+    │
+    ├── Fetch published content (RLS enforced)
+    └── Render via PuckRenderer + registry whitelist
+    ▼
+Response (SSR + Islands)
 ```
 
 ---
@@ -140,7 +163,7 @@ Database (RLS Policy: tenant_id = current_tenant_id AND Application Filter)
            ┌───────────────┼───────────────┐
            ▼               ▼               ▼
       Protected       PermissionContext   Theme Wrapper
-       Routes          (RBAC + Limits)    (Apply Brand)
+       Routes          (ABAC + Limits)    (Apply Brand)
 ```
 
 ---
@@ -160,10 +183,10 @@ Database (RLS Policy: tenant_id = current_tenant_id AND Application Filter)
 
 ## Key Design Decisions
 
-### 1. No Server-Side Rendering
+### 1. Rendering Modes
 
-- Pure SPA architecture for simplicity
-- SEO handled via `react-helmet-async`
+- **Admin Panel**: SPA for dashboard workflows; SEO handled via `react-helmet-async`.
+- **Public Portal**: SSR/Islands via Astro for fast public pages and SEO.
 
 ### 2. Database-First
 

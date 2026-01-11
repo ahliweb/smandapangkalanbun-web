@@ -9,8 +9,8 @@ The Public Portal is a high-performance, secure, multi-tenant frontend built wit
 - **Tenant Resolution** (Priority Order):
   1. **Path Parameter** (Primary): Extracts tenant slug from first URL segment (`/{tenant}/...`).
   2. **Host Header** (Fallback): Maps `Host` header → `public.tenants` (via RPC `get_tenant_id_by_host`).
-  - Middleware (`src/middleware.ts`) sets `locals.tenant_id` and `locals.tenant_slug`.
-  - Host-resolved tenants are redirected to canonical path-based URLs (301).
+  - Middleware (`awcms-public/primary/src/middleware.ts`) sets `locals.tenant_id` and `locals.tenant_slug`.
+  - Host-resolved tenants are served without a tenant path prefix (legacy domains remain supported).
 - **URL Structure**: `/{tenant}/{slug}` (e.g., `/primary/articles/`)
 - **Data Isolation**:
   - **RLS**: Row-Level Security policies on `articles` table compel tenant check.
@@ -22,16 +22,16 @@ The Public Portal is a high-performance, secure, multi-tenant frontend built wit
 
 ### A. Puck Layouts
 
-- **File**: `src/components/PuckRenderer.tsx`
+- **File**: `awcms-public/primary/src/components/PuckRenderer.tsx`
 - **Logic**: Iterates over `puck_layout_jsonb` structure.
 - **Security**:
-  - Uses `src/components/registry.tsx` as a strictly typed Whitelist.
+  - Uses `awcms-public/primary/src/components/registry.tsx` as a strictly typed whitelist.
   - Runtime prop validation via **Zod Schemas**.
   - Drop unknown components (dev warning / prod silence).
 
 ### B. Rich Text (TipTap)
 
-- **File**: `src/components/TipTapRenderer.tsx`
+- **File**: `awcms-public/primary/src/components/TipTapRenderer.tsx`
 - **Strategy**: **JSON to React Tree**.
   - No `dangerouslySetInnerHTML`.
   - Direct mapping of nodes (heading, paragraph, image) to React Elements.
@@ -62,8 +62,8 @@ The Public Portal is a high-performance, secure, multi-tenant frontend built wit
   - Fetches `template_assignments` for the current channel.
   - Determines template from page override or channel assignment.
   - Merges **Header Part** + **Page Content** + **Footer Part** into final layout.
-- **Root Redirect** (`index.astro`):
-  - Redirects `/` to `/primary/` (default tenant).
+- **Root Page** (`index.astro`):
+  - Serves host-resolved tenant home pages without forcing a `/{tenant}/` redirect.
 - **URL Builder** (`src/lib/url.ts`):
   - `tenantUrl(slug, path)`: Builds tenant-prefixed URLs.
   - Used by Navbar, Footer, and all internal links.

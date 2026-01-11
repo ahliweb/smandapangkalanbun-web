@@ -22,6 +22,7 @@ Before you begin, ensure you have the following installed:
 ```bash
 git clone https://github.com/ahliweb/awcms.git
 cd awcms
+# In the monorepo layout, the Admin Panel lives in ./awcms
 ```
 
 ### 2. Install Dependencies

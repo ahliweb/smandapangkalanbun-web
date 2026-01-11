@@ -5,6 +5,14 @@ All notable changes to the **AWCMS** project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.9.7] - 2026-01-11
+
+### Documentation
+
+- Refreshed stack/version references, Tailwind 4 vs 3 split, and public portal paths across core docs and project READMEs.
+- Updated mobile and ESP32 documentation to match current folder layout and dependency versions.
+- Corrected public portal routing/middleware behavior and Cloudflare deployment env var naming.
+
 ## [2.9.6] "Stabilization" - 2026-01-10
 
 ### Fixed
@@ -308,7 +316,7 @@ All notable changes to the **AWCMS** project will be documented in this file.
 - **Documentation Updates**:
   - Fixed broken links in `INDEX.md` (CHANGELOG path).
   - Fixed broken links in `VERSIONING.md` (CHANGELOG references).
-  - Fixed `FOLDER_STRUCTURE.md` (RBAC→ABAC, removed deprecated notice).
+  - Fixed `FOLDER_STRUCTURE.md` (ABAC terminology alignment, removed deprecated notice).
   - Added Vitest/Prettier/Wrangler to `TECH_STACK.md`.
   - Updated `TESTING.md` with Vitest implementation details.
 
@@ -328,7 +336,7 @@ All notable changes to the **AWCMS** project will be documented in this file.
 - **Offline Architecture (CRITICAL)**: Implemented missing `schema.js` and `applySchema` logic in `db.js`, fixing a critical gap where local SQLite tables were not initialized.
 - **Testing Framework**: Established comprehensive automated testing infrastructure using `vitest`, `jsdom`, and `@testing-library`, enabling verifying core system logic.
 - **Unit Tests**:
-  - `PermissionContext.test.jsx`: Added verification for ABAC logic, RBAC fallback, and `super_admin` policies.
+  - `PermissionContext.test.jsx`: Added verification for ABAC logic, ABAC fallback, and `super_admin` policies.
   - `UnifiedDataManager.test.js`: Added verification for offline/online toggle and data fetching delegation.
 
 ## [2.3.0] - 2026-01-04

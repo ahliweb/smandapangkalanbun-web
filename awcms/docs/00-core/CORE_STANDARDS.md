@@ -1,6 +1,6 @@
 # AWCMS Core Standards
 
-> **Version**: 2.9.6 | **Last Updated**: 2026-01-10 | **React**: 18.3.1
+> **Version**: 2.9.7 | **Last Updated**: 2026-01-11 | **React**: 18.3.1
 
 This document establishes the definitive architecture and standardization pillars for the AWCMS ecosystem. All development, documentation, and extension work must align with these 5 Core Standards.
 
@@ -106,7 +106,7 @@ This document establishes the definitive architecture and standardization pillar
 ### 4.1 Documentation Architecture
 
 * **AI Guidelines**:
-  * **Primary**: [AGENTS.md](../02-reference/AGENTS.md) (Rules for AI Assist)
+  * **Primary**: [AGENTS.md](../../../AGENTS.md) (Rules for AI Assist)
   * **Context**: **Context7 MCP** integration for library docs.
 * **Project Overview**:
   * **Root**: [README.md](../../README.md) (Installation & Start)
@@ -116,7 +116,7 @@ This document establishes the definitive architecture and standardization pillar
 
 ### 4.2 Documentation Reference
 
-* [AI Agents Guide](../02-reference/AGENTS.md)
+* [AI Agents Guide](../../../AGENTS.md)
 * [Database Schema](../02-reference/DATABASE_SCHEMA.md)
 
 ---

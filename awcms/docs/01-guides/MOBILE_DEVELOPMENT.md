@@ -24,7 +24,7 @@ Gunakan library resmi [supabase_flutter](https://pub.dev/packages/supabase_flutt
 dependencies:
   flutter:
     sdk: flutter
-  supabase_flutter: ^1.10.0
+  supabase_flutter: ^2.8.0
 ```
 
 ### Inisialisasi

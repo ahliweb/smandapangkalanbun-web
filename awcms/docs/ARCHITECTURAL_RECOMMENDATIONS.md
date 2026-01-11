@@ -184,6 +184,6 @@ All new features MUST include:
 ## Related Documents
 
 - [CORE_STANDARDS.md](00-core/CORE_STANDARDS.md) - Definitive standards
-- [AGENTS.md](02-reference/AGENTS.md) - AI development guidelines
+- [AGENTS.md](../../AGENTS.md) - AI development guidelines
 - [PERFORMANCE.md](03-features/PERFORMANCE.md) - Performance optimization
 - [SECURITY.md](00-core/SECURITY.md) - Security implementation

@@ -31,12 +31,12 @@ In the AWCMS ecosystem, AI Agents are treated as specialized team members. We de
 
 * **Focus**: Public Portal (`awcms-public`), Astro Islands, Performance.
 * **Capabilities**:
-  * Working with **Astro 5** and **React 19** (Islands Architecture).
+  * Working with **Astro 5** and **React 18.3.1** (Islands Architecture).
   * Implementing **Zod** schemas for component prop validation.
   * Optimizing for Cloudflare Pages (Edge Cache, Headers).
 * **Constraints**:
   * **NO** direct database access (must use Supabase JS Client or Functions).
-  * **NO** `@measured/puck` dependency (use `PuckRenderer` only).
+  * **NO** Puck editor runtime in the public portal (use `PuckRenderer` only; `@measured/puck` is types-only).
 
 ---
 
@@ -48,10 +48,10 @@ Agents must be aware of the exact versions in use:
 | ---------------- | -------- | --------------------------------------- |
 | React            | 18.3.1   | Functional components only              |
 | Vite             | 7.2.7    | Build tool & dev server                 |
-| TailwindCSS      | 4.0.0    | CSS-based config (no tailwind.config.js)|
-| Supabase         | 2.87.1   | Auth, Database, Storage                 |
+| TailwindCSS      | 4.1.18   | Admin uses CSS-based config             |
+| Supabase         | 2.87.1 / 2.89.0 | Admin / Public clients           |
 | React Router DOM | 7.10.1   | Client-side routing                     |
-| Puck             | Latest   | Visual Editor (@measured/puck)          |
+| Puck             | 0.20.2   | Visual Editor (@measured/puck)          |
 | TipTap           | 3.13.0   | Rich text editor (XSS-safe)             |
 | Framer Motion    | 12.23.26 | Animations                              |
 | Radix UI         | Latest   | Accessible UI primitives                |
@@ -61,7 +61,7 @@ Agents must be aware of the exact versions in use:
 | Leaflet          | 1.9.4    | Maps                                    |
 
 > [!IMPORTANT]
-> **React Version Split**: The Admin Panel uses React 18.3.1 (required for Puck visual editor compatibility). The Public Portal uses React 19.2.3 (Astro Islands architecture). Do not mix these versions across projects.
+> **React Version Alignment**: The Admin Panel and Public Portal both use React 18.3.1. Do not upgrade to React 19 until Puck compatibility and public portal validation are complete.
 
 ---
 
@@ -93,10 +93,10 @@ To ensure successful code generation and integration, Agents must adhere to the 
 
 | Rule             | Requirement                                |
 | ---------------- | ------------------------------------------ |
-| Language         | JavaScript ES2022+ (NO TypeScript)         |
+| Language         | Admin Panel uses JavaScript ES2022+; Public Portal uses TypeScript/TSX |
 | **Admin Panel**  | React 18.3.1 (Strict), Vite 7              |
-| **Public Portal**| Astro 5, React 19, Cloudflare Pages        |
-| Styling          | TailwindCSS 4 utilities (NO external CSS)  |
+| **Public Portal**| Astro 5, React 18.3.1, Cloudflare Pages    |
+| Styling          | Admin uses TailwindCSS 4 utilities; Public uses TailwindCSS 3 with `tailwind.config.mjs` |
 | Backend          | Supabase only (NO Node.js servers)         |
 
 ### Code Patterns
@@ -150,7 +150,7 @@ class MyComponent extends Component<Props> { } // NO class components!
 | File                                   | Purpose                               |
 | -------------------------------------- | ------------------------------------- |
 | `src/contexts/SupabaseAuthContext.jsx` | Authentication state & methods        |
-| `src/contexts/PermissionContext.jsx`   | ABAC/RBAC permissions & role checks   |
+| `src/contexts/PermissionContext.jsx`   | ABAC permissions & role checks   |
 | `src/contexts/PluginContext.jsx`       | Extension system & hook provider      |
 | `src/contexts/ThemeContext.jsx`        | Dark/Light theme management           |
 
@@ -269,7 +269,7 @@ toast({ title: "Saved", description: "Changes saved successfully" });
 toast({ variant: "destructive", title: "Error", description: error.message });
 ```
 
-### TailwindCSS 4.0 Styling
+### TailwindCSS 4.1 Styling (Admin Panel)
 
 ```javascript
 // Use utility classes directly

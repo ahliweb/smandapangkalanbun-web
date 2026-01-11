@@ -100,8 +100,8 @@ VITE_SUPABASE_ANON_KEY=your-anon-key
 | Category | Technology |
 | -------- | ---------- |
 | Frontend (Admin) | React 18.3.1, Vite 7.2.7 |
-| Frontend (Public) | Astro 5.x, React 19.x, Cloudflare Pages |
-| Styling | TailwindCSS 4.1.18, Radix UI |
+| Frontend (Public) | Astro 5.x, React 18.3.1, Cloudflare Pages |
+| Styling | TailwindCSS 4.1.18 (Admin), 3.4.19 (Public), Radix UI |
 | Backend | Supabase (PostgreSQL, Auth, Storage) |
 | Editor | TipTap 3.13.0, Puck (@measured/puck) |
 | Animation | Framer Motion 12.23.26 |
@@ -109,7 +109,7 @@ VITE_SUPABASE_ANON_KEY=your-anon-key
 | Charts | Recharts 3.5.1, Leaflet 1.9.4 |
 
 > [!IMPORTANT]
-> **React 18 Required**: This project strictly uses React 18.3.1 because the Puck visual editor is not yet compatible with React 19. Do not upgrade to React 19 until Puck adds support.
+> **React 18 Required**: Admin and Public apps use React 18.3.1. Do not upgrade to React 19 until Puck compatibility and public portal validation are complete.
 
 ---
 
@@ -257,7 +257,7 @@ awcms/
 | [Folder Structure](docs/02-reference/FOLDER_STRUCTURE.md) | Project organization |
 | [Security](docs/00-core/SECURITY.md) | Security measures |
 | [Deployment](docs/01-guides/DEPLOYMENT.md) | Deploy to production |
-| [AI Agents](docs/02-reference/AGENTS.md) | Agent development guide |
+| [AI Agents](../AGENTS.md) | Agent development guide |
 | [Contributing](docs/01-guides/CONTRIBUTING.md) | How to contribute |
 
 ---

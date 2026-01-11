@@ -10,7 +10,7 @@ This guide documents the migration of `awcms-public` from root-based tenant reso
 | :--- | :--- | :--- |
 | **URL Structure** | `/articles` | `/{tenant}/articles` |
 | **Tenant Resolution** | Domain/subdomain only | Path parameter (primary) + domain fallback |
-| **Canonical Form** | `tenant.example.com/page` | `example.com/tenant/page` |
+| **Canonical Form** | `tenant.example.com/page` | `example.com/tenant/page` (path-based; host-based still supported) |
 
 ---
 
@@ -36,16 +36,15 @@ https://example.com/primary/pages/about/
 
 ## Redirect Rules
 
-The following redirects are automatically applied:
+Path-based URLs are canonical for multi-tenant routing, while host-based domains are still supported without forced redirects.
 
-| Old URL | New URL | Status |
-| :--- | :--- | :--- |
-| `/` | `/primary/` | 301 |
-| `/articles` | `/primary/articles/` | 301 |
-| `/pages/{slug}` | `/primary/pages/{slug}/` | 301 |
-| `tenant.domain.com/*` | `/{tenant-slug}/*` | 301 |
+| Scenario | Behavior |
+| :--- | :--- |
+| `/{tenant}` vs resolved tenant slug mismatch | Redirects to `/{resolved-tenant}/...` (301) |
+| Missing trailing slash | Redirects to trailing-slash URL |
+| Host-based domain (`tenant.domain.com`) | Served directly without tenant prefix |
 
-> **Note**: "primary" is the default tenant. Replace with your tenant's slug as needed.
+> **Note**: "primary" is the default tenant slug used when a host-based fallback is configured.
 
 ---
 
@@ -65,7 +64,7 @@ It then looks up the tenant by slug in the `tenants` table.
 
 If no tenant is found in the path, the middleware falls back to host-based resolution using the existing `get_tenant_id_by_host` RPC.
 
-If a valid tenant is resolved from the host, the user is redirected to the canonical path-based URL.
+If a valid tenant is resolved from the host, the page is served directly without a tenant path prefix (legacy domain support).
 
 ---
 
@@ -123,7 +122,7 @@ graph TD
     D --> F{Found?}
     E -->|Yes| G[Set Context & Continue]
     E -->|No| H[404 Response]
-    F -->|Yes| I[Redirect to /{tenant}/]
+    F -->|Yes| I[Serve without tenant prefix]
     F -->|No| H
 ```
 
@@ -136,5 +135,5 @@ If issues arise, rollback by:
 1. Restoring `src/pages/[...slug].astro` (original catch-all route).
 2. Reverting `src/middleware.ts` to host-only resolution.
 3. Removing `src/pages/[tenant]/` directory.
-4. Removing `src/pages/index.astro` redirect.
+4. Removing `src/pages/index.astro` host-based handler.
 5. Rebuilding and redeploying.

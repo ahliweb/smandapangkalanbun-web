@@ -184,7 +184,7 @@ supabase migration repair <version> --status reverted
 2. Clear browser cache
 3. Check `src/index.css` has `@import "tailwindcss"`
 4. Verify class names are correct
-5. TailwindCSS 4.0 uses CSS-based config (no tailwind.config.js needed)
+5. Admin Panel uses TailwindCSS 4.x CSS-based config; Public Portal uses `tailwind.config.mjs` (TailwindCSS 3.x)
 
 ### Toast Not Showing
 

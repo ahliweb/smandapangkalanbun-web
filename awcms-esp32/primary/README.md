@@ -13,6 +13,8 @@ ESP32-based IoT firmware with **secure credential storage**.
 
 ## Quick Start
 
+Run all commands from `awcms-esp32/primary`.
+
 1. **Copy environment file:**
 
    ```bash
@@ -32,13 +34,14 @@ ESP32-based IoT firmware with **secure credential storage**.
 3. **Build and upload:**
 
    ```bash
+   # Run from awcms-esp32/primary
    source .env && pio run -t uploadfs && pio run -t upload
    ```
 
 ## Project Structure
 
 ```text
-awcms-esp32/
+awcms-esp32/primary/
 ├── .env              # Secrets (NOT in git)
 ├── .env.example      # Template
 ├── include/
@@ -57,7 +60,9 @@ Tenant-specific configuration lives under `/{tenant_code}/`:
 awcms-esp32/
   primary/              # Default tenant
     README.md           # Tenant config docs
-  src/                  # Shared firmware code
+    src/                # Firmware code
+    include/            # Headers and config
+    data/               # Web UI assets
 ```
 
 See the [parent README](../README.md) for multi-tenant folder structure.

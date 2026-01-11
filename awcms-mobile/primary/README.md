@@ -2,7 +2,7 @@
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B.svg)](https://flutter.dev)
 [![Supabase](https://img.shields.io/badge/Supabase-2.8.0-3ECF8E.svg)](https://supabase.com)
-[![Riverpod](https://img.shields.io/badge/Riverpod-2.6.1-00D09E.svg)](https://riverpod.dev)
+[![Riverpod](https://img.shields.io/badge/Riverpod-3.1.0-00D09E.svg)](https://riverpod.dev)
 [![Drift](https://img.shields.io/badge/Drift-2.30-blue.svg)](https://drift.simonbinder.eu/)
 
 Aplikasi mobile Flutter untuk **AWCMS** (Ahliweb Content Management System). Menggunakan backend Supabase yang sama dengan web admin.
@@ -20,7 +20,7 @@ Aplikasi mobile Flutter untuk **AWCMS** (Ahliweb Content Management System). Men
 ### Installation
 
 ```bash
-cd awcms-mobile
+cd awcms-mobile/primary
 flutter pub get
 dart run build_runner build  # Generate Drift code
 cp .env.example .env         # Configure credentials
@@ -49,6 +49,7 @@ lib/
 │   ├── widgets/                 # OfflineIndicator, etc.
 │   └── themes/                  # Material 3 themes
 └── routes/                      # GoRouter config
+```
 
 ---
 
@@ -59,8 +60,8 @@ Tenant-specific configuration lives under `/{tenant_code}/`:
 ```text
 awcms-mobile/
   primary/               # Default tenant
+    lib/                 # Flutter source code
     README.md            # Tenant config docs
-  lib/                   # Shared Flutter code
 ```
 
 See the [parent README](../README.md) for multi-tenant folder structure.
@@ -72,8 +73,8 @@ See the [parent README](../README.md) for multi-tenant folder structure.
 | Category | Technology |
 | -------- | ---------- |
 | Framework | Flutter 3.x |
-| State Management | Riverpod 2.x |
-| Routing | GoRouter 14.x |
+| State Management | Riverpod 3.1.0 |
+| Routing | GoRouter 17.0.1 |
 | Backend | Supabase Flutter 2.x |
 | Local Database | Drift 2.30 (SQLite) |
 | Connectivity | connectivity_plus |

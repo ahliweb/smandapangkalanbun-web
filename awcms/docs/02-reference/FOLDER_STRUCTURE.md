@@ -16,13 +16,17 @@ awcms-dev/              # Monorepo Root
 │   ├── src/
 │   └── package.json
 ├── awcms-public/       # Public Portal
-│   ├── primary/        # Astro App (v5 + React 19)
+│   ├── primary/        # Astro App (v5 + React 18.3.1, TypeScript)
 │   └── package.json    # Cloudflare Proxy
-└── awcms-mobile/       # Mobile App
-    └── primary/        # Flutter Source
+├── awcms-mobile/       # Mobile App
+│   └── primary/        # Flutter Source
+├── awcms-esp32/        # IoT Firmware
+│   └── primary/        # ESP32 PlatformIO project
+└── awcms-ext/          # External Extensions
+    └── primary-analytics/ # Example external extension
 ```
 
-> **Note:** TailwindCSS 4.0 no longer requires `tailwind.config.js` - configuration is done via CSS.
+> **Note:** Admin uses TailwindCSS 4.x with CSS-based config; Public Portal uses TailwindCSS 3.x with `tailwind.config.mjs`.
 
 ---
 
@@ -128,7 +132,7 @@ src/
 └── 📄 index.css          # Global styles (TailwindCSS 4)
 ```
 
-> **External Extensions** are located at project root in `awcms-ext-{vendor}-{slug}/` folders. See [EXTENSIONS.md](../03-features/EXTENSIONS.md) for details.
+> **External Extensions** live in `awcms-ext/` and internal extensions live in `awcms/src/extensions/`. See [EXTENSIONS.md](../03-features/EXTENSIONS.md) for details.
 
 ---
 
@@ -136,28 +140,17 @@ src/
 
 ```text
 docs/
-├── README.md             # Documentation overview
-├── INSTALLATION.md       # Setup guide
-├── CONFIGURATION.md      # Configuration options
-├── ARCHITECTURE.md       # System architecture
-├── DATABASE_SCHEMA.md    # Database tables
-├── API_DOCUMENTATION.md  # API usage
-├── ABAC_SYSTEM.md        # Permissions system
-├── COMPONENT_GUIDE.md    # UI components
-├── SECURITY.md           # Security measures
-├── DEPLOYMENT_GUIDE.md   # Deployment options
-├── CONTRIBUTING.md       # Contribution guide
-├── TESTING.md            # Testing guide
-├── TROUBLESHOOTING.md    # Common issues
-├── CHANGELOG.md          # Version history
+├── 00-core/              # Core standards and architecture
+├── 01-guides/            # Installation, configuration, deployment
+├── 02-reference/         # API, schema, tech stack, folder structure
+├── 03-features/          # Feature deep dives
+├── 04-compliance/        # Compliance mapping
+├── schemas/              # JSON schemas
+├── INDEX.md              # Documentation index
+├── CHANGELOG.md          # Docs changelog
 ├── LICENSE.md            # MIT License
-├── TECH_STACK.md         # Technologies used
-├── FOLDER_STRUCTURE.md   # This file
-├── AGENTS.md             # AI assistance guide
-├── MENU_SYSTEM.md        # Menu configuration
-├── INTERNATIONALIZATION.md # i18n guide
-├── CLOUDFLARE_DEPLOYMENT.md # Cloudflare deploy guide
-└── ...                   # Additional docs
+├── CODE_OF_CONDUCT.md    # Community standards
+└── ARCHITECTURAL_RECOMMENDATIONS.md # Best practices
 ```
 
 ---
@@ -168,7 +161,7 @@ docs/
 | ---- | ------- |
 | `main.jsx` | Application entry point, renders root component |
 | `App.jsx` | Root component with providers and router |
-| `index.css` | Global CSS with TailwindCSS 4 directives |
+| `index.css` | Global CSS with TailwindCSS 4 directives (Admin Panel) |
 | `vite.config.js` | Build tool configuration with aliases |
 | `postcss.config.js` | PostCSS with TailwindCSS plugin |
 
