@@ -33,10 +33,10 @@ function ArticlesManager() {
       label: 'Workflow',
       render: (value) => {
         const colors = {
-          published: 'bg-green-100 text-green-700 border-green-200',
-          approved: 'bg-blue-100 text-blue-700 border-blue-200',
-          reviewed: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-          draft: 'bg-slate-100 text-slate-700 border-slate-200'
+          published: 'bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800',
+          approved: 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800',
+          reviewed: 'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800',
+          draft: 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-muted dark:text-muted-foreground dark:border-border'
         };
         return (
           <span className={`px-2 py-0.5 rounded-full text-xs font-medium border ${colors[value] || colors.draft} capitalize`}>
@@ -53,8 +53,8 @@ function ArticlesManager() {
       label: 'Type',
       render: (value) => (
         value === 'visual' ?
-          <span title="Visual Builder" className="inline-flex items-center justify-center w-6 h-6 rounded bg-indigo-50 text-indigo-600"><Layout className="w-3.5 h-3.5" /></span> :
-          <span title="Standard Editor" className="inline-flex items-center justify-center w-6 h-6 rounded bg-slate-50 text-slate-500"><FileText className="w-3.5 h-3.5" /></span>
+          <span title="Visual Builder" className="inline-flex items-center justify-center w-6 h-6 rounded bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400"><Layout className="w-3.5 h-3.5" /></span> :
+          <span title="Standard Editor" className="inline-flex items-center justify-center w-6 h-6 rounded bg-slate-50 text-slate-500 dark:bg-muted dark:text-muted-foreground"><FileText className="w-3.5 h-3.5" /></span>
       )
     }
   ];

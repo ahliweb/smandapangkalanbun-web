@@ -25,21 +25,21 @@ const ModuleHeader = ({
     return (
         <div className="space-y-4">
             {/* Breadcrumb Navigation */}
-            <nav className="flex items-center text-sm text-slate-500">
-                <Link to="/cmspanel" className="hover:text-blue-600 transition-colors flex items-center gap-1">
+            <nav className="flex items-center text-sm text-muted-foreground">
+                <Link to="/cmspanel" className="hover:text-primary transition-colors flex items-center gap-1">
                     <Home className="w-4 h-4" />
                     Dashboard
                 </Link>
                 {breadcrumbs.map((crumb, index) => (
                     <React.Fragment key={index}>
-                        <ChevronRight className="w-4 h-4 mx-2 text-slate-300" />
+                        <ChevronRight className="w-4 h-4 mx-2 text-muted-foreground/50" />
                         {crumb.href ? (
-                            <Link to={crumb.href} className="hover:text-blue-600 transition-colors flex items-center gap-1">
+                            <Link to={crumb.href} className="hover:text-primary transition-colors flex items-center gap-1">
                                 {crumb.icon && <crumb.icon className="w-4 h-4" />}
                                 {crumb.label}
                             </Link>
                         ) : (
-                            <span className="flex items-center gap-1 text-slate-700 font-medium">
+                            <span className="flex items-center gap-1 text-foreground font-medium">
                                 {crumb.icon && <crumb.icon className="w-4 h-4" />}
                                 {crumb.label}
                             </span>
@@ -54,12 +54,12 @@ const ModuleHeader = ({
             {/* Header with Title, Description, and Actions */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-                        {TitleIcon && <TitleIcon className="w-6 h-6 text-blue-600" />}
+                    <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
+                        {TitleIcon && <TitleIcon className="w-6 h-6 text-primary" />}
                         {title}
                     </h1>
                     {description && (
-                        <p className="text-slate-500 mt-1">{description}</p>
+                        <p className="text-muted-foreground mt-1">{description}</p>
                     )}
                 </div>
                 {actions.length > 0 && (

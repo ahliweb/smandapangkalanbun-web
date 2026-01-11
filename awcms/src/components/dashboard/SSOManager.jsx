@@ -106,20 +106,20 @@ function SSOManager() {
   }, []);
 
   const SecurityFeatureCard = ({ title, description, enabled, icon: Icon }) => (
-    <div className="flex items-start gap-4 p-4 bg-slate-50 rounded-lg border">
-      <div className={`p-2 rounded-lg ${enabled ? 'bg-green-100 text-green-600' : 'bg-slate-200 text-slate-500'}`}>
+    <div className="flex items-start gap-4 p-4 bg-card rounded-lg border">
+      <div className={`p-2 rounded-lg ${enabled ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' : 'bg-muted text-muted-foreground'}`}>
         <Icon className="w-5 h-5" />
       </div>
       <div className="flex-1">
         <div className="flex items-center gap-2">
-          <h4 className="font-medium text-slate-800">{title}</h4>
+          <h4 className="font-medium text-foreground">{title}</h4>
           {enabled ? (
             <CheckCircle className="w-4 h-4 text-green-500" />
           ) : (
-            <XCircle className="w-4 h-4 text-slate-400" />
+            <XCircle className="w-4 h-4 text-muted-foreground" />
           )}
         </div>
-        <p className="text-sm text-slate-500">{description}</p>
+        <p className="text-sm text-muted-foreground">{description}</p>
       </div>
     </div>
   );
@@ -127,13 +127,13 @@ function SSOManager() {
   return (
     <div className="space-y-6">
       {/* Breadcrumb Navigation */}
-      <nav className="flex items-center text-sm text-slate-500">
-        <a href="/cmspanel" className="hover:text-blue-600 transition-colors flex items-center gap-1">
+      <nav className="flex items-center text-sm text-muted-foreground">
+        <a href="/cmspanel" className="hover:text-primary transition-colors flex items-center gap-1">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
           Dashboard
         </a>
-        <svg className="w-4 h-4 mx-2 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-        <span className="flex items-center gap-1 text-slate-700 font-medium">
+        <svg className="w-4 h-4 mx-2 text-muted-foreground/50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+        <span className="flex items-center gap-1 text-foreground font-medium">
           <Shield className="w-4 h-4" />
           SSO & Security
         </span>
@@ -141,8 +141,8 @@ function SSOManager() {
 
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-bold text-slate-800">{t('sso.title')}</h2>
-          <p className="text-slate-600">{t('sso.subtitle')}</p>
+          <h2 className="text-3xl font-bold text-foreground">{t('sso.title')}</h2>
+          <p className="text-muted-foreground">{t('sso.subtitle')}</p>
         </div>
         <Button onClick={() => { setCurrentPage(0); fetchSecurityData(0); }} variant="outline" className="gap-2" disabled={loading}>
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -220,18 +220,18 @@ function SSOManager() {
             </Card>
           </div>
 
-          <Card className="bg-blue-50 border-blue-100">
+          <Card className="bg-blue-50 border-blue-100 dark:bg-blue-900/10 dark:border-blue-800">
             <CardHeader>
               <div className="flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5 text-blue-600" />
-                <CardTitle className="text-blue-900">OAuth Provider Configuration</CardTitle>
+                <AlertTriangle className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                <CardTitle className="text-blue-900 dark:text-blue-200">OAuth Provider Configuration</CardTitle>
               </div>
             </CardHeader>
-            <CardContent className="text-sm text-blue-800 space-y-2">
+            <CardContent className="text-sm text-blue-800 dark:text-blue-300 space-y-2">
               <p>OAuth providers (Google, GitHub, Azure AD, etc.) are configured directly in <strong>Supabase Dashboard</strong>.</p>
               <p className="flex items-center gap-2">
                 <span>→</span>
-                <a href="https://supabase.com/dashboard/project/_/auth/providers" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-600">
+                <a href="https://supabase.com/dashboard/project/_/auth/providers" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-600 dark:hover:text-blue-400">
                   Configure OAuth in Supabase Dashboard
                 </a>
               </p>
@@ -248,11 +248,11 @@ function SSOManager() {
             <CardContent>
               <div className="rounded-md border overflow-hidden">
                 <table className="w-full text-sm">
-                  <thead className="bg-slate-50 border-b">
+                  <thead className="bg-muted/50 border-b">
                     <tr>
-                      <th className="p-3 text-left font-medium">Provider</th>
-                      <th className="p-3 text-left font-medium">Provider ID</th>
-                      <th className="p-3 text-left font-medium">Status</th>
+                      <th className="p-3 text-left font-medium text-muted-foreground">Provider</th>
+                      <th className="p-3 text-left font-medium text-muted-foreground">Provider ID</th>
+                      <th className="p-3 text-left font-medium text-muted-foreground">Status</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
@@ -262,14 +262,14 @@ function SSOManager() {
                           <span className="text-lg">{provider.icon}</span>
                           <span className="font-medium">{provider.name}</span>
                         </td>
-                        <td className="p-3 font-mono text-xs text-slate-500">{provider.provider_id}</td>
+                        <td className="p-3 font-mono text-xs text-muted-foreground">{provider.provider_id}</td>
                         <td className="p-3">
                           {provider.enabled ? (
-                            <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                            <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 rounded-full text-xs font-medium">
                               <CheckCircle className="w-3 h-3" /> Enabled
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 px-2 py-1 bg-slate-100 text-slate-500 rounded-full text-xs font-medium">
+                            <span className="inline-flex items-center gap-1 px-2 py-1 bg-secondary text-muted-foreground rounded-full text-xs font-medium">
                               <XCircle className="w-3 h-3" /> Disabled
                             </span>
                           )}
@@ -279,7 +279,7 @@ function SSOManager() {
                   </tbody>
                 </table>
               </div>
-              <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-800">
+              <div className="mt-4 p-3 bg-amber-50 border border-amber-200 dark:bg-amber-900/10 dark:border-amber-800 rounded-lg text-sm text-amber-800 dark:text-amber-300">
                 <strong>Note:</strong> To enable/disable OAuth providers, configure them in the{' '}
                 <a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer" className="underline">
                   Supabase Dashboard → Authentication → Providers
@@ -293,7 +293,7 @@ function SSOManager() {
           <Card>
             <CardHeader>
               <div className="flex items-center gap-2">
-                <Activity className="w-5 h-5 text-slate-500" />
+                <Activity className="w-5 h-5 text-muted-foreground" />
                 <CardTitle>Recent Login Activity</CardTitle>
               </div>
               <CardDescription>Login events from audit logs (page {currentPage + 1} of {Math.ceil(totalCount / PAGE_SIZE) || 1})</CardDescription>
@@ -301,24 +301,24 @@ function SSOManager() {
             <CardContent>
               {loading ? (
                 <div className="flex items-center justify-center py-8">
-                  <RefreshCw className="w-6 h-6 animate-spin text-slate-400" />
+                  <RefreshCw className="w-6 h-6 animate-spin text-muted-foreground" />
                 </div>
               ) : securityInfo.recentLogins.length === 0 ? (
-                <div className="text-center py-8 text-slate-500">
-                  <Users className="w-12 h-12 mx-auto mb-4 text-slate-300" />
+                <div className="text-center py-8 text-muted-foreground">
+                  <Users className="w-12 h-12 mx-auto mb-4 text-muted-foreground/50" />
                   <p>No login activity recorded yet.</p>
                   <p className="text-sm">Login events will appear here once users start signing in.</p>
                 </div>
               ) : (
                 <div className="rounded-md border overflow-hidden">
                   <table className="w-full text-sm">
-                    <thead className="bg-slate-50 border-b">
+                    <thead className="bg-muted/50 border-b">
                       <tr>
-                        <th className="p-3 text-left font-medium">Time</th>
-                        <th className="p-3 text-left font-medium">Email</th>
-                        <th className="p-3 text-left font-medium">Status</th>
-                        <th className="p-3 text-left font-medium">Channel</th>
-                        <th className="p-3 text-left font-medium">IP Address</th>
+                        <th className="p-3 text-left font-medium text-muted-foreground">Time</th>
+                        <th className="p-3 text-left font-medium text-muted-foreground">Email</th>
+                        <th className="p-3 text-left font-medium text-muted-foreground">Status</th>
+                        <th className="p-3 text-left font-medium text-muted-foreground">Channel</th>
+                        <th className="p-3 text-left font-medium text-muted-foreground">IP Address</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y">
@@ -327,27 +327,27 @@ function SSOManager() {
                         const errorMsg = log.details?.error;
                         return (
                           <tr key={log.id || idx}>
-                            <td className="p-3 text-slate-600">
+                            <td className="p-3 text-muted-foreground">
                               <div className="flex items-center gap-2">
-                                <Clock className="w-4 h-4 text-slate-400" />
+                                <Clock className="w-4 h-4 text-muted-foreground" />
                                 {log.created_at ? format(new Date(log.created_at), 'dd MMM yyyy HH:mm:ss') : '-'}
                               </div>
                             </td>
                             <td className="p-3">{log.user?.email || log.details?.attempted_email || log.user_id || '-'}</td>
                             <td className="p-3">
                               <span className={`px-2 py-1 rounded text-xs font-medium ${status === 'success'
-                                  ? 'bg-green-100 text-green-700'
-                                  : 'bg-red-100 text-red-700'
+                                ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                                : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
                                 }`} title={errorMsg || ''}>
                                 {status === 'success' ? '✓ Success' : `✗ ${errorMsg || 'Failed'}`}
                               </span>
                             </td>
                             <td className="p-3">
-                              <span className="px-2 py-1 bg-slate-100 rounded text-xs font-medium">
+                              <span className="px-2 py-1 bg-secondary rounded text-xs font-medium">
                                 {log.channel || 'web'}
                               </span>
                             </td>
-                            <td className="p-3 font-mono text-xs text-slate-500">
+                            <td className="p-3 font-mono text-xs text-muted-foreground">
                               {log.ip_address || '-'}
                             </td>
                           </tr>
@@ -356,8 +356,8 @@ function SSOManager() {
                     </tbody>
                   </table>
                   {/* Pagination Controls */}
-                  <div className="flex items-center justify-between p-3 border-t bg-slate-50">
-                    <div className="text-sm text-slate-500">
+                  <div className="flex items-center justify-between p-3 border-t bg-muted/20">
+                    <div className="text-sm text-muted-foreground">
                       Showing {currentPage * PAGE_SIZE + 1} - {Math.min((currentPage + 1) * PAGE_SIZE, totalCount)} of {totalCount}
                     </div>
                     <div className="flex gap-2">

@@ -36,13 +36,13 @@ const AdminPageLayout = ({
     }
 
     return (
-        <div className="min-h-screen bg-slate-50 relative overflow-hidden font-sans text-slate-900 selection:bg-blue-100 selection:text-blue-900">
+        <div className="min-h-screen bg-background relative overflow-hidden font-sans text-foreground selection:bg-primary/20 selection:text-primary">
             {/* Futuristic Background Mesh */}
             <div className="fixed inset-0 z-0 pointer-events-none">
-                <div className="absolute top-[-10%] -left-20 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl mix-blend-multiply animate-blob"></div>
-                <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-purple-400/20 rounded-full blur-3xl mix-blend-multiply animate-blob animation-delay-2000"></div>
-                <div className="absolute top-[20%] left-[20%] w-96 h-96 bg-indigo-400/20 rounded-full blur-3xl mix-blend-multiply animate-blob animation-delay-4000"></div>
-                <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-sky-100/40 rounded-full blur-[100px]"></div>
+                <div className="absolute top-[-10%] -left-20 w-96 h-96 bg-blue-400/20 dark:bg-blue-900/20 rounded-full blur-3xl mix-blend-multiply dark:mix-blend-screen animate-blob"></div>
+                <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-purple-400/20 dark:bg-purple-900/20 rounded-full blur-3xl mix-blend-multiply dark:mix-blend-screen animate-blob animation-delay-2000"></div>
+                <div className="absolute top-[20%] left-[20%] w-96 h-96 bg-indigo-400/20 dark:bg-indigo-900/20 rounded-full blur-3xl mix-blend-multiply dark:mix-blend-screen animate-blob animation-delay-4000"></div>
+                <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-sky-100/40 dark:bg-sky-900/10 rounded-full blur-[100px]"></div>
             </div>
 
             {/* Main Content Container */}

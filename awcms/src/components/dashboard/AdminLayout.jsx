@@ -27,7 +27,7 @@ const AdminLayout = () => {
   }, []);
 
   return (
-    <div className="flex h-screen bg-slate-50 overflow-hidden">
+    <div className="flex h-screen bg-background overflow-hidden">
       {/* Sidebar - Handles its own rendering based on props */}
       <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
 
@@ -43,7 +43,7 @@ const AdminLayout = () => {
           </div>
 
           {/* Footer with Template Version */}
-          <footer className="mt-8 py-4 border-t border-slate-200 text-center text-xs text-slate-400">
+          <footer className="mt-8 py-4 border-t border-border text-center text-xs text-muted-foreground">
             <span>{TEMPLATE_NAME} v{TEMPLATE_VERSION}</span>
             <span className="mx-2">•</span>
             <span>AWCMS © {new Date().getFullYear()}</span>

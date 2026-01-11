@@ -218,10 +218,10 @@ const GenericContentManager = ({
             key: 'owner',
             label: 'Owner',
             render: (_, row) => (
-                <div className="flex items-center gap-2 text-xs text-slate-600">
-                    <User className="w-3 h-3 text-slate-400" />
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <User className="w-3 h-3 text-muted-foreground" />
                     <span>{row.owner?.full_name || row.owner?.email || 'System'}</span>
-                    {user?.id === row.created_by && <span className="bg-blue-100 text-blue-700 px-1.5 rounded-full text-[10px] font-bold">You</span>}
+                    {user?.id === row.created_by && <span className="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-200 px-1.5 rounded-full text-[10px] font-bold">You</span>}
                 </div>
             )
         }
@@ -234,7 +234,7 @@ const GenericContentManager = ({
             key: 'tenant_id',
             label: 'Nama Tenant',
             render: (_, row) => (
-                <span className="text-xs font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded">
+                <span className="text-xs font-medium text-muted-foreground bg-secondary px-2 py-0.5 rounded">
                     {row.tenant?.name || '(Unknown Tenant)'}
                 </span>
             )

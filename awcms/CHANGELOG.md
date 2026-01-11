@@ -10,6 +10,18 @@ All notable changes to the **AWCMS** project will be documented in this file.
 - **SSO Login Activity**: Log OAuth-based sign-ins to `audit_logs` so SSO login history is populated consistently.
 - **Extensions Registry**: Added soft delete support for `extension_menu_items` and `extension_routes_registry` to prevent missing `deleted_at` errors during menu/route fetches.
 
+## [2.10.1] "Midnight" - 2026-01-11
+
+### Changed
+
+- **UI/UX (Dark Mode)**: Comprehensive overhaul of Dark Mode contrast across the admin panel.
+  - **Global**: Updated `index.css` semantic variables (background, foreground, border, muted) for better readability.
+  - **AdminPageLayout**: Replaced hardcoded light backgrounds with `bg-background` to allow dark theme continuity.
+  - **Headers**: Fixed hardcoded slate text in `Header.jsx`, `PageHeader.jsx`, and `ModuleHeader.jsx` to use `text-foreground` and `text-muted-foreground`.
+  - **Editors**: Refactored `GenericResourceEditor` to use `bg-card` and semantic borders, fixing white modals in dark mode.
+  - **Components**: Updated `SSOManager`, `GenericContentManager`, and `ContentTable` to use semantic colors.
+  - **Badges**: Added `dark:` variants to `ArticlesManager` workflow pills for proper contrast.
+
 ## [2.10.0] "Sentinel" - 2026-01-11
 
 ### Added

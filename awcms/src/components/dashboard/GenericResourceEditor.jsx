@@ -203,18 +203,18 @@ const GenericResourceEditor = ({
     };
 
     return (
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 max-w-3xl mx-auto">
-            <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
+        <div className="bg-card rounded-xl border border-border shadow-sm p-6 max-w-3xl mx-auto">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-border">
                 <div className="flex items-center gap-4">
-                    <Button variant="ghost" size="icon" onClick={onClose}>
+                    <Button variant="ghost" size="icon" onClick={onClose} className="hover:bg-muted text-muted-foreground hover:text-foreground">
                         <ArrowLeft className="w-4 h-4" />
                     </Button>
                     <div>
-                        <h2 className="text-xl font-bold text-slate-800">
+                        <h2 className="text-xl font-bold text-foreground">
                             {initialData ? `Edit ${resourceName}` : `Create New ${resourceName}`}
                         </h2>
                         {initialData && (
-                            <p className="text-xs text-slate-500 mt-1 flex items-center gap-1">
+                            <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
                                 <Lock className="w-3 h-3" /> Owner: {initialData.owner?.full_name || 'System'}
                             </p>
                         )}
@@ -295,7 +295,7 @@ const GenericResourceEditor = ({
                                     />
                                     <label
                                         htmlFor={field.key}
-                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-slate-700"
+                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-foreground"
                                     >
                                         {field.placeholder || "Enable"}
                                     </label>
@@ -332,14 +332,14 @@ const GenericResourceEditor = ({
                                     placeholder={field.description}
                                 />
                             )}
-                            {field.description && <p className="text-[10px] text-slate-400">{field.description}</p>}
+                            {field.description && <p className="text-[10px] text-muted-foreground">{field.description}</p>}
                         </div>
                     ))}
                 </div>
 
-                <div className="flex justify-end pt-4 border-t border-slate-100">
+                <div className="flex justify-end pt-4 border-t border-border">
                     <Button type="button" variant="outline" onClick={onClose} className="mr-2">Cancel</Button>
-                    <Button type="submit" disabled={loading} className="bg-blue-600">
+                    <Button type="submit" disabled={loading} className="bg-primary text-primary-foreground hover:bg-primary/90">
                         {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                         Save {resourceName}
                     </Button>

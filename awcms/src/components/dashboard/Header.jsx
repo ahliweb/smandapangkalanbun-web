@@ -39,7 +39,7 @@ function Header({ toggleSidebar, onNavigate }) {
             variant="ghost"
             size="icon"
             onClick={toggleSidebar}
-            className="lg:hidden text-slate-600 hover:text-slate-900"
+            className="lg:hidden text-muted-foreground hover:text-foreground"
           >
             <Menu className="w-6 h-6" />
           </Button>
@@ -63,12 +63,12 @@ function Header({ toggleSidebar, onNavigate }) {
           {/* Notification Dropdown */}
           <NotificationDropdown />
 
-          <div className="h-8 w-px bg-slate-200 mx-1 hidden md:block"></div>
+          <div className="h-8 w-px bg-border mx-1 hidden md:block"></div>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="flex items-center gap-3 pl-2 pr-4 py-2 h-auto hover:bg-slate-50 rounded-full border border-transparent hover:border-slate-200 transition-all">
-                <Avatar className="w-9 h-9 border border-slate-200">
+              <Button variant="ghost" className="flex items-center gap-3 pl-2 pr-4 py-2 h-auto hover:bg-muted rounded-full border border-transparent hover:border-border transition-all">
+                <Avatar className="w-9 h-9 border border-border">
                   {(user?.user_metadata?.avatar_url) && (
                     <AvatarImage
                       src={user.user_metadata.avatar_url}
@@ -76,27 +76,27 @@ function Header({ toggleSidebar, onNavigate }) {
                       className="object-cover"
                     />
                   )}
-                  <AvatarFallback className="bg-blue-600 text-white font-semibold">
+                  <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
                     {getInitials(user?.email)}
                   </AvatarFallback>
                 </Avatar>
                 <div className="hidden md:flex flex-col items-start text-sm">
-                  <span className="font-semibold text-slate-800">{user?.email?.split('@')[0]}</span>
-                  <span className="text-xs text-slate-500">Administrator</span>
+                  <span className="font-semibold text-foreground">{user?.email?.split('@')[0]}</span>
+                  <span className="text-xs text-muted-foreground">Administrator</span>
                 </div>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 bg-white border-slate-200 text-slate-800 shadow-lg">
-              <DropdownMenuLabel className="text-slate-900">{t('menu.profile')}</DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-slate-100" />
-              <DropdownMenuItem asChild className="focus:bg-slate-50 cursor-pointer">
+            <DropdownMenuContent align="end" className="w-56 bg-card border-border text-foreground shadow-lg">
+              <DropdownMenuLabel className="text-foreground">{t('menu.profile')}</DropdownMenuLabel>
+              <DropdownMenuSeparator className="bg-border" />
+              <DropdownMenuItem asChild className="focus:bg-muted cursor-pointer">
                 <Link to="/cmspanel/profile" className="flex items-center w-full">
-                  <User className="w-4 h-4 mr-2 text-slate-500" />
+                  <User className="w-4 h-4 mr-2 text-muted-foreground" />
                   {t('menu.profile')}
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuSeparator className="bg-slate-100" />
-              <DropdownMenuItem onClick={signOut} className="text-red-600 focus:bg-red-50 focus:text-red-700 cursor-pointer">
+              <DropdownMenuSeparator className="bg-border" />
+              <DropdownMenuItem onClick={signOut} className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer">
                 <LogOut className="w-4 h-4 mr-2" />
                 {t('auth.logout')}
               </DropdownMenuItem>

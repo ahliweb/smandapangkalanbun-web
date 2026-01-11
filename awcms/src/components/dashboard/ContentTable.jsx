@@ -26,16 +26,16 @@ const ContentTable = ({
 }) => {
 
   const TableSkeleton = () => (
-    <div className="rounded-md border bg-white overflow-hidden">
+    <div className="rounded-md border bg-card overflow-hidden">
       <Table>
-        <TableHeader className="bg-slate-50">
+        <TableHeader className="bg-muted/50">
           <TableRow>
             {columns.map((col, i) => (
               <TableHead key={i} className={col.className}>
-                <Skeleton className="h-4 w-24 bg-slate-200" />
+                <Skeleton className="h-4 w-24 bg-muted" />
               </TableHead>
             ))}
-            <TableHead className="text-right"><Skeleton className="h-4 w-16 ml-auto bg-slate-200" /></TableHead>
+            <TableHead className="text-right"><Skeleton className="h-4 w-16 ml-auto bg-muted" /></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -43,13 +43,13 @@ const ContentTable = ({
             <TableRow key={i}>
               {columns.map((col, j) => (
                 <TableCell key={j} className={col.className}>
-                  <Skeleton className="h-4 w-full bg-slate-100" />
+                  <Skeleton className="h-4 w-full bg-muted/50" />
                 </TableCell>
               ))}
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
-                  <Skeleton className="h-8 w-8 rounded-md bg-slate-100" />
-                  <Skeleton className="h-8 w-8 rounded-md bg-slate-100" />
+                  <Skeleton className="h-8 w-8 rounded-md bg-muted/50" />
+                  <Skeleton className="h-8 w-8 rounded-md bg-muted/50" />
                 </div>
               </TableCell>
             </TableRow>
@@ -65,7 +65,7 @@ const ContentTable = ({
 
   if (!data || data.length === 0) {
     return (
-      <div className="w-full bg-white rounded-md border p-12 flex flex-col items-center justify-center text-slate-500">
+      <div className="w-full bg-card rounded-md border p-12 flex flex-col items-center justify-center text-muted-foreground">
         <p className="text-lg font-medium">No items found</p>
         <p className="text-sm">Try adjusting your search or filters.</p>
       </div>
@@ -100,7 +100,7 @@ const ContentTable = ({
                     ) : col.type === 'boolean' ? (
                       item[col.key] ? <span className="text-green-600">Yes</span> : <span className="text-destructive">No</span>
                     ) : (
-                      item[col.key]
+                      <span className="text-foreground">{item[col.key]}</span>
                     )}
                   </TableCell>
                 ))}
@@ -134,12 +134,12 @@ const ContentTable = ({
 
       {pagination && (
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 px-2">
-          <div className="text-sm text-slate-500">
+          <div className="text-sm text-muted-foreground">
             Showing {((pagination.currentPage - 1) * pagination.itemsPerPage) + 1} to {Math.min(pagination.currentPage * pagination.itemsPerPage, pagination.totalItems)} of {pagination.totalItems} entries
           </div>
           <div className="flex items-center gap-4">
             <select
-              className="h-8 rounded-md border border-slate-300 bg-white text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="h-8 rounded-md border border-input bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
               value={pagination.itemsPerPage}
               onChange={(e) => pagination.onLimitChange(Number(e.target.value))}
             >

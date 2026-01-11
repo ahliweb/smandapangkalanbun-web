@@ -33,12 +33,12 @@ const PageHeader = ({
     return (
         <div className="space-y-6">
             {/* Elegant Breadcrumb Navigation */}
-            <nav className="flex items-center text-sm font-medium text-slate-500" aria-label="Breadcrumb">
+            <nav className="flex items-center text-sm font-medium text-muted-foreground" aria-label="Breadcrumb">
                 <ol className="flex items-center gap-2">
                     <li>
                         <Link
                             to="/cmspanel"
-                            className="bg-white/50 hover:bg-white text-slate-500 hover:text-blue-600 px-2 py-1 rounded-md transition-all duration-200 flex items-center gap-1.5 backdrop-blur-sm border border-transparent hover:border-slate-200"
+                            className="bg-background/50 hover:bg-background text-muted-foreground hover:text-primary px-2 py-1 rounded-md transition-all duration-200 flex items-center gap-1.5 backdrop-blur-sm border border-transparent hover:border-border"
                         >
                             <Home className="w-4 h-4" />
                             <span className="sr-only sm:not-sr-only">Dashboard</span>
@@ -47,17 +47,17 @@ const PageHeader = ({
 
                     {breadcrumbs.map((crumb, index) => (
                         <li key={index} className="flex items-center gap-2">
-                            <ChevronRight className="w-4 h-4 text-slate-300" aria-hidden="true" />
+                            <ChevronRight className="w-4 h-4 text-muted-foreground/50" aria-hidden="true" />
                             {crumb.href ? (
                                 <Link
                                     to={crumb.href}
-                                    className="hover:text-blue-600 transition-colors flex items-center gap-1.5 px-2 py-1 rounded-md hover:bg-white/50"
+                                    className="hover:text-primary transition-colors flex items-center gap-1.5 px-2 py-1 rounded-md hover:bg-background/50"
                                 >
                                     {crumb.icon && <crumb.icon className="w-4 h-4" />}
                                     {crumb.label}
                                 </Link>
                             ) : (
-                                <span className="flex items-center gap-1.5 text-slate-800 font-semibold px-2" aria-current="page">
+                                <span className="flex items-center gap-1.5 text-foreground font-semibold px-2" aria-current="page">
                                     {crumb.icon && <crumb.icon className="w-4 h-4" />}
                                     {crumb.label}
                                 </span>
@@ -68,20 +68,20 @@ const PageHeader = ({
             </nav>
 
             {/* Header Content */}
-            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-2 border-b border-slate-200/50">
+            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-2 border-b border-border">
                 <div className="space-y-2">
-                    <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 flex items-center gap-3">
+                    <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-foreground flex items-center gap-3">
                         {TitleIcon && (
                             <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/20">
                                 <TitleIcon className="w-7 h-7" aria-hidden="true" />
                             </div>
                         )}
-                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-slate-800 to-slate-600">
+                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-slate-800 to-slate-600 dark:from-white dark:via-slate-200 dark:to-slate-400">
                             {title}
                         </span>
                     </h1>
                     {description && (
-                        <p className="text-lg text-slate-500 max-w-3xl leading-relaxed">
+                        <p className="text-lg text-muted-foreground max-w-3xl leading-relaxed">
                             {description}
                         </p>
                     )}
@@ -97,8 +97,8 @@ const PageHeader = ({
                                 className={`
                                     relative overflow-hidden transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg
                                     ${!action.variant || action.variant === 'default'
-                                        ? 'bg-gradient-to-r from-slate-900 to-slate-800 hover:from-blue-600 hover:to-indigo-600 border-0 shadow-slate-900/20'
-                                        : 'bg-white/70 backdrop-blur-sm border-slate-200 hover:border-blue-300 hover:bg-white'}
+                                        ? 'bg-gradient-to-r from-slate-900 to-slate-800 hover:from-blue-600 hover:to-indigo-600 border-0 shadow-slate-900/20 dark:from-blue-600 dark:to-indigo-600'
+                                        : 'bg-background/70 backdrop-blur-sm border-border hover:border-blue-300 hover:bg-accent hover:text-accent-foreground'}
                                     ${action.className}
                                 `}
                                 disabled={action.disabled}
