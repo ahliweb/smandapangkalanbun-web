@@ -1,6 +1,6 @@
 # AWCMS Core Standards
 
-> **Version**: 2.9.7 | **Last Updated**: 2026-01-11 | **React**: 18.3.1
+> **Version**: 2.12.0 | **Last Updated**: 2026-01-12 | **React**: 18.3.1
 
 This document establishes the definitive architecture and standardization pillars for the AWCMS ecosystem. All development, documentation, and extension work must align with these 5 Core Standards.
 
@@ -83,12 +83,13 @@ This document establishes the definitive architecture and standardization pillar
   * **Registry**: `src/lib/extensionRegistry.js` (Component mapping)
   * **Context**: `src/contexts/PluginContext.jsx` (Plugin state & config)
   * **Events**: Hook Architecture (`src/lib/hooks.js`) for Actions/Filters.
-* **Core Plugins**:
-  * **Communication**: `Email` (Mailketing Integration)
-  * **Growth**: `SEO` Manager, `Analytics` Dashboard
-  * **Admin**: `Regions` (via `useRegions` for 10-level hierarchy)
+* **Core Plugins** (`src/plugins/`):
+  * **Communication**: `mailketing` (Email Settings & Logs)
+  * **Data**: `regions` (10-level Administrative Hierarchy)
+  * **Utility**: `backup` (System Backup Management)
+  * **Example**: `helloworld` (Plugin Development Template)
 * **External Extensions**:
-  * **Loading**: Dynamic Import Logic (Lazy Loading)
+  * **Loading**: Dynamic Import Logic (`externalExtensionLoader.js`)
   * **Commerce**: `CartContext` (Optional Commerce Module)
   * **Slots**: Defined UI slots for standardized injection points.
 
@@ -130,7 +131,7 @@ This document establishes the definitive architecture and standardization pillar
 * **Mobile & IoT Ecosystem**:
   * **App**: Flutter Integration (`awcms-mobile`)
   * **IoT Hooks**: `useSensorData()` (Real-time), `useDevices()` (Management)
-  * **Engangement**: `useMobileUsers()`, `usePushNotifications()`
+  * **Engagement**: `useMobileUsers()`, `usePushNotifications()`
 * **Performance Strategy**:
   * **Caching**: `UnifiedDataManager` (Local Storage Caching, 60s TTL)
   * **Architecture**: Online-First with SWR-like caching behavior.

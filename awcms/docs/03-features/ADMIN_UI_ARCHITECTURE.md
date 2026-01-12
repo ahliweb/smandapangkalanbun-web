@@ -224,4 +224,4 @@ The template automatically handles tenant context:
 ## Version
 
 - Template: `awadmintemplate01 v1.0.0`
-- Last Updated: 2026-01-05
+- Last Updated: 2026-01-12

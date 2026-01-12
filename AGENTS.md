@@ -44,21 +44,22 @@ In the AWCMS ecosystem, AI Agents are treated as specialized team members. We de
 
 Agents must be aware of the exact versions in use:
 
-| Technology       | Version  | Notes                                   |
-| ---------------- | -------- | --------------------------------------- |
-| React            | 18.3.1   | Functional components only              |
-| Vite             | 7.2.7    | Build tool & dev server                 |
-| TailwindCSS      | 4.1.18   | Admin uses CSS-based config             |
-| Supabase         | 2.87.1 / 2.89.0 | Admin / Public clients           |
-| React Router DOM | 7.10.1   | Client-side routing                     |
-| Puck             | 0.20.2   | Visual Editor (@measured/puck)          |
-| TipTap           | 3.13.0   | Rich text editor (XSS-safe)             |
-| Framer Motion    | 12.23.26 | Animations                              |
-| Radix UI         | Latest   | Accessible UI primitives                |
-| Lucide React     | 0.561.0  | Icon library                            |
-| i18next          | 25.7.2   | Internationalization                    |
-| Recharts         | 3.5.1    | Charts & Data Visualization             |
-| Leaflet          | 1.9.4    | Maps                                    |
+| Technology       | Version   | Notes                                   |
+| ---------------- | --------- | --------------------------------------- |
+| React            | 18.3.1    | Functional components only              |
+| Vite             | 7.2.7     | Build tool & dev server                 |
+| TailwindCSS      | 4.1.18    | Admin uses CSS-based config             |
+| Supabase JS      | 2.87.1    | Admin client (respects RLS)             |
+| React Router DOM | 7.10.1    | Client-side routing                     |
+| Puck             | 0.20.2    | Visual Editor (@measured/puck)          |
+| TipTap           | 3.13.0    | Rich text editor (XSS-safe)             |
+| Framer Motion    | 12.23.26  | Animations                              |
+| Radix UI         | Latest    | Accessible UI primitives                |
+| Lucide React     | 0.561.0   | Icon library                            |
+| i18next          | 25.7.2    | Internationalization                    |
+| Recharts         | 3.5.1     | Charts & Data Visualization             |
+| Leaflet          | 1.9.4     | Maps                                    |
+| Vitest           | 4.0.16    | Unit/Integration testing                |
 
 > [!IMPORTANT]
 > **React Version Alignment**: The Admin Panel and Public Portal both use React 18.3.1. Do not upgrade to React 19 until Puck compatibility and public portal validation are complete.
@@ -150,9 +151,12 @@ class MyComponent extends Component<Props> { } // NO class components!
 | File                                   | Purpose                               |
 | -------------------------------------- | ------------------------------------- |
 | `src/contexts/SupabaseAuthContext.jsx` | Authentication state & methods        |
-| `src/contexts/PermissionContext.jsx`   | ABAC permissions & role checks   |
+| `src/contexts/PermissionContext.jsx`   | ABAC permissions & role checks        |
 | `src/contexts/PluginContext.jsx`       | Extension system & hook provider      |
 | `src/contexts/ThemeContext.jsx`        | Dark/Light theme management           |
+| `src/contexts/TenantContext.jsx`       | Multi-tenant context & resolution     |
+| `src/contexts/DarkModeContext.jsx`     | Dark mode toggle state                |
+| `src/contexts/CartContext.jsx`         | Optional commerce cart state          |
 
 ### Core Libraries
 
@@ -161,29 +165,47 @@ class MyComponent extends Component<Props> { } // NO class components!
 | `src/lib/hooks.js`                | WordPress-style Action/Filter system  |
 | `src/lib/customSupabaseClient.js` | Public Supabase client (respects RLS) |
 
-| Hook               | File                               | Purpose                         |
-| ------------------ | ---------------------------------- | ------------------------------- |
-| `useAdminMenu`     | `src/hooks/useAdminMenu.js`        | Sidebar menu loading & state    |
-| `useAuditLog`      | `src/hooks/useAuditLog.js`         | ERP Audit Logging & Compliance  |
-| `useDashboardData` | `src/hooks/useDashboardData.js`    | Dashboard statistics            |
-| `useExtensionAudit`| `src/hooks/useExtensionAudit.js`   | Extension audit logging         |
-| `useMedia`         | `src/hooks/useMedia.js`            | Media library operations        |
-| `useNotifications` | `src/hooks/useNotifications.js`    | Notification system             |
-| `useSearch`        | `src/hooks/useSearch.js`           | Debounced search logic          |
-| `useTwoFactor`     | `src/hooks/useTwoFactor.js`        | 2FA setup & verification        |
+| Hook                 | File                                 | Purpose                         |
+| -------------------- | ------------------------------------ | ------------------------------- |
+| `useAdminMenu`       | `src/hooks/useAdminMenu.js`          | Sidebar menu loading & state    |
+| `useAuditLog`        | `src/hooks/useAuditLog.js`           | ERP Audit Logging & Compliance  |
+| `useDashboardData`   | `src/hooks/useDashboardData.js`      | Dashboard statistics            |
+| `useDevices`         | `src/hooks/useDevices.js`            | IoT device management           |
+| `useExtensionAudit`  | `src/hooks/useExtensionAudit.js`     | Extension audit logging         |
+| `useMedia`           | `src/hooks/useMedia.js`              | Media library operations        |
+| `useMobileUsers`     | `src/hooks/useMobileUsers.js`        | Mobile app user management      |
+| `useNotifications`   | `src/hooks/useNotifications.js`      | Notification system             |
+| `usePlatformStats`   | `src/hooks/usePlatformStats.js`      | Platform-wide statistics        |
+| `usePublicTenant`    | `src/hooks/usePublicTenant.js`       | Public portal tenant resolving  |
+| `usePushNotifications`| `src/hooks/usePushNotifications.js` | Mobile push notifications       |
+| `useRegions`         | `src/hooks/useRegions.js`            | 10-level region hierarchy       |
+| `useSearch`          | `src/hooks/useSearch.js`             | Debounced search logic          |
+| `useSensorData`      | `src/hooks/useSensorData.js`         | IoT sensor real-time data       |
+| `useTemplates`       | `src/hooks/useTemplates.js`          | Template management             |
+| `useTemplateStrings` | `src/hooks/useTemplateStrings.js`    | i18n template strings           |
+| `useTenantTheme`     | `src/hooks/useTenantTheme.js`        | Per-tenant theming              |
+| `useTwoFactor`       | `src/hooks/useTwoFactor.js`          | 2FA setup & verification        |
+| `useWidgets`         | `src/hooks/useWidgets.js`            | Widget system management        |
+| `useWorkflow`        | `src/hooks/useWorkflow.js`           | Content workflow engine         |
 
 ### Utility Libraries
 
-| File                              | Purpose                                   |
-| --------------------------------- | ----------------------------------------- |
-| `src/lib/customSupabaseClient.js` | Public Supabase client (respects RLS)     |
-| `src/lib/supabaseAdmin.js`        | Admin client (bypasses RLS)               |
-| `src/lib/utils.js`                | Helper functions (`cn()`, etc.)           |
-| `src/lib/extensionRegistry.js`    | Extension component mapping               |
-| `src/lib/templateExtensions.js`   | Template/Widget/PageType extension APIs   |
-| `src/lib/widgetRegistry.js`       | Widget type definitions                   |
-| `src/lib/themeUtils.js`           | Theme utilities                           |
-| `src/lib/i18n.js`                 | i18next configuration                     |
+| File                                | Purpose                                   |
+| ----------------------------------- | ----------------------------------------- |
+| `src/lib/customSupabaseClient.js`   | Public Supabase client (respects RLS)     |
+| `src/lib/supabaseAdmin.js`          | Admin client (bypasses RLS)               |
+| `src/lib/utils.js`                  | Helper functions (`cn()`, etc.)           |
+| `src/lib/extensionRegistry.js`      | Extension component mapping               |
+| `src/lib/templateExtensions.js`     | Template/Widget/PageType extension APIs   |
+| `src/lib/widgetRegistry.js`         | Widget type definitions                   |
+| `src/lib/themeUtils.js`             | Theme utilities                           |
+| `src/lib/i18n.js`                   | i18next configuration                     |
+| `src/lib/hooks.js`                  | WordPress-style Action/Filter system      |
+| `src/lib/pluginRegistry.js`         | Core plugin registration                  |
+| `src/lib/publicModuleRegistry.js`   | Public portal module registry             |
+| `src/lib/tierFeatures.js`           | Subscription tier feature gating          |
+| `src/lib/regionUtils.js`            | Region hierarchy utilities                |
+| `src/lib/externalExtensionLoader.js`| External extension dynamic loading        |
 
 ---
 

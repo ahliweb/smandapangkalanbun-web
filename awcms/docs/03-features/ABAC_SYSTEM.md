@@ -251,46 +251,137 @@ CREATE TABLE role_permissions (
 
 ```jsx
 // src/contexts/PermissionContext.jsx
-import { createContext, useContext } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
+import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { udm } from '@/lib/data/UnifiedDataManager';
 
-const PermissionContext = createContext();
+const PermissionContext = createContext(undefined);
 
 export function PermissionProvider({ children }) {
+  const { user } = useAuth();
   const [permissions, setPermissions] = useState([]);
-  const [role, setRole] = useState(null);
+  const [userRole, setUserRole] = useState(null);
+  const [tenantId, setTenantId] = useState(null);
+  const [abacPolicies, setAbacPolicies] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const hasPermission = (permission) => {
-    if (role === 'super_admin') return true;
+  // Fetches user permissions with offline fallback support
+  const fetchUserPermissions = useCallback(async () => {
+    // ... fetches from users table with deep joins
+    // Falls back to waterfall queries if offline
+  }, [user]);
+
+  const hasPermission = useCallback((permission) => {
+    if (!permission) return true;
+    if (['super_admin', 'owner'].includes(userRole)) return true;
     return permissions.includes(permission);
-  };
+  }, [permissions, userRole]);
+
+  const hasAnyPermission = useCallback((permissionList) => {
+    if (['super_admin', 'owner'].includes(userRole)) return true;
+    if (!permissionList || permissionList.length === 0) return true;
+    return permissionList.some(p => permissions.includes(p));
+  }, [permissions, userRole]);
+
+  // Check access with ownership awareness
+  const checkAccess = useCallback((action, resource, record = null) => {
+    if (['super_admin', 'owner'].includes(userRole)) return true;
+    const permissionKey = `tenant.${resource}.${action}`;
+    if (permissions.includes(permissionKey)) return true;
+    // Ownership check
+    if (record?.created_by === user?.id) return true;
+    return false;
+  }, [permissions, userRole, user]);
+
+  // ABAC Policy evaluation
+  const checkPolicy = useCallback((action, resource, context = {}) => {
+    if (['super_admin', 'owner'].includes(userRole)) return true;
+    const finalContext = { channel: 'web', ...context };
+    // Check deny policies
+    const denyMatch = abacPolicies.some(policy => {
+      if (policy.effect !== 'deny') return false;
+      if (!policy.actions.includes('*') && !policy.actions.includes(action)) return false;
+      if (policy.conditions?.channel && policy.conditions.channel !== finalContext.channel) return false;
+      return true;
+    });
+    return !denyMatch;
+  }, [abacPolicies, userRole]);
+
+  // Computed property for platform admin check
+  const isPlatformAdmin = useMemo(() => {
+    return ['owner', 'super_admin'].includes(userRole);
+  }, [userRole]);
+
+  const value = useMemo(() => ({
+    permissions,
+    userRole,
+    tenantId,
+    isPlatformAdmin,
+    loading,
+    hasPermission,
+    hasAnyPermission,
+    checkAccess,
+    checkPolicy,
+    refreshPermissions: fetchUserPermissions
+  }), [/* deps */]);
 
   return (
-    <PermissionContext.Provider value={{ hasPermission, role, permissions }}>
+    <PermissionContext.Provider value={value}>
       {children}
     </PermissionContext.Provider>
   );
 }
 
-export const usePermission = () => useContext(PermissionContext);
+// Note: Hook is named usePermissions (plural)
+export const usePermissions = () => {
+  const context = useContext(PermissionContext);
+  if (context === undefined) {
+    throw new Error('usePermissions must be used within a PermissionProvider');
+  }
+  return context;
+};
 ```
+
+### Context API
+
+| Property/Method | Type | Description |
+| --------------- | ---- | ----------- |
+| `permissions` | `string[]` | Array of permission keys user has |
+| `userRole` | `string` | Current user's role name |
+| `tenantId` | `string` | Current tenant UUID |
+| `isPlatformAdmin` | `boolean` | True if owner or super_admin |
+| `loading` | `boolean` | True while loading permissions |
+| `hasPermission(key)` | `function` | Check single permission |
+| `hasAnyPermission(keys[])` | `function` | Check if user has any of listed permissions |
+| `checkAccess(action, resource, record?)` | `function` | Check access with ownership awareness |
+| `checkPolicy(action, resource, context?)` | `function` | Evaluate ABAC policies |
+| `refreshPermissions()` | `function` | Force reload permissions |
 
 ### Protected Component
 
 ```jsx
-import { usePermission } from '@/contexts/PermissionContext';
+import { usePermissions } from '@/contexts/PermissionContext';
 
 function ArticleActions({ article }) {
-  const { hasPermission } = usePermission();
+  const { hasPermission, checkAccess, isPlatformAdmin } = usePermissions();
 
   return (
     <div className="flex gap-2">
-      {hasPermission('edit_articles') && (
+      {/* Simple permission check */}
+      {hasPermission('tenant.article.update') && (
         <Button onClick={() => editArticle(article.id)}>Edit</Button>
       )}
-      {hasPermission('delete_articles') && (
+      
+      {/* Access check with ownership */}
+      {checkAccess('delete', 'article', article) && (
         <Button variant="destructive" onClick={() => deleteArticle(article.id)}>
           Delete
         </Button>
+      )}
+      
+      {/* Platform admin check */}
+      {isPlatformAdmin && (
+        <Badge>Viewing as Admin</Badge>
       )}
     </div>
   );
@@ -301,11 +392,13 @@ function ArticleActions({ article }) {
 
 ```jsx
 import { Navigate } from 'react-router-dom';
-import { usePermission } from '@/contexts/PermissionContext';
+import { usePermissions } from '@/contexts/PermissionContext';
 
 function ProtectedRoute({ children, permission }) {
-  const { hasPermission } = usePermission();
+  const { hasPermission, loading } = usePermissions();
 
+  if (loading) return <LoadingSpinner />;
+  
   if (!hasPermission(permission)) {
     return <Navigate to="/403" />;
   }
@@ -317,7 +410,7 @@ function ProtectedRoute({ children, permission }) {
 <Route 
   path="/cmspanel/users" 
   element={
-    <ProtectedRoute permission="view_users">
+    <ProtectedRoute permission="tenant.user.read">
       <UsersPage />
     </ProtectedRoute>
   } 
