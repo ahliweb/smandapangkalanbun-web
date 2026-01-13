@@ -98,6 +98,7 @@ const Turnstile = ({
         if (widgetIdRef.current) return;
 
         console.log('[Turnstile] Rendering widget...');
+        console.log('[Turnstile] USING SITE KEY:', siteKey);
 
         // Render new widget
         try {
