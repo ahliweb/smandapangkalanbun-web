@@ -42,12 +42,17 @@ export const getCanonical = (path = ''): string | URL => {
 export const getPermalink = (slug = '', type = 'page'): string => {
   let permalink: string;
 
+  if (slug.startsWith('javascript:')) {
+    return '#';
+  }
+
   if (
     slug.startsWith('https://') ||
     slug.startsWith('http://') ||
     slug.startsWith('://') ||
     slug.startsWith('#') ||
-    slug.startsWith('javascript:')
+    slug.startsWith('mailto:') ||
+    slug.startsWith('tel:')
   ) {
     return slug;
   }
@@ -104,11 +109,11 @@ export const getAsset = (path: string): string =>
 const definitivePermalink = (permalink: string): string => createPath(BASE_PATHNAME, permalink);
 
 /** */
-export const applyGetPermalinks = (menu: object = {}) => {
+export const applyGetPermalinks = (menu: any = {}): any => {
   if (Array.isArray(menu)) {
-    return menu.map((item) => applyGetPermalinks(item));
+    return menu.map((item: any) => applyGetPermalinks(item));
   } else if (typeof menu === 'object' && menu !== null) {
-    const obj = {};
+    const obj: any = {};
     for (const key in menu) {
       if (key === 'href') {
         if (typeof menu[key] === 'string') {
