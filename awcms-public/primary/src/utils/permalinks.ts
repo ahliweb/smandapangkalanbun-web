@@ -43,27 +43,40 @@ export const getCanonical = (path = ''): string | URL => {
 export const getPermalink = (slug = '', type = 'page'): string => {
   let permalink: string;
 
+  // Security: Validate URL schemes using proper URL parsing
+  // to prevent javascript:, vbscript:, etc. injection attacks
   const lowerSlug = slug.toLowerCase().trim();
+  const ALLOWED_SCHEMES = new Set(['http:', 'https:', 'mailto:', 'tel:', 'data:']);
 
-  const ALLOWED_PROTOCOLS = ['http:', 'https:', 'mailto:', 'tel:', 'data:'];
-
-  if (lowerSlug.includes(':')) {
-    const scheme = lowerSlug.split(':')[0] + ':';
-    if (!ALLOWED_PROTOCOLS.includes(scheme) && !lowerSlug.startsWith('//') && !lowerSlug.startsWith('#')) {
-      return '#';
-    }
+  // Handle anchor links
+  if (lowerSlug.startsWith('#')) {
+    return slug;
   }
 
-  if (
-    lowerSlug.startsWith('https://') ||
-    lowerSlug.startsWith('http://') ||
-    lowerSlug.startsWith('://') ||
-    lowerSlug.startsWith('#') ||
-    lowerSlug.startsWith('mailto:') ||
-    lowerSlug.startsWith('tel:') ||
-    lowerSlug.startsWith('data:')
-  ) {
+  // Handle protocol-relative URLs (e.g., //example.com)
+  if (lowerSlug.startsWith('//')) {
     return slug;
+  }
+
+  // Check if this looks like an absolute URL with a scheme
+  if (lowerSlug.includes(':')) {
+    try {
+      // Use URL constructor to properly parse the scheme
+      const url = new URL(slug, 'http://placeholder.local');
+      const scheme = url.protocol.toLowerCase();
+
+      // If the original slug has a scheme (not relative), validate it
+      if (slug.includes(':') && !slug.startsWith('/')) {
+        if (!ALLOWED_SCHEMES.has(scheme)) {
+          // Reject dangerous schemes like javascript:, vbscript:, data: (if not allowed), etc.
+          return '#';
+        }
+        // Valid external URL with allowed scheme
+        return slug;
+      }
+    } catch {
+      // Invalid URL, continue to treat as internal path
+    }
   }
 
   switch (type) {
