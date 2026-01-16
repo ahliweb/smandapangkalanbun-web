@@ -64,14 +64,14 @@ function UsersManager() {
   ];
 
   // Actions for header
-  const headerActions = canCreate ? [
-    {
-      label: 'New User',
-      icon: Plus,
-      onClick: () => { setSelectedUser(null); setShowEditor(true); },
-      permission: 'tenant.user.create',
-    },
-  ] : [];
+  const headerActions = canCreate ? (
+    <Button
+      onClick={() => { setSelectedUser(null); setShowEditor(true); }}
+    >
+      <Plus className="mr-2 h-4 w-4" />
+      New User
+    </Button>
+  ) : null;
 
   const fetchUsers = useCallback(async () => {
     if (!canView) return;

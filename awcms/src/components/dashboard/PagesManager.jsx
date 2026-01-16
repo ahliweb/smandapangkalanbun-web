@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import GenericContentManager from '@/components/dashboard/GenericContentManager';
 import VisualPageBuilder from '@/components/visual-builder/VisualPageBuilder';
 import { AdminPageLayout, PageHeader, PageTabs, TabsContent } from '@/templates/flowbite-admin';
@@ -15,19 +15,19 @@ function PagesManager({ onlyVisual = false }) {
   const [visualBuilderPage, setVisualBuilderPage] = useState(null);
 
   // Tab definitions
-  const tabs = onlyVisual ? [] : [
+  const tabs = useMemo(() => onlyVisual ? [] : [
     { value: 'pages', label: 'Pages', icon: FileText, color: 'blue' },
     { value: 'categories', label: 'Categories', icon: FolderOpen, color: 'purple' },
-  ];
+  ], [onlyVisual]);
 
   // Dynamic breadcrumb based on active tab
-  const breadcrumbs = [
+  const breadcrumbs = useMemo(() => [
     { label: onlyVisual ? 'Visual Pages' : 'Pages', href: activeTab !== 'pages' ? '/cmspanel/pages' : undefined, icon: Layers },
     ...(activeTab !== 'pages' && !onlyVisual ? [{ label: 'Categories' }] : []),
-  ];
+  ], [onlyVisual, activeTab]);
 
   // Page columns with editor type indicator
-  const pageColumns = [
+  const pageColumns = useMemo(() => [
     { key: 'title', label: 'Page Title', className: 'font-medium' },
     { key: 'slug', label: 'Path' },
     {
@@ -83,9 +83,9 @@ function PagesManager({ onlyVisual = false }) {
     { key: 'status', label: 'Status' },
     { key: 'published_at', label: 'Published', type: 'date' },
     { key: 'updated_at', label: 'Updated', type: 'date' }
-  ];
+  ], []);
 
-  const pageFormFields = [
+  const pageFormFields = useMemo(() => [
     { key: 'title', label: 'Title', required: true },
     {
       key: 'page_type',
@@ -124,10 +124,10 @@ function PagesManager({ onlyVisual = false }) {
     { key: 'featured_image', label: 'Featured Image', type: 'image' },
     { key: 'meta_description', label: 'SEO Description', type: 'textarea' },
     { key: 'is_active', label: 'Active', type: 'boolean' }
-  ];
+  ], [onlyVisual]);
 
   // Custom row actions for Visual Builder
-  const customRowActions = (page) => {
+  const customRowActions = useCallback((page) => {
     if (page.editor_type === 'visual') {
       return (
         <Button
@@ -146,17 +146,17 @@ function PagesManager({ onlyVisual = false }) {
       );
     }
     return null;
-  };
+  }, []);
 
   // Category columns and fields
-  const categoryColumns = [
+  const categoryColumns = useMemo(() => [
     { key: 'name', label: 'Name', className: 'font-medium' },
     { key: 'slug', label: 'Slug' },
     { key: 'description', label: 'Description' },
     { key: 'created_at', label: 'Created', type: 'date' }
-  ];
+  ], []);
 
-  const categoryFormFields = [
+  const categoryFormFields = useMemo(() => [
     { key: 'name', label: 'Name', required: true },
     { key: 'slug', label: 'Slug' },
     { key: 'description', label: 'Description', type: 'textarea' },
@@ -167,7 +167,7 @@ function PagesManager({ onlyVisual = false }) {
         { value: 'product', label: 'Products' }
       ], defaultValue: 'page'
     }
-  ];
+  ], []);
 
   // If Visual Builder is open, show it full screen
   if (visualBuilderPage) {

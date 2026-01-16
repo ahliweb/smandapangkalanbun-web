@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useMemo, useCallback } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Layout, Globe, FileType, AlertTriangle, PanelTop, PanelBottom, Pencil } from 'lucide-react';
 import GenericContentManager from './GenericContentManager';
@@ -13,17 +14,17 @@ const ThemeLayoutManager = () => {
     const [visualBuilderOpen, setVisualBuilderOpen] = useState(false);
     const [selectedPage, setSelectedPage] = useState(null);
 
-    const handleOpenVisualBuilder = (page) => {
+    const handleOpenVisualBuilder = useCallback((page) => {
         setSelectedPage(page);
         setVisualBuilderOpen(true);
-    };
+    }, []);
 
-    const handleCloseVisualBuilder = () => {
+    const handleCloseVisualBuilder = useCallback(() => {
         setVisualBuilderOpen(false);
         setSelectedPage(null);
-    };
+    }, []);
 
-    const columns = [
+    const columns = useMemo(() => [
         { key: 'title', label: 'Template Name', className: 'font-medium' },
         {
             key: 'page_type',
@@ -43,9 +44,9 @@ const ThemeLayoutManager = () => {
         },
         { key: 'status', label: 'Status' },
         { key: 'updated_at', label: 'Last Updated', type: 'date' }
-    ];
+    ], []);
 
-    const formFields = [
+    const formFields = useMemo(() => [
         { key: 'title', label: 'Template Name', required: true },
         {
             key: 'page_type',
@@ -66,10 +67,10 @@ const ThemeLayoutManager = () => {
         { key: 'status', label: 'Status', type: 'select', options: [{ value: 'published', label: 'Active' }, { value: 'draft', label: 'Draft' }] },
         { key: 'editor_type', label: 'Editor', type: 'hidden', defaultValue: 'visual' },
         { key: 'is_active', label: 'Active', type: 'boolean', defaultValue: true }
-    ];
+    ], []);
 
     // Custom row action to launch Visual Page Builder
-    const visualEditorAction = (item) => (
+    const visualEditorAction = useCallback((item) => (
         <Button
             size="sm"
             variant="outline"
@@ -80,10 +81,10 @@ const ThemeLayoutManager = () => {
             <Pencil className="w-4 h-4 mr-1" />
             Visual Editor
         </Button>
-    );
+    ), [handleOpenVisualBuilder]);
 
     // Helper to render manager for specific type
-    const renderManager = (type, icon, title) => (
+    const renderManager = useCallback((type, icon, title) => (
         <GenericContentManager
             tableName="pages"
             resourceName={title}
@@ -106,7 +107,7 @@ const ThemeLayoutManager = () => {
                 </div>
             }
         />
-    );
+    ), [columns, formFields, visualEditorAction]);
 
     // If Visual Builder is open, render it full-screen
     if (visualBuilderOpen && selectedPage) {
@@ -154,3 +155,4 @@ const ThemeLayoutManager = () => {
 };
 
 export default ThemeLayoutManager;
+

@@ -32,15 +32,16 @@ function AdminDashboard() {
         return 'Good Evening';
     };
 
-    const headerActions = [
-        {
-            label: 'Refresh Data',
-            icon: RefreshCw,
-            onClick: refresh,
-            variant: 'outline',
-            className: loading ? 'opacity-70' : 'bg-white/50 backdrop-blur-sm border-slate-200 hover:bg-white hover:border-indigo-300 transition-all'
-        }
-    ];
+    const headerActions = (
+        <Button
+            onClick={refresh}
+            variant="outline"
+            className={loading ? 'opacity-70' : 'bg-white/50 backdrop-blur-sm border-slate-200 hover:bg-white hover:border-indigo-300 transition-all'}
+        >
+            <RefreshCw className="mr-2 h-4 w-4" />
+            Refresh Data
+        </Button>
+    );
 
     if (error) {
         return (
