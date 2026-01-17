@@ -26,12 +26,45 @@
     },
     {
       "pattern": "^https?://svgshare\\.com"
+    },
+    {
+      "pattern": "^https?://(www\\.)?vercel\\.com"
+    },
+    {
+      "pattern": "^https?://(www\\.)?vercel\\.app"
+    },
+    {
+      "pattern": "^https?://(www\\.)?netlify\\.com"
+    },
+    {
+      "pattern": "^https?://app\\.netlify\\.com"
+    },
+    {
+      "pattern": "^https?://(www\\.)?snyk\\.io"
+    },
+    {
+      "pattern": "^https?://custom-icon-badges\\.demolab\\.com"
+    },
+    {
+      "pattern": "^https?://img\\.shields\\.io"
+    },
+    {
+      "pattern": "^https?://developer\\.stackblitz\\.com"
+    },
+    {
+      "pattern": "^https?://raw\\.githubusercontent\\.com"
+    },
+    {
+      "pattern": "^https?://.*\\.pages\\.dev"
+    },
+    {
+      "pattern": "^https?://tailnext\\.vercel\\.app"
     }
   ],
   "replacementPatterns": [],
-  "timeout": "5s",
+  "timeout": "10s",
   "retryOn429": true,
-  "retryCount": 2,
+  "retryCount": 3,
   "fallbackRetryDelay": "30s",
   "aliveStatusCodes": [
     200,
