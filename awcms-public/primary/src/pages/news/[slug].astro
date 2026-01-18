@@ -7,6 +7,7 @@ import Layout from "~/layouts/PageLayout.astro";
 import { createClientFromEnv } from "~/lib/supabase";
 import { getArticleBySlug } from "~/lib/content";
 import { Icon } from "astro-icon/components";
+import { getLocale, t } from "~/utils/i18n";
 
 // SSR mode for dynamic content
 export const prerender = false;
@@ -20,6 +21,7 @@ if (!slug) {
 
 // Get tenant from locals
 const tenant_id = Astro.locals.tenant_id || null;
+const locale = getLocale(Astro.request);
 
 // Create Supabase client
 const supabase = createClientFromEnv(
@@ -44,7 +46,7 @@ const publishedDate = article.published_at
     ? new Date(article.published_at)
     : new Date(article.created_at);
 
-const formattedDate = publishedDate.toLocaleDateString("id-ID", {
+const formattedDate = publishedDate.toLocaleDateString(locale, {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -112,7 +114,8 @@ const htmlContent = article.content || "";
                         article.views > 0 && (
                             <span class="flex items-center gap-1">
                                 <Icon name="tabler:eye" class="w-4 h-4" />
-                                {article.views.toLocaleString()} views
+                                {article.views.toLocaleString()}{" "}
+                                {t("news_page.article.views", locale)}
                             </span>
                         )
                     }
@@ -147,7 +150,10 @@ const htmlContent = article.content || "";
                 isVisual ? (
                     <div class="visual-content prose prose-lg dark:prose-invert max-w-none">
                         <p class="text-muted-foreground">
-                            Visual content rendering coming soon...
+                            {t(
+                                "news_page.article.visual_content_placeholder",
+                                locale,
+                            )}
                         </p>
                     </div>
                 ) : (
@@ -187,7 +193,7 @@ const htmlContent = article.content || "";
                     class="inline-flex items-center gap-2 text-primary hover:underline"
                 >
                     <Icon name="tabler:arrow-left" class="w-4 h-4" />
-                    Back to News
+                    {t("news_page.article.back_to_news", locale)}
                 </a>
             </footer>
         </div>

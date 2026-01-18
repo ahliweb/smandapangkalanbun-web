@@ -23,29 +23,54 @@ export const supportedLocales: Locale[] = ['en', 'id'];
  * Get the current locale from various sources
  */
 export function getLocale(request?: Request): Locale {
-    // 1. Check URL parameter
+    // 1. Check URL Path (First priority for static/rewritten paths)
     if (request) {
-        const url = new URL(request.url);
-        const langParam = url.searchParams.get('lang');
-        if (langParam && supportedLocales.includes(langParam as Locale)) {
-            return langParam as Locale;
+        try {
+            const url = new URL(request.url);
+
+            // Check specific path prefix
+            const match = url.pathname.match(/^\/(id|en)(\/|$)/);
+            if (match && supportedLocales.includes(match[1] as Locale)) {
+                return match[1] as Locale;
+            }
+
+            // Check URL parameter
+            const langParam = url.searchParams.get('lang');
+            if (langParam && supportedLocales.includes(langParam as Locale)) {
+                return langParam as Locale;
+            }
+        } catch {
+            // Ignore URL parsing errors
         }
     }
 
-    // 2. Check cookie (for SSR)
+    // 2. Check cookie (for SSR only - headers might not be available in SSG)
     if (request) {
-        const cookies = request.headers.get('cookie') || '';
-        const match = cookies.match(/lang=(\w+)/);
-        if (match && supportedLocales.includes(match[1] as Locale)) {
-            return match[1] as Locale;
+        try {
+            // Check if headers are available (avoid SSG errors)
+            if (request.headers && typeof request.headers.get === 'function') {
+                const cookies = request.headers.get('cookie') || '';
+                const match = cookies.match(/lang=(\w+)/);
+                if (match && supportedLocales.includes(match[1] as Locale)) {
+                    return match[1] as Locale;
+                }
+            }
+        } catch {
+            // Ignore header access errors
         }
     }
 
     // 3. Check Accept-Language header
     if (request) {
-        const acceptLang = request.headers.get('accept-language') || '';
-        if (acceptLang.startsWith('id')) {
-            return 'id';
+        try {
+            if (request.headers && typeof request.headers.get === 'function') {
+                const acceptLang = request.headers.get('accept-language') || '';
+                if (acceptLang.startsWith('id')) {
+                    return 'id';
+                }
+            }
+        } catch {
+            // Ignore header access errors
         }
     }
 
@@ -59,17 +84,17 @@ export function getLocale(request?: Request): Locale {
  */
 export function t(key: string, locale: Locale = defaultLocale): string {
     const keys = key.split('.');
-    let value: any = translations[locale];
+    let value: unknown = translations[locale];
 
     for (const k of keys) {
         if (value && typeof value === 'object' && k in value) {
-            value = value[k];
+            value = (value as Record<string, unknown>)[k];
         } else {
             // Fallback to English if key not found
             value = translations[defaultLocale];
             for (const fallbackKey of keys) {
                 if (value && typeof value === 'object' && fallbackKey in value) {
-                    value = value[fallbackKey];
+                    value = (value as Record<string, unknown>)[fallbackKey];
                 } else {
                     return key; // Return key if not found anywhere
                 }
@@ -92,9 +117,9 @@ export function createTranslator(locale: Locale) {
  * Get all translations for a namespace
  * Example: getNamespace('nav') returns { home: 'Home', about: 'About', ... }
  */
-export function getNamespace(namespace: string, locale: Locale = defaultLocale): Record<string, string> {
-    const trans = translations[locale];
-    return (trans as any)[namespace] || {};
+export function getNamespace(namespace: string, locale: Locale = defaultLocale): Record<string, unknown> {
+    const trans = translations[locale] as Record<string, unknown>;
+    return (trans[namespace] as Record<string, unknown>) || {};
 }
 
 /**

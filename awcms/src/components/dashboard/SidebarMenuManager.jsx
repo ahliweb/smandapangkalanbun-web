@@ -12,6 +12,7 @@ import { usePermissions } from '@/contexts/PermissionContext';
 import { useSearch } from '@/hooks/useSearch';
 import { getIconComponent } from '@/lib/adminIcons';
 import { Button } from '@/components/ui/button';
+import { useTranslation } from 'react-i18next';
 import { Input } from '@/components/ui/input';
 import MinCharSearchInput from '@/components/common/MinCharSearchInput';
 import { Badge } from '@/components/ui/badge';
@@ -30,6 +31,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { AdminPageLayout, PageHeader } from '@/templates/flowbite-admin';
 
 function SidebarMenuManager() {
+    const { t } = useTranslation();
     const { menuItems, loading, updateMenuOrder, toggleVisibility, updateMenuItem, updateGroup, fetchMenu } = useAdminMenu();
     const { hasPermission, userRole, loading: permsLoading } = usePermissions();
     const { toast } = useToast();
@@ -125,11 +127,11 @@ function SidebarMenuManager() {
                 await updateGroup(group.label, { newOrder: (i + 1) * 10 });
             }
 
-            toast({ title: 'Success', description: 'Group order updated.' });
+            toast({ title: t('common.success'), description: t('sidebar_manager.toast.group_order_updated') });
             setHasChanges(false);
             fetchMenu(); // Refresh to get consistent state
         } catch (err) {
-            toast({ variant: 'destructive', title: 'Error', description: 'Failed to save group order.' });
+            toast({ variant: 'destructive', title: t('common.error'), description: t('sidebar_manager.toast.error_save_group') });
         } finally {
             setIsSaving(false);
         }
@@ -148,10 +150,10 @@ function SidebarMenuManager() {
                 newOrder: parseInt(groupEditForm.order)
             });
             setEditingGroup(null);
-            toast({ title: 'Success', description: 'Group updated.' });
+            toast({ title: t('common.success'), description: t('sidebar_manager.toast.group_updated') });
             fetchMenu();
         } catch (err) {
-            toast({ variant: 'destructive', title: 'Error', description: 'Failed to update group.' });
+            toast({ variant: 'destructive', title: t('common.error'), description: t('sidebar_manager.toast.error_update_group') });
         }
     };
 
@@ -182,11 +184,11 @@ function SidebarMenuManager() {
             if (error) throw error;
 
             setShowNewGroupDialog(false);
-            toast({ title: 'Success', description: `Group "${newGroupForm.label}" created.` });
+            toast({ title: t('common.success'), description: t('sidebar_manager.toast.group_created', { name: newGroupForm.label }) });
             fetchMenu(); // Refresh to show new group
         } catch (err) {
             console.error('Error creating group:', err);
-            toast({ variant: 'destructive', title: 'Error', description: 'Failed to create group.' });
+            toast({ variant: 'destructive', title: t('common.error'), description: t('sidebar_manager.toast.error_create_group') });
         }
     };
 
@@ -198,16 +200,16 @@ function SidebarMenuManager() {
 
     const handleSaveOrder = async () => {
         if (!canEdit && !isSuperAdmin) {
-            toast({ variant: 'destructive', title: 'Permission Denied', description: 'You do not have permission to edit sidebar.' });
+            toast({ variant: 'destructive', title: t('sidebar_manager.toast.permission_denied'), description: t('sidebar_manager.toast.permission_desc') });
             return;
         }
         setIsSaving(true);
         try {
             await updateMenuOrder(items);
             setHasChanges(false);
-            toast({ title: 'Success', description: 'Menu order updated successfully.' });
+            toast({ title: t('common.success'), description: t('sidebar_manager.toast.menu_order_updated') });
         } catch (err) {
-            toast({ variant: 'destructive', title: 'Error', description: 'Failed to save order.' });
+            toast({ variant: 'destructive', title: t('common.error'), description: t('sidebar_manager.toast.error_save_order') });
         } finally {
             setIsSaving(false);
         }
@@ -216,21 +218,21 @@ function SidebarMenuManager() {
     const handleToggleVisibility = async (e, item) => {
         e.stopPropagation();
         if (!canEdit && !isSuperAdmin) {
-            toast({ variant: 'destructive', title: 'Permission Denied', description: 'You do not have permission to edit sidebar.' });
+            toast({ variant: 'destructive', title: t('sidebar_manager.toast.permission_denied'), description: t('sidebar_manager.toast.permission_desc') });
             return;
         }
         try {
             await toggleVisibility(item.id, item.is_visible);
             setItems(prev => prev.map(i => i.id === item.id ? { ...i, is_visible: !i.is_visible } : i));
-            toast({ title: item.is_visible ? 'Hidden' : 'Visible', description: `Menu item is now ${item.is_visible ? 'hidden' : 'visible'}.` });
+            toast({ title: item.is_visible ? t('sidebar_manager.hidden') : t('sidebar_manager.visible'), description: t('sidebar_manager.toast.visibility_updated', { status: item.is_visible ? t('sidebar_manager.hidden') : t('sidebar_manager.visible') }) });
         } catch (err) {
-            toast({ variant: 'destructive', title: 'Error', description: 'Failed to update visibility.' });
+            toast({ variant: 'destructive', title: t('common.error'), description: t('sidebar_manager.toast.error_visibility') });
         }
     };
 
     const handleEdit = (item) => {
         if (!canEdit && !isSuperAdmin) {
-            toast({ variant: 'destructive', title: 'Permission Denied', description: 'You do not have permission to edit sidebar.' });
+            toast({ variant: 'destructive', title: t('sidebar_manager.toast.permission_denied'), description: t('sidebar_manager.toast.permission_desc') });
             return;
         }
         setEditingItem(item);
@@ -259,9 +261,9 @@ function SidebarMenuManager() {
             } : i));
 
             setEditingItem(null);
-            toast({ title: 'Updated', description: 'Menu item details updated.' });
+            toast({ title: t('common.success'), description: t('sidebar_manager.toast.item_updated') });
         } catch (err) {
-            toast({ variant: 'destructive', title: 'Error', description: 'Failed to update item.' });
+            toast({ variant: 'destructive', title: t('common.error'), description: t('sidebar_manager.toast.error_update_item') });
         }
     };
 
@@ -285,8 +287,8 @@ function SidebarMenuManager() {
                 <div className="p-4 bg-destructive/10 rounded-full mb-4">
                     <ShieldAlert className="w-12 h-12 text-destructive" />
                 </div>
-                <h3 className="text-xl font-bold text-foreground">Access Restricted</h3>
-                <p className="text-muted-foreground mt-2">You do not have permission to view the Sidebar Manager.</p>
+                <h3 className="text-xl font-bold text-foreground">{t('sidebar_manager.access_restricted.title')}</h3>
+                <p className="text-muted-foreground mt-2">{t('sidebar_manager.access_restricted.desc')}</p>
             </div>
         );
     }
@@ -294,24 +296,24 @@ function SidebarMenuManager() {
     return (
         <AdminPageLayout requiredPermission="platform.sidebar.read">
             <Helmet>
-                <title>Sidebar Manager - CMS</title>
+                <title>{t('sidebar_manager.title')} - CMS</title>
             </Helmet>
 
             <PageHeader
-                title="Sidebar Navigation"
-                description="Customize the admin sidebar menu order, grouping, and visibility."
+                title={t('sidebar_manager.title')}
+                description={t('sidebar_manager.subtitle')}
                 icon={Settings2}
-                breadcrumbs={[{ label: 'Sidebar Manager', icon: Settings2 }]}
+                breadcrumbs={[{ label: t('sidebar_manager.breadcrumbs'), icon: Settings2 }]}
                 actions={(
                     <div className="flex items-center gap-3">
                         <Button variant="outline" onClick={() => fetchMenu()} disabled={loading}>
                             <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-                            Refresh
+                            {t('sidebar_manager.refresh')}
                         </Button>
                         {hasChanges && (
                             <Button onClick={handleSaveOrder} disabled={isSaving}>
                                 <Save className="w-4 h-4 mr-2" />
-                                {isSaving ? 'Saving...' : 'Save Order'}
+                                {isSaving ? t('sidebar_manager.saving') : t('sidebar_manager.save_order')}
                             </Button>
                         )}
                     </div>
@@ -324,8 +326,8 @@ function SidebarMenuManager() {
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                     <div className="flex justify-between items-center mb-4">
                         <TabsList>
-                            <TabsTrigger value="items">Menu Items</TabsTrigger>
-                            <TabsTrigger value="groups">Groups</TabsTrigger>
+                            <TabsTrigger value="items">{t('sidebar_manager.tabs.items')}</TabsTrigger>
+                            <TabsTrigger value="groups">{t('sidebar_manager.tabs.groups')}</TabsTrigger>
                         </TabsList>
                     </div>
 
@@ -341,11 +343,11 @@ function SidebarMenuManager() {
                                         isValid={isSearchValid}
                                         message={searchMessage}
                                         minLength={minLength}
-                                        placeholder="Search menu or group... (5+ chars)"
+                                        placeholder={t('sidebar_manager.search_placeholder')}
                                     />
                                 </div>
                                 <div className="text-sm text-muted-foreground">
-                                    {filteredItems.length} items found
+                                    {t('sidebar_manager.items_found', { count: filteredItems.length })}
                                 </div>
                             </div>
 
@@ -353,7 +355,7 @@ function SidebarMenuManager() {
                                 {loading && items.length === 0 ? (
                                     <div className="flex flex-col items-center justify-center h-64 text-muted-foreground">
                                         <RefreshCw className="w-8 h-8 animate-spin mb-2" />
-                                        <p>Loading configuration...</p>
+                                        <p>{t('sidebar_manager.loading_config')}</p>
                                     </div>
                                 ) : (
                                     <Reorder.Group axis="y" values={items} onReorder={handleReorder} className="space-y-2">
@@ -407,13 +409,13 @@ bg - card shadow - sm transition - all
                                                                 {item.source === 'extension' && (
                                                                     <span className="flex items-center text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-100 dark:bg-indigo-900/10 dark:text-indigo-400 dark:border-indigo-900/20">
                                                                         <Puzzle className="w-3 h-3 mr-1" />
-                                                                        Ext
+                                                                        {t('sidebar_manager.module')}
                                                                     </span>
                                                                 )}
                                                                 {(item.plugin_type === 'core' || item.is_core) && (
                                                                     <span className="flex items-center text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-100 dark:bg-emerald-900/10 dark:text-emerald-400 dark:border-emerald-900/20">
                                                                         <Puzzle className="w-3 h-3 mr-1" />
-                                                                        Core
+                                                                        {t('sidebar_manager.core')}
                                                                     </span>
                                                                 )}
                                                             </div>
@@ -427,7 +429,7 @@ bg - card shadow - sm transition - all
                                                                     onClick={() => handleEdit(item)}
                                                                     disabled={item.source === 'extension'}
                                                                     className={`text - muted - foreground ${item.source === 'extension' ? 'opacity-50 cursor-not-allowed' : 'hover:text-primary'} `}
-                                                                    title={item.source === 'extension' ? "Managed by Extension" : "Edit Item"}
+                                                                    title={item.source === 'extension' ? t('sidebar_manager.managed_by_ext') : t('sidebar_manager.edit_item')}
                                                                 >
                                                                     <Edit2 className="w-4 h-4" />
                                                                 </Button>
@@ -462,14 +464,14 @@ bg - card shadow - sm transition - all
                         <div className="bg-card rounded-xl border border-border shadow-sm flex flex-col min-h-[500px]">
                             <div className="p-4 border-b border-border flex items-center justify-between bg-muted/30">
                                 <div>
-                                    <h3 className="text-sm font-medium text-foreground">Manage Groups</h3>
-                                    <p className="text-xs text-muted-foreground">Drag to reorder groups. This updates the order for all items within.</p>
+                                    <h3 className="text-sm font-medium text-foreground">{t('sidebar_manager.tabs.groups')}</h3>
+                                    <p className="text-xs text-muted-foreground">{t('sidebar_manager.subtitle')}</p>
                                 </div>
                                 {/* Show Save Button specific to Groups tab if changes exist */}
                                 {hasChanges && activeTab === 'groups' && (
                                     <Button onClick={handleSaveGroupOrder} disabled={isSaving} size="sm">
                                         <Save className="w-4 h-4 mr-2" />
-                                        {isSaving ? 'Saving...' : 'Save Group Order'}
+                                        {isSaving ? t('sidebar_manager.saving') : t('sidebar_manager.save_group_order')}
                                     </Button>
                                 )}
                                 {(canEdit || isSuperAdmin) && (
@@ -483,7 +485,7 @@ bg - card shadow - sm transition - all
                                         className="border-green-600/30 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/10"
                                     >
                                         <Plus className="w-4 h-4 mr-2" />
-                                        Add Group
+                                        {t('sidebar_manager.add_group')}
                                     </Button>
                                 )}
                             </div>
@@ -514,10 +516,10 @@ bg - card shadow - sm transition - all
                                                 <div className="flex-1">
                                                     <div className="flex items-center gap-2">
                                                         <h4 className={`font-medium ${group.isExtension ? 'text-indigo-700 dark:text-indigo-300' : 'text-foreground'}`}>{group.label}</h4>
-                                                        {group.isExtension && <span className="text-[10px] bg-indigo-100 text-indigo-700 px-1.5 rounded-full border border-indigo-200 dark:bg-indigo-900/20 dark:text-indigo-300 dark:border-indigo-800">Module</span>}
-                                                        {group.isPlugin && <span className="text-[10px] bg-emerald-100 text-emerald-700 px-1.5 rounded-full border border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-300 dark:border-emerald-800">Core</span>}
+                                                        {group.isExtension && <span className="text-[10px] bg-indigo-100 text-indigo-700 px-1.5 rounded-full border border-indigo-200 dark:bg-indigo-900/20 dark:text-indigo-300 dark:border-indigo-800">{t('sidebar_manager.module')}</span>}
+                                                        {group.isPlugin && <span className="text-[10px] bg-emerald-100 text-emerald-700 px-1.5 rounded-full border border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-300 dark:border-emerald-800">{t('sidebar_manager.core')}</span>}
                                                     </div>
-                                                    <p className="text-xs text-muted-foreground">Order: {group.order}</p>
+                                                    <p className="text-xs text-muted-foreground">{t('sidebar_manager.order')}: {group.order}</p>
                                                 </div>
                                                 {(canEdit || isSuperAdmin) && (
                                                     <Button
@@ -526,7 +528,7 @@ bg - card shadow - sm transition - all
                                                         disabled={group.isExtension}
                                                         onClick={() => handleEditGroup(group)}
                                                         className="text-muted-foreground hover:text-primary disabled:opacity-30 disabled:hover:text-muted-foreground"
-                                                        title={group.isExtension ? "Managed by Extension" : "Edit Group"}
+                                                        title={group.isExtension ? t('sidebar_manager.managed_by_ext') : t('sidebar_manager.edit_group')}
                                                     >
                                                         <Edit2 className="w-4 h-4" />
                                                     </Button>
@@ -546,24 +548,24 @@ bg - card shadow - sm transition - all
                 } onOpenChange={(open) => !open && setEditingItem(null)}>
                     <DialogContent>
                         <DialogHeader>
-                            <DialogTitle>Edit Menu Item</DialogTitle>
+                            <DialogTitle>{t('sidebar_manager.edit_item')}</DialogTitle>
                             <DialogDescription>
-                                Customize the label and grouping for this sidebar item.
+                                {t('sidebar_manager.dialogs.edit_item_desc')}
                             </DialogDescription>
                         </DialogHeader>
                         <div className="py-4 space-y-4">
                             <div className="space-y-2">
-                                <Label>Label</Label>
+                                <Label>{t('sidebar_manager.label')}</Label>
                                 <Input
                                     value={editForm.label}
                                     onChange={e => setEditForm({ ...editForm, label: e.target.value })}
-                                    placeholder="Menu Label"
+                                    placeholder={t('sidebar_manager.label')}
                                 />
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <Label>Group Label</Label>
+                                    <Label>{t('sidebar_manager.group_label')}</Label>
                                     <div className="relative">
                                         <Input
                                             list="groups-list"
@@ -579,7 +581,7 @@ bg - card shadow - sm transition - all
                                     </div>
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Group Order</Label>
+                                    <Label>{t('sidebar_manager.group_order')}</Label>
                                     <Input
                                         type="number"
                                         value={editForm.group_order}
@@ -587,18 +589,18 @@ bg - card shadow - sm transition - all
                                         placeholder="0"
                                         min="0"
                                     />
-                                    <p className="text-[10px] text-slate-500">Lower numbers appear higher.</p>
+                                    <p className="text-[10px] text-slate-500">{t('sidebar_manager.dialogs.group_order_helper')}</p>
                                 </div>
                             </div>
 
                             <div className="space-y-2">
-                                <Label>Key (Read Only)</Label>
+                                <Label>{t('sidebar_manager.key')}</Label>
                                 <Input value={editingItem?.key || ''} disabled className="bg-muted" />
                             </div>
                         </div>
                         <DialogFooter>
-                            <Button variant="outline" onClick={() => setEditingItem(null)}>Cancel</Button>
-                            <Button onClick={saveEdit}>Save Changes</Button>
+                            <Button variant="outline" onClick={() => setEditingItem(null)}>{t('sidebar_manager.cancel')}</Button>
+                            <Button onClick={saveEdit}>{t('sidebar_manager.save_changes')}</Button>
                         </DialogFooter>
                     </DialogContent>
                 </Dialog >
@@ -607,18 +609,18 @@ bg - card shadow - sm transition - all
                 < Dialog open={!!editingGroup} onOpenChange={(open) => !open && setEditingGroup(null)}>
                     <DialogContent>
                         <DialogHeader>
-                            <DialogTitle>Edit Group</DialogTitle>
+                            <DialogTitle>{t('sidebar_manager.edit_group')}</DialogTitle>
                             <DialogDescription>
-                                Rename or reorder this group.
+                                {t('sidebar_manager.dialogs.edit_group_desc')}
                             </DialogDescription>
                         </DialogHeader>
                         <div className="py-4 space-y-4">
                             <div className="space-y-2">
-                                <Label>Group Label</Label>
+                                <Label>{t('sidebar_manager.group_label')}</Label>
                                 <Input
                                     value={groupEditForm.label}
                                     onChange={e => setGroupEditForm({ ...groupEditForm, label: e.target.value })}
-                                    placeholder="Group Name"
+                                    placeholder={t('sidebar_manager.group_name')}
                                 />
                             </div>
                             <div className="space-y-2">
@@ -632,8 +634,8 @@ bg - card shadow - sm transition - all
                             </div>
                         </div>
                         <DialogFooter>
-                            <Button variant="outline" onClick={() => setEditingGroup(null)}>Cancel</Button>
-                            <Button onClick={saveGroupEdit}>Save Group</Button>
+                            <Button variant="outline" onClick={() => setEditingGroup(null)}>{t('sidebar_manager.cancel')}</Button>
+                            <Button onClick={saveGroupEdit}>{t('sidebar_manager.save_group')}</Button>
                         </DialogFooter>
                     </DialogContent>
                 </Dialog >
@@ -642,20 +644,20 @@ bg - card shadow - sm transition - all
                 < Dialog open={showNewGroupDialog} onOpenChange={(open) => !open && setShowNewGroupDialog(false)}>
                     <DialogContent>
                         <DialogHeader>
-                            <DialogTitle>Create New Group</DialogTitle>
+                            <DialogTitle>{t('sidebar_manager.create_group')}</DialogTitle>
                             <DialogDescription>
-                                Add a new menu group. Groups help organize sidebar items.
+                                {t('sidebar_manager.dialogs.create_group_desc')}
                             </DialogDescription>
                         </DialogHeader>
                         <div className="py-4 space-y-4">
                             <div className="space-y-2">
-                                <Label>Group Name</Label>
+                                <Label>{t('sidebar_manager.group_name')}</Label>
                                 <Input
                                     value={newGroupForm.label}
                                     onChange={e => setNewGroupForm({ ...newGroupForm, label: e.target.value })}
                                     placeholder="e.g., MARKETING"
                                 />
-                                <p className="text-[10px] text-slate-500">Use UPPERCASE for consistency with existing groups.</p>
+                                <p className="text-[10px] text-slate-500">{t('sidebar_manager.dialogs.create_group_helper')}</p>
                             </div>
                             <div className="space-y-2">
                                 <Label>Order</Label>
@@ -666,17 +668,17 @@ bg - card shadow - sm transition - all
                                     placeholder="10"
                                     min="1"
                                 />
-                                <p className="text-[10px] text-muted-foreground">Lower numbers appear higher in the sidebar.</p>
+                                <p className="text-[10px] text-muted-foreground">{t('sidebar_manager.dialogs.create_group_order_helper')}</p>
                             </div>
                         </div>
                         <DialogFooter>
-                            <Button variant="outline" onClick={() => setShowNewGroupDialog(false)}>Cancel</Button>
+                            <Button variant="outline" onClick={() => setShowNewGroupDialog(false)}>{t('sidebar_manager.cancel')}</Button>
                             <Button
                                 onClick={handleCreateGroup}
                                 disabled={!newGroupForm.label.trim()}
                                 className="bg-green-600 hover:bg-green-700"
                             >
-                                Create Group
+                                {t('sidebar_manager.create')}
                             </Button>
                         </DialogFooter>
                     </DialogContent>

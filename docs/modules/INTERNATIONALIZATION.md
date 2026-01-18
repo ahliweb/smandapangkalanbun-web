@@ -113,6 +113,14 @@ function LanguageSwitcher() {
 }
 ```
 
+### Reference Implementations
+
+For complex examples involving dynamic column headers, form labels, and tab translations, refer to:
+
+- **`ArticlesManager.jsx`**: Demonstrates full i18n for a content module with categories and tags.
+- **`ProductsManager.jsx`**: Demonstrates i18n for commerce products with tabs and status options.
+- **`GenericContentManager.jsx`**: Demonstrates shared i18n patterns for search, deletion, and common actions.
+
 ---
 
 ## Translation File Structure
@@ -214,6 +222,26 @@ When a user changes their language in `LanguageSettings`, it is saved to the dat
 - [lib/i18n.js](file:///home/data/dev_react/awcms-dev/awcms/src/lib/i18n.js)
 - [en.json](file:///home/data/dev_react/awcms-dev/awcms/src/locales/en.json)
 - [id.json](file:///home/data/dev_react/awcms-dev/awcms/src/locales/id.json)
+
+### Public Portal Namespaces (awcms-public)
+
+The public portal uses the following namespaces in `src/locales/`:
+
+| Namespace | Usage |
+| :--- | :--- |
+| `common` | General UI elements (buttons, labels) |
+| `nav`, `footer` | Navigation and footer links |
+| `hero` | Landing page hero section |
+| `about` | About page content |
+| `services_page` | Services page content |
+| `pricing_page` | Pricing page content |
+| `contact_page` | Contact page content |
+| `blog_page` | Blog listing and categories |
+| `blog_post` | Single blog post specific labels |
+| `news_page` | News section listing and filters |
+| `error_page` | 404 and other error messages |
+| `homes` | For landing page content (startup, saas, mobile-app, personal). |
+| `landing` | For landing page demos (click-through, lead-generation, pre-launch, product, sales, subscription). |
 
 ---
 

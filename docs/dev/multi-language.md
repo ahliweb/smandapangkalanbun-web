@@ -59,6 +59,15 @@ const locale = getLocale(Astro.request);
 - [i18n.ts](file:///home/data/dev_react/awcms-dev/awcms-public/primary/src/utils/i18n.ts)
 - [en.json](file:///home/data/dev_react/awcms-dev/awcms-public/primary/src/locales/en.json)
 - [id.json](file:///home/data/dev_react/awcms-dev/awcms-public/primary/src/locales/id.json)
+- [LanguageSwitcher.astro](file:///home/data/dev_react/awcms-dev/awcms-public/primary/src/components/common/LanguageSwitcher.astro)
+
+**Language Switcher:**
+
+The public portal includes a language switcher dropdown in the header:
+
+- Displays current language code (EN/ID)
+- Dropdown with flag icons for each language
+- Uses URL parameter `?lang=en` or `?lang=id`
 
 ---
 
@@ -154,3 +163,12 @@ Reference the key in your component/code.
 2. **Public Portal**: Add `?lang=id` to URL
 3. **Mobile**: Change device language settings
 4. **ESP32**: Recompile with different `DEVICE_LANGUAGE`
+
+---
+
+## Best Practices
+
+- **Avoid Hardcoding**: Never write user-visible text directly in JSX/HTML. Always use `t()`.
+- **Use Placeholders**: For dynamic text, use interpolation: `t('welcome_user', { name: userName })`.
+- **Group Keys**: Organize keys logically by module or component to prevent conflicts.
+- **Fallbacks**: Always provide a fallback key or value if translation is missing (handled by i18next).

@@ -1,4 +1,3 @@
-
 {
   "common": {
     "loading": "Memuat...",
@@ -15,7 +14,7 @@
     "success": "Berhasil",
     "error": "Error",
     "confirm_delete": "Apakah Anda yakin ingin menghapus item ini?",
-  "confirm_permanent_delete": "Hapus permanen dinonaktifkan. Gunakan tempat sampah dan pemulihan.",
+    "confirm_permanent_delete": "Hapus permanen dinonaktifkan. Gunakan tempat sampah dan pemulihan.",
     "status": "Status",
     "created_at": "Dibuat Pada",
     "updated_at": "Terakhir Diperbarui",
@@ -45,10 +44,22 @@
     "reset": "Atur Ulang",
     "trash": "Sampah",
     "restore": "Pulihkan",
-  "permanent_delete": "Hapus Permanen (Dinonaktifkan)",
+    "permanent_delete": "Hapus Permanen (Dinonaktifkan)",
     "access_denied": "Akses Ditolak",
     "access_restricted": "Akses Terbatas",
-    "permission_required": "Anda tidak memiliki izin untuk melihat bagian ini."
+    "permission_required": "Anda tidak memiliki izin untuk melihat bagian ini.",
+    "permission_required_resource": "Anda tidak memiliki izin untuk melihat {{resource}}.",
+    "manage_resource": "Kelola entri {{resource}}.",
+    "back_to_active": "Kembali ke Aktif",
+    "create_resource": "{{resource}} Baru",
+    "search_resource": "Cari {{resource}}... (5+ karakter)",
+    "move_to_trash": "Pindahkan ke Sampah?",
+    "move_to_trash_confirm": "Ini akan memindahkan {{resource}} ke sampah. Anda dapat memulihkannya nanti.",
+    "trash_bin": "Keranjang Sampah",
+    "owner": "Pemilik",
+    "system": "Sistem",
+    "you": "Anda",
+    "global": "Global"
   },
   "auth": {
     "login": "Masuk",
@@ -90,7 +101,24 @@
     "contact_messages": "Pesan Masuk",
     "menus": "Manajer Menu",
     "sso": "SSO & Keamanan",
-    "extensions": "Ekstensi"
+    "extensions": "Ekstensi",
+    "visual_pages": "Halaman Visual",
+    "themes": "Tema",
+    "tenants": "Tenant",
+    "audit_logs": "Log Audit",
+    "services": "Layanan",
+    "teams": "Tim",
+    "funfacts": "Fakta Menarik",
+    "partners": "Mitra",
+    "projects": "Proyek",
+    "regions": "Wilayah",
+    "settings": "Pengaturan"
+  },
+  "sidebar": {
+    "title": "Portal CMS",
+    "search_placeholder": "Cari menu...",
+    "no_items": "Menu tidak ditemukan",
+    "loading": "Memuat menu..."
   },
   "dashboard": {
     "total_articles": "Total Artikel",
@@ -116,7 +144,13 @@
       "is_public": "Publik?",
       "meta_title": "Judul Meta (SEO)",
       "meta_desc": "Deskripsi Meta (SEO)"
-    }
+    },
+    "workflow": "Alur Kerja",
+    "visibility": "Visibilitas",
+    "views": "Dilihat",
+    "type": "Tipe",
+    "visual_builder": "Pembangun Visual",
+    "standard_editor": "Editor Standar"
   },
   "products": {
     "title": "Manajer Produk",
@@ -126,7 +160,24 @@
     "sku": "SKU",
     "available": "Tersedia",
     "discount_price": "Harga Diskon",
-    "weight": "Berat (kg)"
+    "weight": "Berat (kg)",
+    "dimensions": "Dimensi",
+    "product_name": "Nama Produk",
+    "type_name": "Nama Tipe",
+    "category_name": "Nama Kategori",
+    "shipping_cost": "Biaya Pengiriman",
+    "is_available": "Tersedia untuk Dibeli",
+    "launch_date": "Tanggal Peluncuran",
+    "main_image": "Gambar Utama",
+    "gallery": "Galeri",
+    "icon": "Ikon",
+    "out_of_stock": "Stok Habis",
+    "status_options": {
+      "draft": "Draf",
+      "active": "Aktif",
+      "out_of_stock": "Stok Habis",
+      "archived": "Diarsipkan"
+    }
   },
   "users": {
     "title": "Manajemen Pengguna",
@@ -134,7 +185,28 @@
     "create_user": "Buat Pengguna Baru",
     "role": "Peran",
     "joined": "Bergabung",
-    "remove_confirm": "Apakah Anda yakin ingin menghapus pengguna ini?"
+    "remove_confirm": "Apakah Anda yakin ingin menghapus pengguna ini?",
+    "guest": "Tamu",
+    "tabs": {
+      "active_users": "Pengguna Aktif",
+      "approvals": "Persetujuan"
+    },
+    "breadcrumbs": {
+      "users": "Pengguna",
+      "approvals": "Persetujuan Pendaftaran"
+    },
+    "columns": {
+      "email": "Email",
+      "full_name": "Nama Lengkap",
+      "role": "Peran",
+      "tenant": "Tenant"
+    },
+    "delete": {
+      "title": "Hapus Pengguna",
+      "confirm": "Apakah Anda yakin ingin menghapus <strong>{{name}}</strong>?",
+      "warning_role": "Sebelum menghapus: Pastikan peran pengguna telah diubah menjadi 'Tanpa Akses' atau peran tanpa izin.",
+      "warning_restore": "Ini akan memindahkan pengguna ke sampah. Anda dapat memulihkan akun nanti jika diperlukan."
+    }
   },
   "roles": {
     "title": "Peran & Izin",
@@ -144,7 +216,29 @@
     "public_view_info": "Tentang Izin 'Lihat (Publik)'",
     "public_view_desc": "Kolom ini mengontrol visibilitas di situs web frontend. Untuk peran 'public', Anda HARUS mencentang ini untuk jenis konten apa pun yang ingin dilihat pengunjung.",
     "select_all": "Pilih Semua",
-    "deselect_all": "Batalkan Semua"
+    "deselect_all": "Batalkan Semua",
+    "columns": {
+      "name": "Nama Peran",
+      "description": "Deskripsi",
+      "permissions": "Izin",
+      "created_by": "Dibuat Oleh",
+      "tenant": "Nama Tenant"
+    },
+    "badges": {
+      "all_access": "AKSES PENUH",
+      "owner": "PEMILIK",
+      "tenant_root": "ROOT TENANT"
+    },
+    "delete": {
+      "title": "Hapus Peran",
+      "confirm": "Apakah Anda yakin ingin menghapus peran <strong>\"{{name}}\"</strong>?",
+      "warning_users": "Pastikan tidak ada pengguna yang saat ini ditugaskan ke peran ini. Pengguna dengan peran ini akan kehilangan akses.",
+      "warning_restore": "Ini akan memindahkan peran ke sampah. Anda dapat memulihkannya jika diperlukan."
+    },
+    "errors": {
+      "protected_role": "Peran sistem tidak dapat dihapus.",
+      "assigned_users": "Ada {{count}} pengguna yang ditugaskan ke peran ini. Tetapkan ulang mereka terlebih dahulu."
+    }
   },
   "sso": {
     "title": "SSO & Keamanan",
@@ -196,6 +290,295 @@
     "google_translate": "Google Translate (Otomatis)",
     "google_translate_desc": "Aktifkan widget Google Translate untuk menerjemahkan konten secara otomatis ke berbagai bahasa (Tingkat Gratis)."
   },
+  "pages": {
+    "title": "Manajer Halaman",
+    "subtitle": "Buat dan kelola halaman situs web.",
+    "visual_title": "Halaman Visual",
+    "visual_desc": "Bangun halaman dengan seret-dan-lepas",
+    "visual_builder": "Pembangun Visual",
+    "standard_editor": "Editor Standar",
+    "layout": "Tata Letak",
+    "template": "Template",
+    "tabs": {
+      "pages": "Halaman",
+      "categories": "Kategori"
+    },
+    "breadcrumbs": {
+      "pages": "Halaman",
+      "visual_pages": "Halaman Visual",
+      "categories": "Kategori"
+    },
+    "columns": {
+      "title": "Judul Halaman",
+      "path": "Jalur",
+      "type": "Tipe",
+      "category": "Kategori",
+      "editor": "Editor",
+      "status": "Status",
+      "published": "Diterbitkan",
+      "updated": "Diperbarui"
+    },
+    "badges": {
+      "homepage": "Beranda",
+      "header": "Header",
+      "footer": "Footer",
+      "single_page": "Tpl Halaman",
+      "single_post": "Tpl Postingan",
+      "404": "404",
+      "regular": "Halaman",
+      "visual": "Visual",
+      "richtext": "Teks Kaya"
+    },
+    "form": {
+      "title": "Judul",
+      "page_type": "Tipe Halaman",
+      "page_type_regular": "Halaman Biasa",
+      "page_type_desc": "Tipe halaman sistem (Beranda, Header, dll.)",
+      "slug": "Slug URL",
+      "status": "Status",
+      "status_published": "Diterbitkan",
+      "status_draft": "Draf",
+      "editor_type": "Tipe Editor",
+      "editor_richtext": "Editor Teks Kaya",
+      "editor_visual": "Pembangun Halaman Visual",
+      "editor_desc": "Pilih tipe editor untuk halaman ini",
+      "category": "Kategori",
+      "content": "Konten",
+      "content_desc": "Konten halaman (untuk editor Teks Kaya)",
+      "excerpt": "Kutipan",
+      "featured_image": "Gambar Unggulan",
+      "meta_desc": "Deskripsi SEO",
+      "active": "Aktif"
+    },
+    "action_edit_visual": "Edit Visual",
+    "category": {
+      "name": "Nama",
+      "slug": "Slug",
+      "description": "Deskripsi",
+      "created": "Dibuat",
+      "form": {
+        "name": "Nama",
+        "slug": "Slug",
+        "description": "Deskripsi",
+        "type": "Tipe",
+        "type_page": "Halaman",
+        "type_article": "Artikel",
+        "type_product": "Produk"
+      }
+    }
+  },
+  "portfolio": {
+    "title": "Manajer Portofolio",
+    "subtitle": "Tampilkan karya dan proyek Anda.",
+    "project": "Proyek",
+    "client": "Klien",
+    "year": "Tahun"
+  },
+  "gallery": {
+    "title": "Galeri",
+    "photo": "Galeri Foto",
+    "video": "Galeri Video",
+    "upload_media": "Unggah Media",
+    "add_album": "Tambah Album"
+  },
+  "menus": {
+    "title": "Manajer Menu",
+    "subtitle": "Konfigurasi menu navigasi.",
+    "add_item": "Tambah Item Menu",
+    "reorder": "Susun Ulang",
+    "parent": "Menu Induk",
+    "link": "URL Tautan"
+  },
+  "tenants": {
+    "title": "Manajemen Tenant",
+    "subtitle": "Kelola konfigurasi multi-tenant.",
+    "domain": "Domain",
+    "channels": "Kanal",
+    "usage": "Statistik Penggunaan"
+  },
+  "themes": {
+    "title": "Editor Tema",
+    "subtitle": "Sesuaikan tampilan dan tata letak.",
+    "colors": "Palet Warna",
+    "typography": "Tipografi",
+    "layout": "Opsi Tata Letak"
+  },
+  "theme_editor": {
+    "title": "Editor Tema",
+    "editing_mode": "Mode Pengeditan",
+    "desktop_view": "Desktop",
+    "mobile_view": "Seluler",
+    "save_changes": "Simpan Perubahan",
+    "saving": "Menyimpan...",
+    "info_label": "Info",
+    "theme_name_placeholder": "Nama Tema",
+    "tabs": {
+      "colors": "Warna",
+      "typography": "Huruf",
+      "layout": "Bentuk"
+    },
+    "colors": {
+      "base_title": "Warna Dasar",
+      "background": "Latar Belakang",
+      "background_desc": "Warna latar belakang halaman",
+      "foreground": "Teks Utama",
+      "foreground_desc": "Warna teks utama",
+      "brand_title": "Identitas Merek",
+      "primary": "Utama",
+      "primary_desc": "Warna merek utama",
+      "primary_text": "Teks Utama",
+      "primary_text_desc": "Teks di atas warna utama",
+      "secondary": "Sekunder",
+      "secondary_desc": "Elemen aksen/muted",
+      "secondary_text": "Teks Sekunder",
+      "secondary_text_desc": "Teks di atas warna sekunder",
+      "accent": "Aksen",
+      "accent_desc": "Sorotan interaktif",
+      "ui_title": "Elemen UI",
+      "border": "Batas",
+      "border_desc": "Batas dan pembagi",
+      "input": "Input",
+      "input_desc": "Input formulir",
+      "card": "Kartu",
+      "card_desc": "Latar belakang kartu",
+      "destructive": "Destruktif",
+      "destructive_desc": "Status kesalahan"
+    },
+    "typography": {
+      "font_families": "Keluarga Font",
+      "headings_font": "Font Judul",
+      "headings_desc": "Digunakan untuk h1, h2, h3, dst.",
+      "body_font": "Font Isi",
+      "body_desc": "Digunakan untuk paragraf dan teks UI.",
+      "select_placeholder": "Pilih font"
+    },
+    "layout": {
+      "border_radius": "Radius Batas",
+      "corner_roundness": "Kebulatan Sudut",
+      "square": "Kotak",
+      "round": "Bulat"
+    },
+    "preview": {
+      "brand": "Merek",
+      "nav": {
+        "home": "Beranda",
+        "products": "Produk",
+        "about": "Tentang",
+        "login": "Masuk",
+        "get_started": "Mulai"
+      },
+      "hero": {
+        "title_start": "Visi Anda,",
+        "title_end": "Terealisasi.",
+        "subtitle": "Ini adalah pratinjau bagaimana tipografi dan warna Anda bekerja bersama. Lakukan penyesuaian di editor untuk melihat perubahan instan.",
+        "start_building": "Mulai Membangun",
+        "learn_more": "Pelajari Lebih Lanjut"
+      },
+      "features": {
+        "title": "Fitur Unggulan",
+        "card_title": "Fitur {{number}}",
+        "card_desc": "Komponen kartu ini mendemonstrasikan gaya kartu, radius batas, dan kontras teks Anda."
+      },
+      "contact": {
+        "title": "Hubungi Kami",
+        "email_label": "Alamat Email",
+        "email_placeholder": "anda@contoh.com",
+        "message_label": "Pesan",
+        "message_placeholder": "Ketik pesan Anda di sini...",
+        "newsletter": "Berlangganan buletin",
+        "send_btn": "Kirim Pesan"
+      }
+    },
+    "toasts": {
+      "error_load": "Gagal memuat tema",
+      "access_denied": "Anda tidak memiliki izin untuk menyimpan perubahan.",
+      "validation_name": "Nama tema diperlukan",
+      "success_save": "Konfigurasi tema disimpan.",
+      "error_save": "Gagal menyimpan tema"
+    }
+  },
+  "audit": {
+    "title": "Log Audit",
+    "subtitle": "Lihat aktivitas dan perubahan sistem.",
+    "action": "Aksi",
+    "user": "Pengguna",
+    "timestamp": "Waktu",
+    "details": "Detail",
+    "page_title": "Log Audit - CMS",
+    "header_title": "Jejak Audit",
+    "header_desc": "Pencatatan aktivitas tingkat perusahaan dan jejak kepatuhan.",
+    "permission_denied": "Anda tidak memiliki izin untuk melihat log audit.",
+    "refresh": "Segarkan",
+    "search_placeholder": "Cari tindakan atau sumber daya...",
+    "activity_history": "Riwayat Aktivitas",
+    "activity_desc": "Semua tindakan sistem dicatat dengan jejak audit penuh untuk kepatuhan.",
+    "table": {
+      "timestamp": "Waktu",
+      "user": "Pengguna",
+      "ip_address": "Alamat IP",
+      "action": "Tindakan",
+      "resource": "Sumber Daya",
+      "changes": "Perubahan",
+      "channel": "Kanal",
+      "loading": "Memuat jejak audit...",
+      "no_logs": "Tidak ada log ditemukan.",
+      "unknown_user": "Tidak Diketahui",
+      "view_diff": "Lihat Perbedaan",
+      "no_modifications": "Tidak ada modifikasi"
+    },
+    "pagination": {
+      "showing": "Menampilkan {{from}} hingga {{to}} dari {{total}} log",
+      "per_page": "per halaman",
+      "previous": "Sebelumnya",
+      "next": "Berikutnya"
+    },
+    "diff": {
+      "title": "Detail Perubahan",
+      "old_value": "Nilai Lama",
+      "new_value": "Nilai Baru",
+      "action": "Tindakan",
+      "resource": "Sumber Daya",
+      "ip_address": "Alamat IP"
+    }
+  },
+  "announcements": {
+    "title": "Pengumuman",
+    "subtitle": "Terbitkan pemberitahuan penting.",
+    "start_date": "Tanggal Mulai",
+    "end_date": "Tanggal Selesai",
+    "priority": "Prioritas"
+  },
+  "promotions": {
+    "title": "Promosi",
+    "subtitle": "Kelola penawaran dan diskon khusus.",
+    "code": "Kode Promo",
+    "discount": "Diskon",
+    "valid_until": "Berlaku Sampai"
+  },
+  "testimonials": {
+    "title": "Testimoni",
+    "subtitle": "Ulasan dan umpan balik pelanggan.",
+    "author": "Penulis",
+    "company": "Perusahaan",
+    "rating": "Peringkat"
+  },
+  "contacts": {
+    "title": "Manajer Kontak",
+    "subtitle": "Kelola lokasi dan informasi kontak.",
+    "address": "Alamat",
+    "phone": "Telepon",
+    "email": "Email",
+    "hours": "Jam Operasional"
+  },
+  "messages": {
+    "title": "Pesan Masuk",
+    "subtitle": "Lihat pengiriman formulir kontak.",
+    "from": "Dari",
+    "subject": "Subjek",
+    "received": "Diterima",
+    "reply": "Balas",
+    "mark_read": "Tandai Dibaca"
+  },
   "public": {
     "hero_title": "Selamat Datang di AhliWeb",
     "hero_subtitle": "Temukan pembaruan terbaru, penawaran spesial, dan portofolio kreatif kami.",
@@ -207,5 +590,147 @@
     "sitemap": "Peta Situs",
     "all_rights_reserved": "Hak cipta dilindungi undang-undang.",
     "footer_desc": "AhliWeb Content Management System (AWCMS) memberdayakan bisnis dengan solusi digital yang skalabel. Dibangun untuk kinerja, keamanan, dan kemudahan penggunaan."
+  },
+  "tenant_settings": {
+    "title": "Pengaturan Tenant",
+    "description": "Kelola branding dan preferensi organisasi Anda.",
+    "branding": {
+      "title": "Branding",
+      "description": "Kustomisasi tampilan portal Anda.",
+      "site_name": "Nama Situs",
+      "site_name_placeholder": "Acme Corp",
+      "brand_color": "Warna Merek",
+      "brand_color_desc": "Warna utama untuk tombol dan aksen.",
+      "font_family": "Jenis Huruf",
+      "font_select_placeholder": "Pilih jenis huruf",
+      "font_family_desc": "Pilih jenis huruf utama untuk portal Anda.",
+      "font_preview": "Rubah pengganggu itu melompat pagar.",
+      "logo": "Logo",
+      "logo_desc": "Disarankan: PNG atau SVG, latar belakang transparan."
+    },
+    "buttons": {
+      "save_changes": "Simpan Perubahan",
+      "saving": "Menyimpan..."
+    },
+    "toasts": {
+      "saved_title": "Pengaturan Disimpan",
+      "saved_desc": "Pengaturan tenant Anda telah diperbarui.",
+      "error_title": "Kesalahan"
+    },
+    "errors": {
+      "tenant_not_found": "Tenant Tidak Ditemukan",
+      "tenant_load_error": "Tidak dapat memuat pengaturan tenant.",
+      "access_denied": "Akses Ditolak",
+      "access_denied_desc": "Anda tidak memiliki izin untuk mengelola pengaturan tenant."
+    }
+  },
+  "sidebar_manager": {
+    "title": "Manajer Sidebar",
+    "subtitle": "Sesuaikan urutan, pengelompokan, dan visibilitas menu sidebar admin.",
+    "breadcrumbs": "Manajer Sidebar",
+    "refresh": "Segarkan",
+    "save_order": "Simpan Urutan",
+    "saving": "Menyimpan...",
+    "tabs": {
+      "items": "Item Menu",
+      "groups": "Grup"
+    },
+    "search_placeholder": "Cari menu atau grup... (5+ karakter)",
+    "items_found": "{{count}} item ditemukan",
+    "loading_config": "Memuat konfigurasi...",
+    "edit_item": "Edit Item Menu",
+    "edit_group": "Edit Grup",
+    "create_group": "Buat Grup Baru",
+    "group_name": "Nama Grup",
+    "order": "Urutan",
+    "label": "Label",
+    "group_label": "Label Grup",
+    "group_order": "Urutan Grup",
+    "key": "Kunci (Baca Saja)",
+    "managed_by_ext": "Dikelola oleh Ekstensi",
+    "module": "Modul",
+    "core": "Inti",
+    "add_group": "Tambah Grup",
+    "save_group_order": "Simpan Urutan Grup",
+    "save_changes": "Simpan Perubahan",
+    "save_group": "Simpan Grup",
+    "cancel": "Batal",
+    "create": "Buat Grup",
+    "delete": "Hapus",
+    "visibility": "Visibilitas",
+    "hidden": "Tersembunyi",
+    "visible": "Terlihat",
+    "toast": {
+      "group_order_updated": "Urutan grup diperbarui.",
+      "group_updated": "Grup diperbarui.",
+      "group_created": "Grup \"{{name}}\" dibuat.",
+      "menu_order_updated": "Urutan menu berhasil diperbarui.",
+      "visibility_updated": "Item menu sekarang {{status}}.",
+      "item_updated": "Detail item menu diperbarui.",
+      "error_save_group": "Gagal menyimpan urutan grup.",
+      "error_update_group": "Gagal memperbarui grup.",
+      "error_create_group": "Gagal membuat grup.",
+      "error_save_order": "Gagal menyimpan urutan.",
+      "error_visibility": "Gagal memperbarui visibilitas.",
+      "error_update_item": "Gagal memperbarui item.",
+      "permission_denied": "Izin Ditolak",
+      "permission_desc": "Anda tidak memiliki izin untuk mengedit sidebar."
+    },
+    "dialogs": {
+      "edit_item_desc": "Sesuaikan label dan pengelompokan untuk item sidebar ini.",
+      "edit_group_desc": "Ubah nama atau urutan grup ini.",
+      "create_group_desc": "Tambahkan grup menu baru. Grup membantu mengatur item sidebar.",
+      "group_order_helper": "Angka lebih kecil muncul lebih tinggi.",
+      "create_group_helper": "Gunakan HURUF BESAR agar konsisten dengan grup yang ada.",
+      "create_group_order_helper": "Angka lebih kecil muncul lebih tinggi di sidebar."
+    },
+    "access_restricted": {
+      "title": "Akses Terbatas",
+      "desc": "Anda tidak memiliki izin untuk melihat Manajer Sidebar."
+    }
+  },
+  "policies": {
+    "page_title": "Manajer Kebijakan",
+    "page_desc": "Definisikan aturan ABAC untuk kontrol akses yang terperinci.",
+    "access_denied": "Akses Ditolak",
+    "new_policy": "Kebijakan Baru",
+    "table": {
+      "name": "Nama Kebijakan",
+      "effect": "Efek",
+      "actions": "Tindakan",
+      "conditions": "Kondisi",
+      "loading": "Memuat kebijakan...",
+      "empty": "Tidak ada kebijakan yang didefinisikan."
+    },
+    "effects": {
+      "deny": "Tolak",
+      "allow": "Izinkan"
+    },
+    "dialog": {
+      "create_title": "Buat Kebijakan ABAC",
+      "edit_title": "Edit Kebijakan",
+      "name": "Nama",
+      "name_placeholder": "mis. Tolak Penghapusan Seluler",
+      "description": "Deskripsi",
+      "desc_placeholder": "Jelaskan apa yang dilakukan kebijakan ini",
+      "effect": "Efek",
+      "actions": "Tindakan",
+      "actions_placeholder": "delete, edit_users, *",
+      "conditions": "Kondisi (JSON)",
+      "context_help": "Konteks yang tersedia: channel, time, ip_address",
+      "cancel": "Batal",
+      "save": "Simpan Kebijakan"
+    },
+    "toasts": {
+      "load_error": "Gagal memuat kebijakan.",
+      "invalid_json": "Kondisi harus berupa JSON yang valid.",
+      "success_title": "Berhasil",
+      "created": "Kebijakan berhasil dibuat.",
+      "updated": "Kebijakan berhasil diperbarui.",
+      "save_failed": "Gagal Menyimpan",
+      "delete_confirm": "Apakah Anda yakin ingin menghapus kebijakan ini?",
+      "deleted": "Kebijakan dipindahkan ke sampah.",
+      "delete_failed": "Gagal Menghapus"
+    }
   }
 }

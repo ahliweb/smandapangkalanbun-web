@@ -13,6 +13,7 @@ import { Plus, RefreshCw, User, ShieldAlert, Trash2, Crown } from 'lucide-react'
 import { useSearch } from '@/hooks/useSearch';
 import MinCharSearchInput from '@/components/common/MinCharSearchInput';
 import { useTenant } from '@/contexts/TenantContext';
+import { useTranslation } from 'react-i18next';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,9 +27,10 @@ import {
 
 /**
  * UsersManager - Manages users and registration approvals.
- * Refactored to use awadmintemplate01 components for consistent UI.
+ * Refactored to use awadmintemplate01 components for consistent UI and i18n.
  */
 function UsersManager() {
+  const { t } = useTranslation();
   const { toast } = useToast();
   const { hasPermission, isPlatformAdmin } = usePermissions();
   const { currentTenant } = useTenant();
@@ -66,14 +68,14 @@ function UsersManager() {
 
   // Tab definitions
   const tabs = [
-    { value: 'users', label: 'Active Users', icon: User, color: 'blue' },
-    { value: 'approvals', label: 'Approvals', icon: ShieldAlert, color: 'amber' },
+    { value: 'users', label: t('users.tabs.active_users'), icon: User, color: 'blue' },
+    { value: 'approvals', label: t('users.tabs.approvals'), icon: ShieldAlert, color: 'amber' },
   ];
 
   // Breadcrumbs
   const breadcrumbs = [
-    { label: 'Users', href: activeTab !== 'users' ? '/cmspanel/users' : undefined, icon: User },
-    ...(activeTab === 'approvals' ? [{ label: 'Registration Approvals' }] : []),
+    { label: t('users.breadcrumbs.users'), href: activeTab !== 'users' ? '/cmspanel/users' : undefined, icon: User },
+    ...(activeTab === 'approvals' ? [{ label: t('users.breadcrumbs.approvals') }] : []),
   ];
 
   // Actions for header
@@ -82,7 +84,7 @@ function UsersManager() {
       onClick={() => { setSelectedUser(null); setShowEditor(true); }}
     >
       <Plus className="mr-2 h-4 w-4" />
-      New User
+      {t('users.create_user')}
     </Button>
   ) : null;
 
@@ -115,11 +117,11 @@ function UsersManager() {
       setTotalItems(count || 0);
     } catch (err) {
       console.error(err);
-      toast({ variant: 'destructive', title: 'Error', description: 'Failed to load users' });
+      toast({ variant: 'destructive', title: t('common.error'), description: t('common.no_data') }); // Fallback error msg
     } finally {
       setLoading(false);
     }
-  }, [canView, isPlatformAdmin, currentTenant, debouncedQuery, currentPage, itemsPerPage, toast]);
+  }, [canView, isPlatformAdmin, currentTenant, debouncedQuery, currentPage, itemsPerPage, toast, t]);
 
   useEffect(() => {
     if (activeTab === 'users') {
@@ -162,13 +164,13 @@ function UsersManager() {
         toast({ title: 'Offline', description: 'User marked for deletion. Will sync when online.' });
       }
 
-      toast({ title: 'Success', description: 'User deleted successfully' });
+      toast({ title: t('common.success'), description: t('common.move_to_trash_confirm', { resource: t('users.breadcrumbs.users') }) });
       fetchUsers();
     } catch (err) {
       console.error('Delete error:', err);
       toast({
         variant: 'destructive',
-        title: 'Delete Failed',
+        title: t('common.error'),
         description: err.message || 'Could not delete user'
       });
     } finally {
@@ -178,18 +180,18 @@ function UsersManager() {
   };
 
   const columns = [
-    { key: 'email', label: 'Email' },
-    { key: 'full_name', label: 'Full Name' },
+    { key: 'email', label: t('users.columns.email') },
+    { key: 'full_name', label: t('users.columns.full_name') },
     {
       key: 'roles',
-      label: 'Role',
+      label: t('users.columns.role'),
       render: (r) => {
-        if (!r?.name) return <span className="text-muted-foreground text-xs">Guest</span>;
+        if (!r?.name) return <span className="text-muted-foreground text-xs">{t('users.guest')}</span>;
         if (r.name === 'owner') {
           return (
             <span className="flex items-center gap-1 bg-amber-500/10 px-2 py-1 rounded-full text-xs font-bold text-amber-600 dark:text-amber-500 border border-amber-500/20">
               <Crown className="w-3 h-3 fill-amber-500 text-amber-500" />
-              OWNER
+              {t('roles.badges.owner')}
             </span>
           );
         }
@@ -203,14 +205,14 @@ function UsersManager() {
     // Tenant column - only for Platform Admins
     ...(isPlatformAdmin ? [{
       key: 'tenant',
-      label: 'Tenant',
+      label: t('users.columns.tenant'),
       render: (_, item) => item.tenant?.name ? (
         <span className="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-medium border border-primary/20">
           {item.tenant.name}
         </span>
-      ) : <span className="text-muted-foreground bg-muted px-2 py-1 rounded-full text-xs font-medium border border-border">Global</span>
+      ) : <span className="text-muted-foreground bg-muted px-2 py-1 rounded-full text-xs font-medium border border-border">{t('common.global')}</span>
     }] : []),
-    { key: 'created_at', label: 'Joined', type: 'date' }
+    { key: 'created_at', label: t('users.joined'), type: 'date' }
   ];
 
   if (showEditor) {
@@ -231,28 +233,25 @@ function UsersManager() {
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
               <Trash2 className="w-5 h-5 text-red-500" />
-              Delete User
+              {t('users.delete.title')}
             </AlertDialogTitle>
             <AlertDialogDescription asChild>
               <div className="space-y-3">
-                <p>
-                  Are you sure you want to delete <strong>{userToDelete?.full_name || userToDelete?.email}</strong>?
-                </p>
+                <p dangerouslySetInnerHTML={{ __html: t('users.delete.confirm', { name: userToDelete?.full_name || userToDelete?.email }) }} />
                 <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-amber-800 text-sm">
-                  <p className="font-medium mb-1">⚠️ Before deleting:</p>
-                  <p>Please ensure the user's role has been changed to <strong>"No Access"</strong> or a role without permissions.</p>
+                  <p className="font-medium mb-1">⚠️ {t('users.delete.warning_role')}</p>
                 </div>
                 <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-red-700 text-sm">
-                  <p className="font-medium">🚫 Warning:</p>
-                  <p>This will move the user to trash. You can restore the account later if needed.</p>
+                  <p className="font-medium">🚫 {t('common.error')}:</p>
+                  <p>{t('users.delete.warning_restore')}</p>
                 </div>
               </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
             <AlertDialogAction onClick={handleConfirmDelete} className="bg-red-600 hover:bg-red-700">
-              Move to Trash
+              {t('common.move_to_trash')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -260,8 +259,8 @@ function UsersManager() {
 
       {/* Page Header */}
       <PageHeader
-        title="Users"
-        description="Manage user accounts, roles, and registration approvals"
+        title={t('users.title')}
+        description={t('users.subtitle')}
         icon={User}
         breadcrumbs={breadcrumbs}
         actions={activeTab === 'users' ? headerActions : []}
@@ -281,11 +280,11 @@ function UsersManager() {
                 isValid={isSearchValid}
                 message={searchMessage}
                 minLength={minLength}
-                placeholder="Search users by email"
+                placeholder={t('common.search_resource', { resource: t('users.breadcrumbs.users') })}
               />
             </div>
             <div className="flex-1"></div>
-            <Button variant="ghost" size="icon" onClick={fetchUsers} title="Refresh" className="text-muted-foreground hover:text-foreground">
+            <Button variant="ghost" size="icon" onClick={fetchUsers} title={t('common.refresh')} className="text-muted-foreground hover:text-foreground">
               <RefreshCw className="w-4 h-4" />
             </Button>
           </div>

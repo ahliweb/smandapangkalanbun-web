@@ -1,5 +1,5 @@
-
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/customSupabaseClient';
 import { useToast } from '@/components/ui/use-toast';
@@ -31,6 +31,7 @@ const ThemeEditor = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { toast } = useToast();
+    const { t } = useTranslation();
 
     // Permission Check
     const { hasPermission } = usePermissions();
@@ -60,7 +61,7 @@ const ThemeEditor = () => {
             .single();
 
         if (error) {
-            toast({ title: "Error", description: "Failed to load theme", variant: "destructive" });
+            toast({ title: t('theme_editor.toasts.error_title'), description: t('theme_editor.toasts.error_load'), variant: "destructive" });
             navigate('/cmspanel/themes');
         } else {
             setName(data.name);
@@ -114,12 +115,12 @@ const ThemeEditor = () => {
 
     const handleSave = async () => {
         if (!canEdit) {
-            toast({ title: "Access Denied", description: "You do not have permission to save changes.", variant: "destructive" });
+            toast({ title: t('theme_editor.toasts.access_denied'), description: t('theme_editor.toasts.access_denied'), variant: "destructive" });
             return;
         }
 
         if (!name.trim()) {
-            toast({ title: "Validation Error", description: "Theme name is required", variant: "destructive" });
+            toast({ title: t('theme_editor.toasts.error_title'), description: t('theme_editor.toasts.validation_name'), variant: "destructive" });
             return;
         }
 
@@ -136,9 +137,9 @@ const ThemeEditor = () => {
                 .eq('id', id);
 
             if (error) throw error;
-            toast({ title: "Success", description: "Theme configuration saved." });
+            toast({ title: t('theme_editor.toasts.success_save'), description: t('theme_editor.toasts.success_save') });
         } catch (err) {
-            toast({ title: "Error", description: err.message, variant: "destructive" });
+            toast({ title: t('theme_editor.toasts.error_save'), description: err.message, variant: "destructive" });
         } finally {
             setSaving(false);
         }
@@ -186,11 +187,11 @@ const ThemeEditor = () => {
                         <ArrowLeft className="w-5 h-5 text-muted-foreground" />
                     </Button>
                     <div className="flex flex-col">
-                        <h1 className="text-lg font-bold text-foreground leading-tight">Theme Editor</h1>
+                        <h1 className="text-lg font-bold text-foreground leading-tight">{t('theme_editor.title')}</h1>
                         <div className="flex items-center gap-2 text-xs text-muted-foreground">
                             <span className="font-medium text-primary">{name}</span>
                             <span>•</span>
-                            <span>Editing Mode</span>
+                            <span>{t('theme_editor.editing_mode')}</span>
                         </div>
                     </div>
                 </div>
@@ -202,7 +203,7 @@ const ThemeEditor = () => {
                             className={`h-7 px-3 ${previewMode === 'desktop' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground'}`}
                             onClick={() => setPreviewMode('desktop')}
                         >
-                            <Monitor className="w-3.5 h-3.5 mr-1.5" /> Desktop
+                            <Monitor className="w-3.5 h-3.5 mr-1.5" /> {t('theme_editor.desktop_view')}
                         </Button>
                         <Button
                             variant="ghost"
@@ -210,13 +211,13 @@ const ThemeEditor = () => {
                             className={`h-7 px-3 ${previewMode === 'mobile' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground'}`}
                             onClick={() => setPreviewMode('mobile')}
                         >
-                            <Smartphone className="w-3.5 h-3.5 mr-1.5" /> Mobile
+                            <Smartphone className="w-3.5 h-3.5 mr-1.5" /> {t('theme_editor.mobile_view')}
                         </Button>
                     </div>
                     <div className="h-6 w-px bg-border mx-1"></div>
                     <Button onClick={handleSave} disabled={saving || !canEdit} className="min-w-[140px]">
                         {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
-                        Save Changes
+                        {saving ? t('theme_editor.saving') : t('theme_editor.save_changes')}
                     </Button>
                 </div>
             </div>
@@ -227,21 +228,21 @@ const ThemeEditor = () => {
                     <div className="p-4 border-b border-border">
                         <div className="space-y-3 mb-4">
                             <div className="space-y-1">
-                                <Label className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Info</Label>
-                                <Input value={name} onChange={e => setName(e.target.value)} placeholder="Theme Name" disabled={!canEdit} />
+                                <Label className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">{t('theme_editor.info_label')}</Label>
+                                <Input value={name} onChange={e => setName(e.target.value)} placeholder={t('theme_editor.theme_name_placeholder')} disabled={!canEdit} />
                             </div>
                         </div>
 
                         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                             <TabsList className="w-full grid grid-cols-3">
                                 <TabsTrigger value="colors" className="text-xs">
-                                    <PaletteIcon className="w-3.5 h-3.5 mr-1.5" /> Colors
+                                    <PaletteIcon className="w-3.5 h-3.5 mr-1.5" /> {t('theme_editor.tabs.colors')}
                                 </TabsTrigger>
                                 <TabsTrigger value="typography" className="text-xs">
-                                    <Type className="w-3.5 h-3.5 mr-1.5" /> Type
+                                    <Type className="w-3.5 h-3.5 mr-1.5" /> {t('theme_editor.tabs.typography')}
                                 </TabsTrigger>
                                 <TabsTrigger value="layout" className="text-xs">
-                                    <Layout className="w-3.5 h-3.5 mr-1.5" /> Shape
+                                    <Layout className="w-3.5 h-3.5 mr-1.5" /> {t('theme_editor.tabs.layout')}
                                 </TabsTrigger>
                             </TabsList>
                         </Tabs>
@@ -251,44 +252,44 @@ const ThemeEditor = () => {
                         <Tabs value={activeTab} className="w-full">
                             <TabsContent value="colors" className="mt-0 space-y-6">
                                 <div>
-                                    <h3 className="text-xs font-bold text-foreground uppercase tracking-wider mb-2">Base Colors</h3>
+                                    <h3 className="text-xs font-bold text-foreground uppercase tracking-wider mb-2">{t('theme_editor.colors.base_title')}</h3>
                                     <div className="bg-card rounded-lg border border-border shadow-sm p-1 px-3">
-                                        <ColorRow label="Background" configKey="background" description="Page background color" />
-                                        <ColorRow label="Foreground" configKey="foreground" description="Main text color" />
+                                        <ColorRow label={t('theme_editor.colors.background')} configKey="background" description={t('theme_editor.colors.background_desc')} />
+                                        <ColorRow label={t('theme_editor.colors.foreground')} configKey="foreground" description={t('theme_editor.colors.foreground_desc')} />
                                     </div>
                                 </div>
 
                                 <div>
-                                    <h3 className="text-xs font-bold text-foreground uppercase tracking-wider mb-2">Brand Identity</h3>
+                                    <h3 className="text-xs font-bold text-foreground uppercase tracking-wider mb-2">{t('theme_editor.colors.brand_title')}</h3>
                                     <div className="bg-card rounded-lg border border-border shadow-sm p-1 px-3">
-                                        <ColorRow label="Primary" configKey="primary" description="Main brand color" />
-                                        <ColorRow label="Primary Text" configKey="primaryForeground" description="Text on primary color" />
-                                        <ColorRow label="Secondary" configKey="secondary" description="Accent/muted elements" />
-                                        <ColorRow label="Secondary Text" configKey="secondaryForeground" description="Text on secondary color" />
-                                        <ColorRow label="Accent" configKey="accent" description="Interactive highlights" />
+                                        <ColorRow label={t('theme_editor.colors.primary')} configKey="primary" description={t('theme_editor.colors.primary_desc')} />
+                                        <ColorRow label={t('theme_editor.colors.primary_text')} configKey="primaryForeground" description={t('theme_editor.colors.primary_text_desc')} />
+                                        <ColorRow label={t('theme_editor.colors.secondary')} configKey="secondary" description={t('theme_editor.colors.secondary_desc')} />
+                                        <ColorRow label={t('theme_editor.colors.secondary_text')} configKey="secondaryForeground" description={t('theme_editor.colors.secondary_text_desc')} />
+                                        <ColorRow label={t('theme_editor.colors.accent')} configKey="accent" description={t('theme_editor.colors.accent_desc')} />
                                     </div>
                                 </div>
 
                                 <div>
-                                    <h3 className="text-xs font-bold text-foreground uppercase tracking-wider mb-2">UI Elements</h3>
+                                    <h3 className="text-xs font-bold text-foreground uppercase tracking-wider mb-2">{t('theme_editor.colors.ui_title')}</h3>
                                     <div className="bg-card rounded-lg border border-border shadow-sm p-1 px-3">
-                                        <ColorRow label="Border" configKey="border" description="Borders and dividers" />
-                                        <ColorRow label="Input" configKey="input" description="Form inputs" />
-                                        <ColorRow label="Card" configKey="card" description="Card backgrounds" />
-                                        <ColorRow label="Destructive" configKey="destructive" description="Error states" />
+                                        <ColorRow label={t('theme_editor.colors.border')} configKey="border" description={t('theme_editor.colors.border_desc')} />
+                                        <ColorRow label={t('theme_editor.colors.input')} configKey="input" description={t('theme_editor.colors.input_desc')} />
+                                        <ColorRow label={t('theme_editor.colors.card')} configKey="card" description={t('theme_editor.colors.card_desc')} />
+                                        <ColorRow label={t('theme_editor.colors.destructive')} configKey="destructive" description={t('theme_editor.colors.destructive_desc')} />
                                     </div>
                                 </div>
                             </TabsContent>
 
                             <TabsContent value="typography" className="mt-0 space-y-6">
                                 <div>
-                                    <h3 className="text-xs font-bold text-foreground uppercase tracking-wider mb-4">Font Families</h3>
+                                    <h3 className="text-xs font-bold text-foreground uppercase tracking-wider mb-4">{t('theme_editor.typography.font_families')}</h3>
                                     <div className="space-y-4">
                                         <div className="space-y-2">
-                                            <Label>Headings Font</Label>
+                                            <Label>{t('theme_editor.typography.headings_font')}</Label>
                                             <Select value={config.fonts?.heading} onValueChange={(val) => handleFontChange('heading', val)}>
                                                 <SelectTrigger disabled={!canEdit}>
-                                                    <SelectValue placeholder="Select font" />
+                                                    <SelectValue placeholder={t('theme_editor.typography.select_placeholder')} />
                                                 </SelectTrigger>
                                                 <SelectContent>
                                                     {FONT_OPTIONS.map(f => (
@@ -298,14 +299,14 @@ const ThemeEditor = () => {
                                                     ))}
                                                 </SelectContent>
                                             </Select>
-                                            <p className="text-xs text-muted-foreground">Used for h1, h2, h3, etc.</p>
+                                            <p className="text-xs text-muted-foreground">{t('theme_editor.typography.headings_desc')}</p>
                                         </div>
 
                                         <div className="space-y-2">
-                                            <Label>Body Font</Label>
+                                            <Label>{t('theme_editor.typography.body_font')}</Label>
                                             <Select value={config.fonts?.body} onValueChange={(val) => handleFontChange('body', val)}>
                                                 <SelectTrigger disabled={!canEdit}>
-                                                    <SelectValue placeholder="Select font" />
+                                                    <SelectValue placeholder={t('theme_editor.typography.select_placeholder')} />
                                                 </SelectTrigger>
                                                 <SelectContent>
                                                     {FONT_OPTIONS.map(f => (
@@ -315,7 +316,7 @@ const ThemeEditor = () => {
                                                     ))}
                                                 </SelectContent>
                                             </Select>
-                                            <p className="text-xs text-muted-foreground">Used for paragraphs and UI text.</p>
+                                            <p className="text-xs text-muted-foreground">{t('theme_editor.typography.body_desc')}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -323,10 +324,10 @@ const ThemeEditor = () => {
 
                             <TabsContent value="layout" className="mt-0 space-y-6">
                                 <div>
-                                    <h3 className="text-xs font-bold text-foreground uppercase tracking-wider mb-4">Border Radius</h3>
+                                    <h3 className="text-xs font-bold text-foreground uppercase tracking-wider mb-4">{t('theme_editor.layout.border_radius')}</h3>
                                     <div className="bg-card p-4 rounded-lg border border-border">
                                         <div className="flex justify-between mb-4 items-center">
-                                            <Label>Corner Roundness</Label>
+                                            <Label>{t('theme_editor.layout.corner_roundness')}</Label>
                                             <span className="text-xs font-mono bg-muted px-2 py-1 rounded text-muted-foreground">{config.radius}rem</span>
                                         </div>
                                         <Slider
@@ -337,8 +338,8 @@ const ThemeEditor = () => {
                                             disabled={!canEdit}
                                         />
                                         <div className="flex justify-between mt-2 text-[10px] text-muted-foreground">
-                                            <span>Square</span>
-                                            <span>Round</span>
+                                            <span>{t('theme_editor.layout.square')}</span>
+                                            <span>{t('theme_editor.layout.round')}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -360,15 +361,15 @@ const ThemeEditor = () => {
                             {/* Header */}
                             <header className="border-b border-border sticky top-0 bg-background/95 backdrop-blur z-10">
                                 <div className="container mx-auto px-6 h-16 flex items-center justify-between">
-                                    <div className="font-bold text-xl text-primary font-heading">Brand</div>
+                                    <div className="font-bold text-xl text-primary font-heading">{t('theme_editor.preview.brand')}</div>
                                     <nav className="hidden md:flex gap-6 text-sm font-medium text-muted-foreground">
-                                        <button className="text-foreground hover:text-primary transition-colors cursor-default">Home</button>
-                                        <button className="hover:text-primary transition-colors cursor-default">Products</button>
-                                        <button className="hover:text-primary transition-colors cursor-default">About</button>
+                                        <button className="text-foreground hover:text-primary transition-colors cursor-default">{t('theme_editor.preview.nav.home')}</button>
+                                        <button className="hover:text-primary transition-colors cursor-default">{t('theme_editor.preview.nav.products')}</button>
+                                        <button className="hover:text-primary transition-colors cursor-default">{t('theme_editor.preview.nav.about')}</button>
                                     </nav>
                                     <div className="flex gap-2">
-                                        <Button size="sm" variant="outline">Log in</Button>
-                                        <Button size="sm">Get Started</Button>
+                                        <Button size="sm" variant="outline">{t('theme_editor.preview.nav.login')}</Button>
+                                        <Button size="sm">{t('theme_editor.preview.nav.get_started')}</Button>
                                     </div>
                                 </div>
                             </header>
@@ -378,14 +379,14 @@ const ThemeEditor = () => {
                             <section className="py-20 px-6 text-center bg-secondary/30">
                                 <div className="max-w-3xl mx-auto space-y-6">
                                     <h1 className="text-4xl md:text-6xl font-bold font-heading tracking-tight text-foreground">
-                                        Your Vision, <span className="text-primary">Realized.</span>
+                                        {t('theme_editor.preview.hero.title_start')} <span className="text-primary">{t('theme_editor.preview.hero.title_end')}</span>
                                     </h1>
                                     <p className="text-lg md:text-xl text-muted-foreground font-sans">
-                                        This is a preview of how your typography and colors work together. Make adjustments in the editor to see instant changes.
+                                        {t('theme_editor.preview.hero.subtitle')}
                                     </p>
                                     <div className="flex justify-center gap-4 pt-4">
-                                        <Button size="lg" className="rounded-full">Start Building</Button>
-                                        <Button size="lg" variant="outline" className="rounded-full">Learn More</Button>
+                                        <Button size="lg" className="rounded-full">{t('theme_editor.preview.hero.start_building')}</Button>
+                                        <Button size="lg" variant="outline" className="rounded-full">{t('theme_editor.preview.hero.learn_more')}</Button>
                                     </div>
                                 </div>
                             </section>
@@ -393,16 +394,16 @@ const ThemeEditor = () => {
                             {/* Content Cards */}
                             <section className="py-16 px-6 bg-background">
                                 <div className="max-w-5xl mx-auto">
-                                    <h2 className="text-2xl font-bold font-heading mb-8 text-center">Feature Showcase</h2>
+                                    <h2 className="text-2xl font-bold font-heading mb-8 text-center">{t('theme_editor.preview.features.title')}</h2>
                                     <div className="grid md:grid-cols-3 gap-6">
                                         {[1, 2, 3].map((i) => (
                                             <div key={i} className="rounded-xl border border-border bg-card text-card-foreground p-6 shadow-sm hover:shadow-md transition-shadow">
                                                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 text-primary">
                                                     <PaletteIcon className="w-6 h-6" />
                                                 </div>
-                                                <h3 className="font-semibold text-lg mb-2 font-heading">Feature {i}</h3>
+                                                <h3 className="font-semibold text-lg mb-2 font-heading">{t('theme_editor.preview.features.card_title', { number: i })}</h3>
                                                 <p className="text-muted-foreground text-sm leading-relaxed">
-                                                    This card component demonstrates your card styling, border radius, and text contrast.
+                                                    {t('theme_editor.preview.features.card_desc')}
                                                 </p>
                                             </div>
                                         ))}
@@ -410,26 +411,25 @@ const ThemeEditor = () => {
                                 </div>
                             </section>
 
-                            {/* Form Section */}
                             <section className="py-16 px-6 bg-secondary/10">
                                 <div className="max-w-md mx-auto bg-card rounded-xl shadow-sm p-8 border border-border">
-                                    <h3 className="text-xl font-bold mb-6 font-heading">Contact Us</h3>
+                                    <h3 className="text-xl font-bold mb-6 font-heading">{t('theme_editor.preview.contact.title')}</h3>
                                     <div className="space-y-4">
                                         <div className="space-y-2">
-                                            <Label>Email Address</Label>
-                                            <Input placeholder="you@example.com" />
+                                            <Label>{t('theme_editor.preview.contact.email_label')}</Label>
+                                            <Input placeholder={t('theme_editor.preview.contact.email_placeholder')} />
                                         </div>
                                         <div className="space-y-2">
-                                            <Label>Message</Label>
-                                            <Textarea placeholder="Type your message here..." className="h-24" />
+                                            <Label>{t('theme_editor.preview.contact.message_label')}</Label>
+                                            <Textarea placeholder={t('theme_editor.preview.contact.message_placeholder')} className="h-24" />
                                         </div>
                                         <div className="flex items-center space-x-2">
                                             <div className="h-4 w-4 rounded border border-primary bg-primary text-primary-foreground flex items-center justify-center">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3"><polyline points="20 6 9 17 4 12"></polyline></svg>
                                             </div>
-                                            <Label className="font-normal text-muted-foreground">Subscribe to newsletter</Label>
+                                            <Label className="font-normal text-muted-foreground">{t('theme_editor.preview.contact.newsletter')}</Label>
                                         </div>
-                                        <Button className="w-full">Send Message</Button>
+                                        <Button className="w-full">{t('theme_editor.preview.contact.send_btn')}</Button>
                                     </div>
                                 </div>
                             </section>

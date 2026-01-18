@@ -5,6 +5,30 @@ All notable changes to the **AWCMS** project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.18.0] "Defiance" - 2026-01-18
+
+### Added
+
+- **Astro Public Portal Internationalization (Phase 7-10)**:
+  - Completed localization of all 12+ landing pages including `homes/` and `landing/` demos.
+  - Implemented `i18n.ts` utility for dynamic routing and metadata translation in Astro.
+  - Added full Indonesian (`id.json`) and English (`en.json`) translation namespaces for all portal components.
+- **Improved I18N Routing**:
+  - Implemented intelligent middleware path rewriting to support `/id/homes/*` URLs.
+  - Enhanced locale detection to prioritize path prefixes (e.g., `/id/`).
+
+### Changed
+
+- **Code Quality & Type Safety**:
+  - Refined TypeScript definitions across `index.astro`, `blog.ts`, and `i18n.ts` to eliminate `any` types.
+  - Verified project build and type-safety via `astro check` and ESLint.
+
+### Fixed
+
+- **Build Stability**:
+  - Resolved "Astro.request.headers not available" warning during static site generation for blog pages.
+  - Repaired missing translation keys causing UI inconsistencies in mobile app demo pages.
+
 ## [2.17.0] "Citadel" - 2026-01-18
 
 ### Added
@@ -14,6 +38,7 @@ All notable changes to the **AWCMS** project will be documented in this file.
   - Added Indonesian as a secondary language with full translations.
   - **awcms**: Set English as `fallbackLng` in i18next config, reordered language selector.
   - **awcms-public**: Created locale files (`en.json`, `id.json`) and `i18n.ts` utility for Astro.
+  - **awcms-public**: Added `LanguageSwitcher.astro` component with dropdown (EN/ID) in header.
   - **awcms-mobile**: Added Flutter l10n with ARB files for English and Indonesian.
   - **awcms-esp32**: Created language header files (`lang_en.h`, `lang_id.h`) with 40+ macros.
 - **Documentation**:

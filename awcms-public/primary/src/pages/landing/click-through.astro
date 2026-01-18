@@ -1,11 +1,15 @@
 ---
-import Layout from '~/layouts/LandingLayout.astro';
+import Layout from "~/layouts/LandingLayout.astro";
 
-import Hero2 from '~/components/widgets/Hero2.astro';
-import CallToAction from '~/components/widgets/CallToAction.astro';
+import Hero2 from "~/components/widgets/Hero2.astro";
+import CallToAction from "~/components/widgets/CallToAction.astro";
+
+import { getLocale, t } from "~/utils/i18n";
+
+const locale = getLocale(Astro.request);
 
 const metadata = {
-  title: 'Click-through Landing Page Demo',
+  title: t("landing.click_through.metadata.title", locale),
 };
 ---
 
@@ -13,28 +17,33 @@ const metadata = {
   <!-- Hero2 Widget ******************* -->
 
   <Hero2
-    tagline="Click-through Demo"
-    title="Click-through Landing Page: The Perfect Bridge to Conversion!"
-    subtitle="Learn how to design a Click-Through Landing Page that seamlessly guides visitors to your main offer."
+    tagline={t("landing.click_through.hero.tagline", locale)}
+    title={t("landing.click_through.hero.title", locale)}
+    subtitle={t("landing.click_through.hero.subtitle", locale)}
     actions={[
-      { variant: 'primary', text: 'Call to Action', href: '#', icon: 'tabler:square-rounded-arrow-right' },
-      { text: 'Learn more', href: '#' },
+      {
+        variant: "primary",
+        text: t("landing.hero.actions.cta", locale),
+        href: "#",
+        icon: "tabler:square-rounded-arrow-right",
+      },
+      { text: t("landing.hero.actions.learn_more", locale), href: "#" },
     ]}
     image={{
-      src: 'https://images.unsplash.com/photo-1516321497487-e288fb19713f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-      alt: 'Click-through Landing Page Hero Image',
+      src: "https://images.unsplash.com/photo-1516321497487-e288fb19713f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+      alt: t("landing.click_through.hero.image_alt", locale),
     }}
   />
 
   <CallToAction
-    title="Coming soon"
-    subtitle="We are working on the content of these demo pages. You will see them very soon. Stay tuned Stay tuned!"
+    title={t("landing.coming_soon.title", locale)}
+    subtitle={t("landing.coming_soon.subtitle", locale)}
     actions={[
       {
-        variant: 'primary',
-        text: 'Download Template',
-        href: 'https://github.com/arthelokyo/astrowind',
-        icon: 'tabler:download',
+        variant: "primary",
+        text: t("landing.coming_soon.action", locale),
+        href: "https://github.com/arthelokyo/astrowind",
+        icon: "tabler:download",
       },
     ]}
   />

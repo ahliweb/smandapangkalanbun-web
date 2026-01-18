@@ -1,78 +1,81 @@
 ---
-import Layout from '~/layouts/PageLayout.astro';
-import HeroText from '~/components/widgets/HeroText.astro';
-import ContactUs from '~/components/widgets/Contact.astro';
-import Features2 from '~/components/widgets/Features2.astro';
+import Layout from "~/layouts/PageLayout.astro";
+import HeroText from "~/components/widgets/HeroText.astro";
+import ContactUs from "~/components/widgets/Contact.astro";
+import Features2 from "~/components/widgets/Features2.astro";
+import { getLocale, t } from "~/utils/i18n";
+
+const locale = getLocale(Astro.request);
 
 const metadata = {
-  title: 'Contact',
+  title: t("contact_page.hero.tagline", locale),
 };
 ---
 
 <Layout metadata={metadata}>
   <!-- HeroText Widget ******************* -->
 
-  <HeroText tagline="Contact" title="Let's Connect!" />
+  <HeroText
+    tagline={t("contact_page.hero.tagline", locale)}
+    title={t("contact_page.hero.title", locale)}
+  />
 
   <ContactUs
     id="form"
-    title="Drop us a message today!"
-    subtitle="For quicker answers, explore our FAQs section. You may find the solution you're looking  for right there! If not, our support team is delighted to help you."
+    title={t("contact_page.form.title", locale)}
+    subtitle={t("contact_page.form.subtitle", locale)}
     inputs={[
       {
-        type: 'text',
-        name: 'name',
-        label: 'Name',
+        type: "text",
+        name: "name",
+        label: t("contact_page.form.inputs.name", locale),
       },
       {
-        type: 'email',
-        name: 'email',
-        label: 'Email',
+        type: "email",
+        name: "email",
+        label: t("contact_page.form.inputs.email", locale),
       },
     ]}
     textarea={{
-      label: 'Message',
+      label: t("contact_page.form.inputs.message", locale),
     }}
     disclaimer={{
-      label:
-        'By submitting this contact form, you acknowledge and agree to the collection of your personal information.',
+      label: t("contact_page.form.disclaimer", locale),
     }}
-    description="Our support team typically responds within 24 business hours."
+    description={t("contact_page.form.description", locale)}
   />
 
   <!-- Features2 Widget ************** -->
 
   <Features2
-    title="We are here to help!"
+    title={t("contact_page.features.title", locale)}
     items={[
       {
-        title: 'General support',
-        description: `Chat with us for inquiries related to account management, website navigation, payment issues, accessing purchased templates or general questions about the website's functionality.`,
+        title: t("contact_page.features.items.general.title", locale),
+        description: t("contact_page.features.items.general.desc", locale),
       },
       {
-        title: 'Contact sales',
-        description:
-          'Chat with us for questions about purchases, customization options, licensing for commercial use, inquiries about specific template, etc.',
+        title: t("contact_page.features.items.sales.title", locale),
+        description: t("contact_page.features.items.sales.desc", locale),
       },
       {
-        title: 'Technical support',
-        description:
-          'Chat with us when facing issues like template installation, problems editing difficulties, compatibility issues with software or download errors, or other technical challenges related to using the templates.',
+        title: t("contact_page.features.items.technical.title", locale),
+        description: t("contact_page.features.items.technical.desc", locale),
       },
       {
-        title: 'Phone',
-        description: '+1 (234) 567-890',
-        icon: 'tabler:headset',
+        title: t("contact_page.features.items.phone.title", locale),
+        description: "+1 (234) 567-890",
+        icon: "tabler:headset",
       },
       {
-        title: 'Email',
-        description: 'contact@support.com',
-        icon: 'tabler:mail',
+        title: t("contact_page.features.items.email.title", locale),
+        description: "contact@support.com",
+        icon: "tabler:mail",
       },
       {
-        title: 'Location',
-        description: '1234 Lorem Ipsum St, 12345, Miami, EEUU',
-        icon: 'tabler:map-pin',
+        title: t("contact_page.features.items.location.title", locale),
+        description: "1234 Lorem Ipsum St, 12345, Miami, EEUU",
+        icon: "tabler:map-pin",
       },
     ]}
   />

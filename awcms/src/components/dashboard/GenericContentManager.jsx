@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import ContentTable from '@/components/dashboard/ContentTable';
 import GenericResourceEditor from '@/components/dashboard/GenericResourceEditor';
 import { usePermissions } from '@/contexts/PermissionContext';
@@ -39,6 +40,7 @@ const GenericContentManager = ({
     EditorComponent, // Optional custom editor component
     customToolbarActions // ({ openEditor }) => ReactNode
 }) => {
+    const { t } = useTranslation();
     const { toast } = useToast();
     const { user } = useAuth();
     const { hasPermission, checkAccess } = usePermissions();
@@ -221,8 +223,8 @@ const GenericContentManager = ({
             <div className="p-4 bg-destructive/10 rounded-full mb-4">
                 <ShieldAlert className="w-12 h-12 text-destructive" />
             </div>
-            <h3 className="text-xl font-bold text-foreground">Access Denied</h3>
-            <p className="text-muted-foreground mt-2">You do not have permission to view {resourceName}s.</p>
+            <h3 className="text-xl font-bold text-foreground">{t('common.access_denied')}</h3>
+            <p className="text-muted-foreground mt-2">{t('common.permission_required_resource', { resource: resourceName })}</p>
         </div>
     );
 
@@ -231,12 +233,12 @@ const GenericContentManager = ({
         ...columns,
         {
             key: 'owner',
-            label: 'Owner',
+            label: t('common.owner'),
             render: (_, row) => (
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <User className="w-3 h-3 text-muted-foreground" />
-                    <span>{row.owner?.full_name || row.owner?.email || 'System'}</span>
-                    {user?.id === row.created_by && <span className="bg-primary/10 text-primary px-1.5 rounded-full text-[10px] font-bold">You</span>}
+                    <span>{row.owner?.full_name || row.owner?.email || t('common.system')}</span>
+                    {user?.id === row.created_by && <span className="bg-primary/10 text-primary px-1.5 rounded-full text-[10px] font-bold">{t('common.you')}</span>}
                 </div>
             )
         }
@@ -292,7 +294,7 @@ const GenericContentManager = ({
                                 <li className="inline-flex items-center gap-1.5">
                                     <Link to="/cmspanel" className="transition-colors hover:text-foreground flex items-center gap-1">
                                         <Home className="w-4 h-4" />
-                                        Dashboard
+                                        {t('menu.dashboard')}
                                     </Link>
                                 </li>
                                 <li aria-hidden="true" className="[&>svg]:size-3.5"><ChevronRight /></li>
@@ -315,7 +317,7 @@ const GenericContentManager = ({
                                         <li className="inline-flex items-center gap-1.5">
                                             <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-destructive text-destructive-foreground font-medium shadow-sm">
                                                 <Trash2 className="w-3.5 h-3.5" />
-                                                <span>Trash</span>
+                                                <span>{t('common.trash')}</span>
                                             </div>
                                         </li>
                                     </>
@@ -327,9 +329,9 @@ const GenericContentManager = ({
                         <div>
                             <h2 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-2">
                                 {resourceName}s
-                                {showTrash && <span className="text-lg font-normal text-destructive bg-destructive/10 px-2 py-0.5 rounded-md">Trash Bin</span>}
+                                {showTrash && <span className="text-lg font-normal text-destructive bg-destructive/10 px-2 py-0.5 rounded-md">{t('common.trash_bin')}</span>}
                             </h2>
-                            <p className="text-muted-foreground">Manage {resourceName.toLowerCase()} entries.</p>
+                            <p className="text-muted-foreground">{t('common.manage_resource', { resource: resourceName.toLowerCase() })}</p>
                         </div>
                         <div className="flex gap-2">
                             {softDeleteEnabled && (
@@ -339,7 +341,7 @@ const GenericContentManager = ({
                                     className={showTrash ? "bg-destructive hover:bg-destructive/90" : ""}
                                 >
                                     {showTrash ? <RotateCcw className="w-4 h-4 mr-2" /> : <Trash2 className="w-4 h-4 mr-2" />}
-                                    {showTrash ? "Back to Active" : "Trash"}
+                                    {showTrash ? t('common.back_to_active') : t('common.trash')}
                                 </Button>
                             )}
 
@@ -350,7 +352,7 @@ const GenericContentManager = ({
 
                             {canCreate && !showTrash && (
                                 <Button onClick={() => { setSelectedItem(null); setShowEditor(true); }} className="bg-primary text-primary-foreground hover:bg-primary/90">
-                                    <Plus className="w-4 h-4 mr-2" /> New {resourceName}
+                                    <Plus className="w-4 h-4 mr-2" /> {t('common.create_resource', { resource: resourceName })}
                                 </Button>
                             )}
                         </div>
@@ -366,7 +368,7 @@ const GenericContentManager = ({
                                 isValid={isSearchValid}
                                 message={searchMessage}
                                 minLength={minLength}
-                                placeholder={`Search ${resourceName}s... (5+ chars)`}
+                                placeholder={t('common.search_resource', { resource: resourceName })}
                             />
                         </div>
                         <div className="flex-1"></div>
@@ -375,7 +377,7 @@ const GenericContentManager = ({
                             size="icon"
                             onClick={handleManualRefresh}
                             disabled={loading}
-                            title="Refresh"
+                            title={t('common.refresh')}
                             className="text-muted-foreground hover:text-foreground disabled:opacity-50"
                         >
                             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -402,7 +404,7 @@ const GenericContentManager = ({
                                 {showTrash && (
                                     <>
                                         {canRestore && (
-                                            <Button size="icon" variant="ghost" onClick={() => handleRestore(item.id)} className="text-green-600 hover:bg-green-50" title="Restore">
+                                            <Button size="icon" variant="ghost" onClick={() => handleRestore(item.id)} className="text-green-600 hover:bg-green-50" title={t('common.restore')}>
                                                 <RotateCcw className="w-4 h-4" />
                                             </Button>
                                         )}
@@ -427,15 +429,15 @@ const GenericContentManager = ({
             <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Move to Trash?</AlertDialogTitle>
+                        <AlertDialogTitle>{t('common.move_to_trash')}</AlertDialogTitle>
                         <AlertDialogDescription>
-                            This will move the {resourceName.toLowerCase()} to trash. You can restore it later from the trash bin.
+                            {t('common.move_to_trash_confirm', { resource: resourceName.toLowerCase() })}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel onClick={() => setItemToDelete(null)}>Cancel</AlertDialogCancel>
+                        <AlertDialogCancel onClick={() => setItemToDelete(null)}>{t('common.cancel')}</AlertDialogCancel>
                         <AlertDialogAction onClick={confirmDelete} className="bg-red-600 hover:bg-red-700">
-                            Delete
+                            {t('common.delete')}
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>

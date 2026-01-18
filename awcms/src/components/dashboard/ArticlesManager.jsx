@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import GenericContentManager from '@/components/dashboard/GenericContentManager';
 import ArticleEditor from '@/components/dashboard/ArticleEditor';
 import { AdminPageLayout, PageHeader, PageTabs, TabsContent } from '@/templates/flowbite-admin';
@@ -10,27 +11,29 @@ import { Button } from '@/components/ui/button';
  * Refactored to use awadmintemplate01 components for consistent UI.
  */
 function ArticlesManager() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('articles');
 
   // Tab definitions
+  // Tab definitions
   const tabs = [
-    { value: 'articles', label: 'Articles', icon: FileText, color: 'blue' },
-    { value: 'categories', label: 'Categories', icon: FolderOpen, color: 'purple' },
-    { value: 'tags', label: 'Tags', icon: Tag, color: 'emerald' },
+    { value: 'articles', label: t('menu.articles'), icon: FileText, color: 'blue' },
+    { value: 'categories', label: t('menu.categories'), icon: FolderOpen, color: 'purple' },
+    { value: 'tags', label: t('menu.tags'), icon: Tag, color: 'emerald' },
   ];
 
   // Dynamic breadcrumb based on active tab
   const breadcrumbs = [
-    { label: 'Articles', href: activeTab !== 'articles' ? '/cmspanel/articles' : undefined, icon: FileText },
-    ...(activeTab !== 'articles' ? [{ label: activeTab.charAt(0).toUpperCase() + activeTab.slice(1) }] : []),
+    { label: t('menu.articles'), href: activeTab !== 'articles' ? '/cmspanel/articles' : undefined, icon: FileText },
+    ...(activeTab !== 'articles' ? [{ label: activeTab === 'categories' ? t('menu.categories') : t('menu.tags') }] : []),
   ];
 
   // Article columns and fields
   const articleColumns = [
-    { key: 'title', label: 'Title', className: 'font-medium' },
+    { key: 'title', label: t('common.title'), className: 'font-medium' },
     {
       key: 'workflow_state',
-      label: 'Workflow',
+      label: t('articles.workflow'),
       render: (value) => {
         const colors = {
           published: 'bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800',
@@ -45,16 +48,16 @@ function ArticlesManager() {
         );
       }
     },
-    { key: 'status', label: 'Visibility', className: 'capitalize' },
-    { key: 'published_at', label: 'Published', type: 'date' },
-    { key: 'views', label: 'Views', type: 'number' },
+    { key: 'status', label: t('articles.visibility'), className: 'capitalize' },
+    { key: 'published_at', label: t('common.published'), type: 'date' },
+    { key: 'views', label: t('articles.views'), type: 'number' },
     {
       key: 'editor_type',
-      label: 'Type',
+      label: t('articles.type'),
       render: (value) => (
         value === 'visual' ?
-          <span title="Visual Builder" className="inline-flex items-center justify-center w-6 h-6 rounded bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400"><Layout className="w-3.5 h-3.5" /></span> :
-          <span title="Standard Editor" className="inline-flex items-center justify-center w-6 h-6 rounded bg-slate-50 text-slate-500 dark:bg-muted dark:text-muted-foreground"><FileText className="w-3.5 h-3.5" /></span>
+          <span title={t('articles.visual_builder')} className="inline-flex items-center justify-center w-6 h-6 rounded bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400"><Layout className="w-3.5 h-3.5" /></span> :
+          <span title={t('articles.standard_editor')} className="inline-flex items-center justify-center w-6 h-6 rounded bg-slate-50 text-slate-500 dark:bg-muted dark:text-muted-foreground"><FileText className="w-3.5 h-3.5" /></span>
       )
     }
   ];
@@ -86,62 +89,62 @@ function ArticlesManager() {
   );
 
   const articleFormFields = [
-    { key: 'title', label: 'Title', required: true },
-    { key: 'slug', label: 'Slug' },
+    { key: 'title', label: t('articles.form.title'), required: true },
+    { key: 'slug', label: t('common.slug') },
     {
-      key: 'status', label: 'Status', type: 'select', options: [
-        { value: 'draft', label: 'Draft' },
-        { value: 'published', label: 'Published' },
-        { value: 'archived', label: 'Archived' }
+      key: 'status', label: t('common.status'), type: 'select', options: [
+        { value: 'draft', label: t('common.draft') },
+        { value: 'published', label: t('common.published') },
+        { value: 'archived', label: t('common.archived') }
       ]
     },
-    { key: 'category_id', label: 'Category', type: 'resource_select', resourceTable: 'categories' },
-    { key: 'excerpt', label: 'Excerpt', type: 'textarea' },
-    { key: 'content', label: 'Content', type: 'richtext', description: 'Main article content with WYSIWYG editor' },
-    { key: 'featured_image', label: 'Featured Image', type: 'image', description: 'Upload or select from Media Library' },
-    { key: 'tags', label: 'Tags', type: 'tags' },
-    { key: 'is_public', label: 'Publicly Visible', type: 'boolean' }
+    { key: 'category_id', label: t('common.category'), type: 'resource_select', resourceTable: 'categories' },
+    { key: 'excerpt', label: t('articles.form.excerpt'), type: 'textarea' },
+    { key: 'content', label: t('articles.form.content'), type: 'richtext', description: t('articles.form.content_desc') || "Main article content with WYSIWYG editor" },
+    { key: 'featured_image', label: t('articles.form.featured_image'), type: 'image', description: t('articles.form.image_desc') || "Upload or select from Media Library" },
+    { key: 'tags', label: t('common.tags'), type: 'tags' },
+    { key: 'is_public', label: t('articles.form.is_public'), type: 'boolean' }
   ];
 
   // Category columns and fields
   const categoryColumns = [
-    { key: 'name', label: 'Name', className: 'font-medium' },
-    { key: 'slug', label: 'Slug' },
-    { key: 'description', label: 'Description' },
-    { key: 'created_at', label: 'Created', type: 'date' }
+    { key: 'name', label: t('common.name'), className: 'font-medium' },
+    { key: 'slug', label: t('common.slug') },
+    { key: 'description', label: t('common.description') },
+    { key: 'created_at', label: t('common.created_at'), type: 'date' }
   ];
 
   const categoryFormFields = [
-    { key: 'name', label: 'Name', required: true },
-    { key: 'slug', label: 'Slug' },
-    { key: 'description', label: 'Description', type: 'textarea' },
+    { key: 'name', label: t('common.name'), required: true },
+    { key: 'slug', label: t('common.slug') },
+    { key: 'description', label: t('common.description'), type: 'textarea' },
     {
-      key: 'type', label: 'Type', type: 'select', options: [
-        { value: 'articles', label: 'Articles' },
-        { value: 'product', label: 'Products' },
-        { value: 'portfolio', label: 'Portfolio' }
+      key: 'type', label: t('articles.type'), type: 'select', options: [
+        { value: 'articles', label: t('menu.articles') },
+        { value: 'product', label: t('menu.products') },
+        { value: 'portfolio', label: t('menu.portfolio') }
       ], defaultValue: 'articles'
     }
   ];
 
   // Tag columns and fields
   const tagColumns = [
-    { key: 'name', label: 'Name', className: 'font-medium' },
-    { key: 'slug', label: 'Slug' },
-    { key: 'created_at', label: 'Created', type: 'date' }
+    { key: 'name', label: t('common.name'), className: 'font-medium' },
+    { key: 'slug', label: t('common.slug') },
+    { key: 'created_at', label: t('common.created_at'), type: 'date' }
   ];
 
   const tagFormFields = [
-    { key: 'name', label: 'Name', required: true },
-    { key: 'slug', label: 'Slug' }
+    { key: 'name', label: t('common.name'), required: true },
+    { key: 'slug', label: t('common.slug') }
   ];
 
   return (
     <AdminPageLayout requiredPermission="tenant.articles.read">
       {/* Page Header with Breadcrumbs */}
       <PageHeader
-        title="Articles"
-        description="Manage your content, categories, and tags"
+        title={t('articles.title')}
+        description={t('articles.subtitle')}
         icon={FileText}
         breadcrumbs={breadcrumbs}
       />
@@ -155,7 +158,7 @@ function ArticlesManager() {
         <TabsContent value="articles" className="mt-0">
           <GenericContentManager
             tableName="articles"
-            resourceName="Article"
+            resourceName={t('articles.type')}
             columns={articleColumns}
             formFields={articleFormFields}
             permissionPrefix="articles"
@@ -169,7 +172,7 @@ function ArticlesManager() {
         <TabsContent value="categories" className="mt-0">
           <GenericContentManager
             tableName="categories"
-            resourceName="Category"
+            resourceName={t('common.category')}
             columns={categoryColumns}
             formFields={categoryFormFields}
             permissionPrefix="categories"

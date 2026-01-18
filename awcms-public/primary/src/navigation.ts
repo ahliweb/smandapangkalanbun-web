@@ -3,171 +3,171 @@ import { getPermalink, getBlogPermalink, getAsset } from './utils/permalinks';
 export const headerData = {
   links: [
     {
-      text: 'Homes',
+      text: 'nav.homes',
       links: [
         {
-          text: 'SaaS',
+          text: 'nav.saas',
           href: getPermalink('/homes/saas'),
         },
         {
-          text: 'Startup',
+          text: 'nav.startup',
           href: getPermalink('/homes/startup'),
         },
         {
-          text: 'Mobile App',
+          text: 'nav.mobile_app',
           href: getPermalink('/homes/mobile-app'),
         },
         {
-          text: 'Personal',
+          text: 'nav.personal',
           href: getPermalink('/homes/personal'),
         },
       ],
     },
     {
-      text: 'Pages',
+      text: 'nav.pages',
       links: [
         {
-          text: 'Features (Anchor Link)',
+          text: 'nav.features',
           href: getPermalink('/#features'),
         },
         {
-          text: 'Services',
+          text: 'nav.services',
           href: getPermalink('/services'),
         },
         {
-          text: 'Pricing',
+          text: 'nav.pricing',
           href: getPermalink('/pricing'),
         },
         {
-          text: 'About us',
+          text: 'nav.about',
           href: getPermalink('/about'),
         },
         {
-          text: 'Contact',
+          text: 'nav.contact',
           href: getPermalink('/contact'),
         },
         {
-          text: 'Terms',
+          text: 'nav.terms',
           href: getPermalink('/terms'),
         },
         {
-          text: 'Privacy policy',
+          text: 'nav.privacy',
           href: getPermalink('/privacy'),
         },
       ],
     },
     {
-      text: 'Landing',
+      text: 'nav.landing',
       links: [
         {
-          text: 'Lead Generation',
+          text: 'nav.lead_generation',
           href: getPermalink('/landing/lead-generation'),
         },
         {
-          text: 'Long-form Sales',
+          text: 'nav.long_form_sales',
           href: getPermalink('/landing/sales'),
         },
         {
-          text: 'Click-Through',
+          text: 'nav.click_through',
           href: getPermalink('/landing/click-through'),
         },
         {
-          text: 'Product Details (or Services)',
+          text: 'nav.product_details',
           href: getPermalink('/landing/product'),
         },
         {
-          text: 'Coming Soon or Pre-Launch',
+          text: 'nav.coming_soon',
           href: getPermalink('/landing/pre-launch'),
         },
         {
-          text: 'Subscription',
+          text: 'nav.subscription',
           href: getPermalink('/landing/subscription'),
         },
       ],
     },
     {
-      text: 'Blog',
+      text: 'nav.blog',
       links: [
         {
-          text: 'Blog List',
+          text: 'nav.blog_list',
           href: getBlogPermalink(),
         },
         {
-          text: 'Article',
+          text: 'nav.article',
           href: getPermalink('get-started-website-with-astro-tailwind-css', 'post'),
         },
         {
-          text: 'Article (with MDX)',
+          text: 'nav.article_mdx',
           href: getPermalink('markdown-elements-demo-post', 'post'),
         },
         {
-          text: 'Category Page',
+          text: 'nav.category_page',
           href: getPermalink('tutorials', 'category'),
         },
         {
-          text: 'Tag Page',
+          text: 'nav.tag_page',
           href: getPermalink('astro', 'tag'),
         },
       ],
     },
     {
-      text: 'Widgets',
+      text: 'nav.widgets',
       href: '#',
     },
   ],
-  actions: [{ text: 'Download', href: 'https://github.com/arthelokyo/astrowind', target: '_blank' }],
+  actions: [{ text: 'nav.download', href: 'https://github.com/arthelokyo/astrowind', target: '_blank' }],
 };
 
 export const footerData = {
   links: [
     {
-      title: 'Product',
+      title: 'footer.product',
       links: [
-        { text: 'Features', href: '#' },
-        { text: 'Security', href: '#' },
-        { text: 'Team', href: '#' },
-        { text: 'Enterprise', href: '#' },
-        { text: 'Customer stories', href: '#' },
-        { text: 'Pricing', href: '#' },
-        { text: 'Resources', href: '#' },
+        { text: 'footer.features', href: '#' },
+        { text: 'footer.security', href: '#' },
+        { text: 'footer.team', href: '#' },
+        { text: 'footer.enterprise', href: '#' },
+        { text: 'footer.customer_stories', href: '#' },
+        { text: 'footer.pricing', href: '#' },
+        { text: 'footer.resources', href: '#' },
       ],
     },
     {
-      title: 'Platform',
+      title: 'footer.platform',
       links: [
-        { text: 'Developer API', href: '#' },
-        { text: 'Partners', href: '#' },
-        { text: 'Atom', href: '#' },
-        { text: 'Electron', href: '#' },
-        { text: 'AstroWind Desktop', href: '#' },
+        { text: 'footer.developer_api', href: '#' },
+        { text: 'footer.partners', href: '#' },
+        { text: 'footer.atom', href: '#' },
+        { text: 'footer.electron', href: '#' },
+        { text: 'footer.desktop', href: '#' },
       ],
     },
     {
-      title: 'Support',
+      title: 'footer.support',
       links: [
-        { text: 'Docs', href: '#' },
-        { text: 'Community Forum', href: '#' },
-        { text: 'Professional Services', href: '#' },
-        { text: 'Skills', href: '#' },
-        { text: 'Status', href: '#' },
+        { text: 'footer.docs', href: '#' },
+        { text: 'footer.community', href: '#' },
+        { text: 'footer.prof_services', href: '#' },
+        { text: 'footer.skills', href: '#' },
+        { text: 'footer.status', href: '#' },
       ],
     },
     {
-      title: 'Company',
+      title: 'footer.company',
       links: [
-        { text: 'About', href: '#' },
-        { text: 'Blog', href: '#' },
-        { text: 'Careers', href: '#' },
-        { text: 'Press', href: '#' },
-        { text: 'Inclusion', href: '#' },
-        { text: 'Social Impact', href: '#' },
-        { text: 'Shop', href: '#' },
+        { text: 'footer.about', href: '#' },
+        { text: 'footer.blog', href: '#' },
+        { text: 'footer.careers', href: '#' },
+        { text: 'footer.press', href: '#' },
+        { text: 'footer.inclusion', href: '#' },
+        { text: 'footer.social_impact', href: '#' },
+        { text: 'footer.shop', href: '#' },
       ],
     },
   ],
   secondaryLinks: [
-    { text: 'Terms', href: getPermalink('/terms') },
-    { text: 'Privacy Policy', href: getPermalink('/privacy') },
+    { text: 'footer.terms', href: getPermalink('/terms') },
+    { text: 'footer.privacy', href: getPermalink('/privacy') },
   ],
   socialLinks: [
     { ariaLabel: 'X', icon: 'tabler:brand-x', href: '#' },
@@ -176,7 +176,5 @@ export const footerData = {
     { ariaLabel: 'RSS', icon: 'tabler:rss', href: getAsset('/rss.xml') },
     { ariaLabel: 'Github', icon: 'tabler:brand-github', href: 'https://github.com/arthelokyo/astrowind' },
   ],
-  footNote: `
-    Made by <a class="text-blue-600 underline dark:text-muted" href="https://github.com/arthelokyo"> Arthelokyo</a> · All rights reserved.
-  `,
+  footNote: 'footer.made_by',
 };

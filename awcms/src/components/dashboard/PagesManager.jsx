@@ -1,38 +1,39 @@
-
 import React, { useState, useMemo, useCallback } from 'react';
 import GenericContentManager from '@/components/dashboard/GenericContentManager';
 import VisualPageBuilder from '@/components/visual-builder/VisualPageBuilder';
 import { AdminPageLayout, PageHeader, PageTabs, TabsContent } from '@/templates/flowbite-admin';
 import { FileText, FolderOpen, Layers, Paintbrush } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useTranslation } from 'react-i18next';
 
 /**
  * PagesManager - Manages pages with Visual Builder support.
  * Refactored to use awadmintemplate01 components for consistent UI.
  */
 function PagesManager({ onlyVisual = false }) {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('pages');
   const [visualBuilderPage, setVisualBuilderPage] = useState(null);
 
   // Tab definitions
   const tabs = useMemo(() => onlyVisual ? [] : [
-    { value: 'pages', label: 'Pages', icon: FileText, color: 'blue' },
-    { value: 'categories', label: 'Categories', icon: FolderOpen, color: 'purple' },
-  ], [onlyVisual]);
+    { value: 'pages', label: t('pages.tabs.pages'), icon: FileText, color: 'blue' },
+    { value: 'categories', label: t('pages.tabs.categories'), icon: FolderOpen, color: 'purple' },
+  ], [onlyVisual, t]);
 
   // Dynamic breadcrumb based on active tab
   const breadcrumbs = useMemo(() => [
-    { label: onlyVisual ? 'Visual Pages' : 'Pages', href: activeTab !== 'pages' ? '/cmspanel/pages' : undefined, icon: Layers },
-    ...(activeTab !== 'pages' && !onlyVisual ? [{ label: 'Categories' }] : []),
-  ], [onlyVisual, activeTab]);
+    { label: onlyVisual ? t('pages.breadcrumbs.visual_pages') : t('pages.breadcrumbs.pages'), href: activeTab !== 'pages' ? '/cmspanel/pages' : undefined, icon: Layers },
+    ...(activeTab !== 'pages' && !onlyVisual ? [{ label: t('pages.breadcrumbs.categories') }] : []),
+  ], [onlyVisual, activeTab, t]);
 
   // Page columns with editor type indicator
   const pageColumns = useMemo(() => [
-    { key: 'title', label: 'Page Title', className: 'font-medium' },
-    { key: 'slug', label: 'Path' },
+    { key: 'title', label: t('pages.columns.title'), className: 'font-medium' },
+    { key: 'slug', label: t('pages.columns.path') },
     {
       key: 'page_type',
-      label: 'Type',
+      label: t('pages.columns.type'),
       render: (value) => {
         const colors = {
           homepage: 'bg-primary/10 text-primary border-primary/20',
@@ -44,24 +45,24 @@ function PagesManager({ onlyVisual = false }) {
           regular: 'bg-card text-card-foreground border-border border'
         };
         const labels = {
-          homepage: 'Home',
-          header: 'Header',
-          footer: 'Footer',
-          single_page: 'Page Tpl',
-          single_post: 'Post Tpl',
-          '404': '404',
-          regular: 'Page'
+          homepage: t('pages.badges.homepage'),
+          header: t('pages.badges.header'),
+          footer: t('pages.badges.footer'),
+          single_page: t('pages.badges.single_page'),
+          single_post: t('pages.badges.single_post'),
+          '404': t('pages.badges.404'),
+          regular: t('pages.badges.regular')
         };
         return (
           <span className={`px-2 py-0.5 text-xs rounded-full font-medium border ${colors[value] || colors.regular}`}>
-            {labels[value] || value || 'Page'}
+            {labels[value] || value || t('pages.badges.regular')}
           </span>
         );
       }
     },
     {
       key: 'category',
-      label: 'Category',
+      label: t('pages.columns.category'),
       render: (value, row) => (
         <span className="text-sm text-muted-foreground">
           {row.category?.name || '-'}
@@ -70,61 +71,61 @@ function PagesManager({ onlyVisual = false }) {
     },
     {
       key: 'editor_type',
-      label: 'Editor',
+      label: t('pages.columns.editor'),
       render: (value) => (
         <span className={`px-2 py-0.5 text-xs rounded-full border ${value === 'visual'
           ? 'bg-accent/10 text-accent-foreground border-accent/20'
           : 'bg-muted text-muted-foreground border-border'
           }`}>
-          {value === 'visual' ? '🎨 Visual' : '📝 Rich Text'}
+          {value === 'visual' ? `🎨 ${t('pages.badges.visual')}` : `📝 ${t('pages.badges.richtext')}`}
         </span>
       )
     },
-    { key: 'status', label: 'Status' },
-    { key: 'published_at', label: 'Published', type: 'date' },
-    { key: 'updated_at', label: 'Updated', type: 'date' }
-  ], []);
+    { key: 'status', label: t('pages.columns.status') },
+    { key: 'published_at', label: t('pages.columns.published'), type: 'date' },
+    { key: 'updated_at', label: t('pages.columns.updated'), type: 'date' }
+  ], [t]);
 
   const pageFormFields = useMemo(() => [
-    { key: 'title', label: 'Title', required: true },
+    { key: 'title', label: t('pages.form.title'), required: true },
     {
       key: 'page_type',
-      label: 'Page Type',
+      label: t('pages.form.page_type'),
       type: 'select',
       options: [
-        { value: 'regular', label: 'Regular Page' }
+        { value: 'regular', label: t('pages.form.page_type_regular') }
       ],
       defaultValue: 'regular',
-      description: 'System page type (Homepage, Header, etc.)'
+      description: t('pages.form.page_type_desc')
     },
-    { key: 'slug', label: 'URL Slug', required: true },
+    { key: 'slug', label: t('pages.form.slug'), required: true },
     {
-      key: 'status', label: 'Status', type: 'select', options: [
-        { value: 'published', label: 'Published' },
-        { value: 'draft', label: 'Draft' }
+      key: 'status', label: t('pages.form.status'), type: 'select', options: [
+        { value: 'published', label: t('pages.form.status_published') },
+        { value: 'draft', label: t('pages.form.status_draft') }
       ]
     },
     {
-      key: 'editor_type', label: 'Editor Type', type: 'select', options: [
-        { value: 'richtext', label: '📝 Rich Text Editor' },
-        { value: 'visual', label: '🎨 Visual Page Builder' }
+      key: 'editor_type', label: t('pages.form.editor_type'), type: 'select', options: [
+        { value: 'richtext', label: `📝 ${t('pages.form.editor_richtext')}` },
+        { value: 'visual', label: `🎨 ${t('pages.form.editor_visual')}` }
       ],
       defaultValue: onlyVisual ? 'visual' : 'richtext',
-      description: 'Choose the editor type for this page',
+      description: t('pages.form.editor_desc'),
     },
-    { key: 'category_id', label: 'Category', type: 'resource_select', resourceTable: 'categories', filter: { type: 'page' } },
+    { key: 'category_id', label: t('pages.form.category'), type: 'resource_select', resourceTable: 'categories', filter: { type: 'page' } },
     {
       key: 'content',
-      label: 'Content',
+      label: t('pages.form.content'),
       type: 'richtext',
-      description: 'Page content (for Rich Text editor)',
+      description: t('pages.form.content_desc'),
       conditionalShow: (formData) => formData.editor_type !== 'visual'
     },
-    { key: 'excerpt', label: 'Excerpt', type: 'textarea' },
-    { key: 'featured_image', label: 'Featured Image', type: 'image' },
-    { key: 'meta_description', label: 'SEO Description', type: 'textarea' },
-    { key: 'is_active', label: 'Active', type: 'boolean' }
-  ], [onlyVisual]);
+    { key: 'excerpt', label: t('pages.form.excerpt'), type: 'textarea' },
+    { key: 'featured_image', label: t('pages.form.featured_image'), type: 'image' },
+    { key: 'meta_description', label: t('pages.form.meta_desc'), type: 'textarea' },
+    { key: 'is_active', label: t('pages.form.active'), type: 'boolean' }
+  ], [onlyVisual, t]);
 
   // Custom row actions for Visual Builder
   const customRowActions = useCallback((page) => {
@@ -138,36 +139,36 @@ function PagesManager({ onlyVisual = false }) {
           }}
           variant="outline"
           className="h-7 px-2 text-xs border-accent text-accent-foreground hover:bg-accent/10"
-          title="Edit with Visual Builder"
+          title={t('pages.action_edit_visual')}
         >
           <Paintbrush className="w-3 h-3 mr-1.5" />
-          Edit Visual
+          {t('pages.action_edit_visual')}
         </Button>
       );
     }
     return null;
-  }, []);
+  }, [t]);
 
   // Category columns and fields
   const categoryColumns = useMemo(() => [
-    { key: 'name', label: 'Name', className: 'font-medium' },
-    { key: 'slug', label: 'Slug' },
-    { key: 'description', label: 'Description' },
-    { key: 'created_at', label: 'Created', type: 'date' }
-  ], []);
+    { key: 'name', label: t('pages.category.name'), className: 'font-medium' },
+    { key: 'slug', label: t('pages.category.slug') },
+    { key: 'description', label: t('pages.category.description') },
+    { key: 'created_at', label: t('pages.category.created'), type: 'date' }
+  ], [t]);
 
   const categoryFormFields = useMemo(() => [
-    { key: 'name', label: 'Name', required: true },
-    { key: 'slug', label: 'Slug' },
-    { key: 'description', label: 'Description', type: 'textarea' },
+    { key: 'name', label: t('pages.category.form.name'), required: true },
+    { key: 'slug', label: t('pages.category.form.slug') },
+    { key: 'description', label: t('pages.category.form.description'), type: 'textarea' },
     {
-      key: 'type', label: 'Type', type: 'select', options: [
-        { value: 'page', label: 'Pages' },
-        { value: 'article', label: 'Articles' },
-        { value: 'product', label: 'Products' }
+      key: 'type', label: t('pages.category.form.type'), type: 'select', options: [
+        { value: 'page', label: t('pages.category.form.type_page') },
+        { value: 'article', label: t('pages.category.form.type_article') },
+        { value: 'product', label: t('pages.category.form.type_product') }
       ], defaultValue: 'page'
     }
-  ], []);
+  ], [t]);
 
   // If Visual Builder is open, show it full screen
   if (visualBuilderPage) {
@@ -184,8 +185,8 @@ function PagesManager({ onlyVisual = false }) {
     <AdminPageLayout requiredPermission={onlyVisual ? "tenant.visual_pages.read" : "tenant.pages.read"}>
       {/* Page Header with Breadcrumbs */}
       <PageHeader
-        title={onlyVisual ? "Visual Pages" : "Pages"}
-        description={onlyVisual ? "Build pages with drag-and-drop" : "Manage website pages and sections"}
+        title={onlyVisual ? t('pages.visual_title') : t('pages.title')}
+        description={onlyVisual ? t('pages.visual_desc') : t('pages.subtitle')}
         icon={Layers}
         breadcrumbs={breadcrumbs}
       />
@@ -194,7 +195,7 @@ function PagesManager({ onlyVisual = false }) {
       {onlyVisual ? (
         <GenericContentManager
           tableName="pages"
-          resourceName="Visual Page"
+          resourceName={t('pages.visual_title')} // Or generic "Visual Page" if strictly needed in singular, but title works
           columns={pageColumns}
           formFields={pageFormFields}
           permissionPrefix="visual_pages"
@@ -211,7 +212,7 @@ function PagesManager({ onlyVisual = false }) {
           <TabsContent value="pages" className="mt-0">
             <GenericContentManager
               tableName="pages"
-              resourceName="Page"
+              resourceName={t('pages.badges.regular')}
               columns={pageColumns}
               formFields={pageFormFields}
               permissionPrefix="pages"
@@ -225,7 +226,7 @@ function PagesManager({ onlyVisual = false }) {
           <TabsContent value="categories" className="mt-0">
             <GenericContentManager
               tableName="categories"
-              resourceName="Category"
+              resourceName={t('pages.category.form.type_page')} // Or Category singular
               columns={categoryColumns}
               formFields={categoryFormFields}
               permissionPrefix="categories"

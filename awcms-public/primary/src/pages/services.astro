@@ -1,13 +1,16 @@
 ---
-import CallToAction from '~/components/widgets/CallToAction.astro';
-import Content from '~/components/widgets/Content.astro';
-import Features2 from '~/components/widgets/Features2.astro';
-import Hero from '~/components/widgets/Hero.astro';
-import Testimonials from '~/components/widgets/Testimonials.astro';
-import Layout from '~/layouts/PageLayout.astro';
+import CallToAction from "~/components/widgets/CallToAction.astro";
+import Content from "~/components/widgets/Content.astro";
+import Features2 from "~/components/widgets/Features2.astro";
+import Hero from "~/components/widgets/Hero.astro";
+import Testimonials from "~/components/widgets/Testimonials.astro";
+import Layout from "~/layouts/PageLayout.astro";
+import { getLocale, t } from "~/utils/i18n";
+
+const locale = getLocale(Astro.request);
 
 const metadata = {
-  title: 'Services',
+  title: t("services_page.hero.tagline", locale),
 };
 ---
 
@@ -15,74 +18,89 @@ const metadata = {
   <!-- Hero Widget ******************* -->
 
   <Hero
-    tagline="Services"
-    title="Elevate your projects with our stunning templates"
-    subtitle="Explore our meticulously crafted templates tailored to various industries and purposes. From captivating presentations to functional website designs, we offer the tools you need to succeed."
-    actions={[{ variant: 'primary', target: '_blank', text: 'Start exploring', href: '/' }]}
+    tagline={t("services_page.hero.tagline", locale)}
+    title={t("services_page.hero.title", locale)}
+    subtitle={t("services_page.hero.subtitle", locale)}
+    actions={[
+      {
+        variant: "primary",
+        target: "_blank",
+        text: t("services_page.hero.cta", locale),
+        href: "/",
+      },
+    ]}
     image={{
-      src: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80',
-      alt: 'AstroWind Hero Image',
+      src: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
+      alt: "AstroWind Hero Image",
     }}
   />
 
   <!-- Features2 Widget ************** -->
 
   <Features2
-    title="Explore our diverse templates"
-    subtitle="Discover our selection below to streamline and elevate your projects."
+    title={t("services_page.features.title", locale)}
+    subtitle={t("services_page.features.subtitle", locale)}
     columns={3}
     items={[
       {
-        title: 'Educational',
-        description:
-          'By harmonizing instructional design and visual appeal, templates streamline content creation for varied materials, expediting development and cultivating engaging educational spaces.',
-        icon: 'tabler:school',
+        title:
+          t("services_page.features.items.educational.title", locale) ||
+          "Educational",
+        description: t("services_page.features.items.educational", locale),
+        icon: "tabler:school",
       },
       {
-        title: 'Interior Design',
-        description:
-          'Crafting functional, visually appealing spaces for residential and commercial use. Templates emphasize layout, colors, and furniture setups, offering a versatile toolkit for your design vision.',
-        icon: 'tabler:home-star',
+        title:
+          t("services_page.features.items.interior.title", locale) ||
+          "Interior Design",
+        description: t("services_page.features.items.interior", locale),
+        icon: "tabler:home-star",
       },
       {
-        title: 'Photography',
-        description: `Empowering photographers, our templates facilitate captivating storytelling. With a keen focus on layout, galleries, and typography, they cater to both professionals and enthusiasts.`,
-        icon: 'tabler:photo',
+        title:
+          t("services_page.features.items.photography.title", locale) ||
+          "Photography",
+        description: t("services_page.features.items.photography", locale),
+        icon: "tabler:photo",
       },
       {
-        title: 'E-commerce',
-        description:
-          'Developing engaging online stores, our E-commerce templates ensure a dynamic presence to effectively showcase products. Ideal for startups or revamps.',
-        icon: 'tabler:shopping-cart',
+        title:
+          t("services_page.features.items.ecommerce.title", locale) ||
+          "E-commerce",
+        description: t("services_page.features.items.ecommerce", locale),
+        icon: "tabler:shopping-cart",
       },
       {
-        title: 'Blog',
-        description:
-          'With attention to typography, these templates empower effective content presentation for writers at any stage, ensuring visually engaging and user-friendly blogs.',
-        icon: 'tabler:article',
+        title: t("services_page.features.items.blog.title", locale) || "Blog",
+        description: t("services_page.features.items.blog", locale),
+        icon: "tabler:article",
       },
       {
-        title: 'Business',
-        description:
-          'Providing polished options for effective visual communication, these templates empower both startups and established companies for a professional brand presence.',
-        icon: 'tabler:building-store',
+        title:
+          t("services_page.features.items.business.title", locale) ||
+          "Business",
+        description: t("services_page.features.items.business", locale),
+        icon: "tabler:building-store",
       },
       {
-        title: 'Branding',
-        description:
-          'Offering pre-designed elements for a consistent brand identity, including logos and marketing materials. Ideal for new ventures or revamps.',
-        icon: 'tabler:arrow-big-up-lines',
+        title:
+          t("services_page.features.items.branding.title", locale) ||
+          "Branding",
+        description: t("services_page.features.items.branding", locale),
+        icon: "tabler:arrow-big-up-lines",
       },
       {
-        title: 'Medical',
-        description: `From presentations to patient forms, these tools enhance communication effectiveness for healthcare professionals. Ideal for medical practices and research pursuits.`,
-        icon: 'tabler:vaccine',
+        title:
+          t("services_page.features.items.medical.title", locale) || "Medical",
+        description: t("services_page.features.items.medical", locale),
+        icon: "tabler:vaccine",
       },
       {
-        title: 'Fashion Design',
-        description:
-          'With attention to detail, customization, and contemporary design, they empower designers to showcase ideas cohesively. Ideal for all levels of designers.',
-        icon: 'tabler:tie',
+        title:
+          t("services_page.features.items.fashion.title", locale) ||
+          "Fashion Design",
+        description: t("services_page.features.items.fashion", locale),
+        icon: "tabler:tie",
       },
     ]}
   />
@@ -93,37 +111,52 @@ const metadata = {
     isReversed
     items={[
       {
-        title: 'High-Quality Designs',
-        description:
-          'Our templates feature top-tier designs that ensure a professional and polished appearance for your projects.',
-        icon: 'tabler:wand',
+        title: t("services_page.main_features.items.quality.title", locale),
+        description: t(
+          "services_page.main_features.items.quality.desc",
+          locale,
+        ),
+        icon: "tabler:wand",
       },
       {
-        title: 'Customization Tools',
-        description:
-          'Tailor each template to your unique needs with user-friendly customization tools that let you personalize colors, fonts, and content.',
-        icon: 'tabler:settings',
+        title: t(
+          "services_page.main_features.items.customization.title",
+          locale,
+        ),
+        description: t(
+          "services_page.main_features.items.customization.desc",
+          locale,
+        ),
+        icon: "tabler:settings",
       },
       {
-        title: 'Pre-Designed Elements',
-        description:
-          'Save time and effort with our ready-to-use elements, including graphics, icons, and layouts that enhance the visual appeal of your creations.',
-        icon: 'tabler:presentation',
+        title: t("services_page.main_features.items.elements.title", locale),
+        description: t(
+          "services_page.main_features.items.elements.desc",
+          locale,
+        ),
+        icon: "tabler:presentation",
       },
       {
-        title: 'Preview and Mockup Views',
-        description:
-          'Visualize the final outcome before making any changes using our preview and mockup views, ensuring your projects meet your expectations.',
-        icon: 'tabler:carousel-horizontal',
+        title: t("services_page.main_features.items.preview.title", locale),
+        description: t(
+          "services_page.main_features.items.preview.desc",
+          locale,
+        ),
+        icon: "tabler:carousel-horizontal",
       },
     ]}
     image={{
-      src: 'https://images.unsplash.com/photo-1525909002-1b05e0c869d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80',
-      alt: 'Features Image',
+      src: "https://images.unsplash.com/photo-1525909002-1b05e0c869d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80",
+      alt: "Features Image",
     }}
   >
     <Fragment slot="content">
-      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">Main Features</h3>
+      <h3
+        class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2"
+      >
+        {t("services_page.main_features.title", locale)}
+      </h3>
     </Fragment>
   </Content>
 
@@ -133,78 +166,78 @@ const metadata = {
     isAfterContent
     items={[
       {
-        title: 'Time Savings',
-        description:
-          'Streamline your workflow, enabling you to create stunning materials efficiently and allocate more time to your core tasks.',
-        icon: 'tabler:clock',
+        title: t("services_page.benefits.items.time", locale),
+        description: t("services_page.benefits.items.time_desc", locale),
+        icon: "tabler:clock",
       },
       {
-        title: 'Professional Appearance',
-        description:
-          'Elevate your projects with the polished and sophisticated look that our templates provide, making a lasting impression on your audience.',
-        icon: 'tabler:school',
+        title: t("services_page.benefits.items.appearance", locale),
+        description: t("services_page.benefits.items.appearance_desc", locale),
+        icon: "tabler:school",
       },
       {
-        title: 'Cost-Efficiency',
-        description:
-          'Benefit from cost savings by avoiding the need for custom design work, as our templates offer professional-grade designs at a fraction of the cost.',
-        icon: 'tabler:coin',
+        title: t("services_page.benefits.items.cost", locale),
+        description: t("services_page.benefits.items.cost_desc", locale),
+        icon: "tabler:coin",
       },
       {
-        title: 'Instant Download',
-        description:
-          'Enjoy immediate access to your chosen templates upon purchase, enabling you to begin working on your projects without delay.',
-        icon: 'tabler:file-download',
+        title: t("services_page.benefits.items.download", locale),
+        description: t("services_page.benefits.items.download_desc", locale),
+        icon: "tabler:file-download",
       },
     ]}
     image={{
-      src: 'https://images.unsplash.com/photo-1552664688-cf412ec27db2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80',
-      alt: 'Benefits Image',
+      src: "https://images.unsplash.com/photo-1552664688-cf412ec27db2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
+      alt: "Benefits Image",
     }}
   >
     <Fragment slot="content">
-      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">Benefits</h3>
+      <h3
+        class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2"
+      >
+        {t("services_page.benefits.title", locale)}
+      </h3>
     </Fragment>
   </Content>
 
   <!-- Testimonials Widget *********** -->
 
   <Testimonials
-    title="Words from real customers"
+    title={t("services_page.testimonials.title", locale)}
     testimonials={[
       {
         testimonial: `The designs are not only visually appealing but also highly professional. The templates have saved me a significant amount of time while helping me make a lasting impression on my clients.`,
-        name: 'Emily Kennedy',
-        job: 'Front-end developer',
+        name: "Emily Kennedy",
+        job: "Front-end developer",
         image: {
-          src: 'https://images.unsplash.com/photo-1618835962148-cf177563c6c0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=930&q=80',
-          alt: 'Emily Kennedy Image',
+          src: "https://images.unsplash.com/photo-1618835962148-cf177563c6c0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=930&q=80",
+          alt: "Emily Kennedy Image",
         },
       },
       {
         testimonial: `It beautifully showcases my work, with its clean and elegant design that lets my photographs shine. Customization was a breeze, even for a non-tech person like me. The result is a professional and immersive portfolio that's garnered numerous compliments.`,
-        name: 'Sarah Hansen',
-        job: 'Photographer',
+        name: "Sarah Hansen",
+        job: "Photographer",
         image: {
-          src: 'https://images.unsplash.com/photo-1561406636-b80293969660?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80',
-          alt: 'Sarah Hansen Image',
+          src: "https://images.unsplash.com/photo-1561406636-b80293969660?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
+          alt: "Sarah Hansen Image",
         },
       },
       {
         testimonial: `I discovered these templates and I'm impressed by their variety and quality. They've helped me establish a consistent brand image across my marketing and social platforms, elevating my business's overall appearance.`,
-        name: 'Mark Wilkinson',
-        job: 'Small business owner',
+        name: "Mark Wilkinson",
+        job: "Small business owner",
         image: {
-          src: 'https://images.unsplash.com/photo-1545167622-3a6ac756afa4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=824&q=80',
-          alt: 'Mark Wilkinson Image',
+          src: "https://images.unsplash.com/photo-1545167622-3a6ac756afa4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=824&q=80",
+          alt: "Mark Wilkinson Image",
         },
       },
     ]}
     callToAction={{
-      target: '_blank',
-      text: 'More testimonials...',
-      href: 'https://github.com/arthelokyo/astrowind',
-      icon: 'tabler:chevron-right',
+      target: "_blank",
+      text: t("services_page.testimonials.cta", locale),
+      href: "https://github.com/arthelokyo/astrowind",
+      icon: "tabler:chevron-right",
     }}
   />
 
@@ -213,12 +246,12 @@ const metadata = {
   <CallToAction
     actions={[
       {
-        variant: 'primary',
-        text: 'Start exploring',
-        href: '/',
+        variant: "primary",
+        text: t("services_page.cta.action", locale),
+        href: "/",
       },
     ]}
-    title="Dive into our template collection"
-    subtitle="Whether you're in business, design, or education, our templates are here to elevate your projects."
+    title={t("services_page.cta.title", locale)}
+    subtitle={t("services_page.cta.subtitle", locale)}
   />
 </Layout>

@@ -14,8 +14,18 @@ export const onRequest = defineMiddleware(async (context, next) => {
     const pathname = url.pathname;
 
     try {
+        // --- I18N LOGIC ---
+        // Strip locale prefix for internal routing and logic
+        // e.g., /id/homes/startup -> /homes/startup
+        let logicalPath = pathname;
+        const localeMatch = pathname.match(/^\/(id|en)(\/|$)/);
+        if (localeMatch) {
+            logicalPath = pathname.replace(/^\/(id|en)/, '') || '/';
+        }
+
         // 1. Extract tenant from path
-        const tenantSlugFromPath = extractTenantFromPath(pathname);
+        // Use logicalPath to ignore locale prefix
+        const tenantSlugFromPath = extractTenantFromPath(logicalPath);
 
         // 2. Get Runtime Env for Cloudflare
         const runtimeEnv = context.locals.runtime?.env || {};
@@ -129,6 +139,12 @@ export const onRequest = defineMiddleware(async (context, next) => {
         locals.host = request.headers.get("host") || "";
         // Track how tenant was resolved - 'path' only if actually resolved from path lookup
         locals.tenant_source = resolvedFromPath ? 'path' : 'host';
+
+        // Rewrite if locale was stripped to match actual file routes
+        if (localeMatch) {
+            // console.log(`[Middleware] Rewriting i18n path: ${pathname} -> ${logicalPath}`);
+            return next(logicalPath);
+        }
 
         return next();
     } catch (e) {

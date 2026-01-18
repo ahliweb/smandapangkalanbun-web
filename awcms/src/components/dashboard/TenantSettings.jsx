@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { supabase } from '@/lib/customSupabaseClient';
 import { useTenant } from '@/contexts/TenantContext';
@@ -14,6 +15,7 @@ import { Loader2, Save } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function TenantSettings() {
+    const { t } = useTranslation();
     const { currentTenant: tenant, loading: tenantLoading } = useTenant();
     const { checkAccess } = usePermissions();
     const { toast } = useToast();
@@ -69,27 +71,29 @@ export default function TenantSettings() {
 
             if (error) throw error;
 
-            toast({ title: 'Settings Saved', description: 'Your tenant settings have been updated.' });
+            if (error) throw error;
+
+            toast({ title: t('tenant_settings.toasts.saved_title'), description: t('tenant_settings.toasts.saved_desc') });
 
             // Note: refreshTenant not available in current TenantContext
             // Full refresh would require page reload or context enhancement
 
         } catch (err) {
             console.error('Error saving settings:', err);
-            toast({ variant: 'destructive', title: 'Error', description: err.message });
+            toast({ variant: 'destructive', title: t('tenant_settings.toasts.error_title'), description: err.message });
         } finally {
             setSaving(false);
         }
     };
 
     if (tenantLoading) return <div className="p-8 flex justify-center"><Loader2 className="animate-spin text-slate-400" /></div>;
-    if (!tenant) return <div className="p-8 text-center"><h2 className="text-xl font-bold text-slate-800">Tenant Not Found</h2><p className="text-slate-500">Unable to load tenant settings.</p></div>;
+    if (!tenant) return <div className="p-8 text-center"><h2 className="text-xl font-bold text-slate-800">{t('tenant_settings.errors.tenant_not_found')}</h2><p className="text-slate-500">{t('tenant_settings.errors.tenant_load_error')}</p></div>;
 
     if (!canManageSettings) {
         return (
             <div className="p-8 text-center">
-                <h2 className="text-xl font-bold text-slate-800">Access Denied</h2>
-                <p className="text-slate-500">You do not have permission to manage tenant settings.</p>
+                <h2 className="text-xl font-bold text-slate-800">{t('tenant_settings.errors.access_denied')}</h2>
+                <p className="text-slate-500">{t('tenant_settings.errors.access_denied_desc')}</p>
             </div>
         );
     }
@@ -97,8 +101,8 @@ export default function TenantSettings() {
     return (
         <div className="max-w-4xl mx-auto space-y-6 pb-12">
             <div>
-                <h1 className="text-3xl font-bold tracking-tight text-slate-900">Tenant Settings</h1>
-                <p className="text-slate-500">Manage your organization's branding and preferences.</p>
+                <h1 className="text-3xl font-bold tracking-tight text-slate-900">{t('tenant_settings.title')}</h1>
+                <p className="text-slate-500">{t('tenant_settings.description')}</p>
             </div>
 
             <Form {...form}>
@@ -107,8 +111,8 @@ export default function TenantSettings() {
                     {/* Branding Section */}
                     <Card>
                         <CardHeader>
-                            <CardTitle>Branding</CardTitle>
-                            <CardDescription>Customize how your portal looks.</CardDescription>
+                            <CardTitle>{t('tenant_settings.branding.title')}</CardTitle>
+                            <CardDescription>{t('tenant_settings.branding.description')}</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
 
@@ -117,9 +121,9 @@ export default function TenantSettings() {
                                 name="siteName"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Site Name</FormLabel>
+                                        <FormLabel>{t('tenant_settings.branding.site_name')}</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Acme Corp" {...field} />
+                                            <Input placeholder={t('tenant_settings.branding.site_name_placeholder')} {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -132,7 +136,7 @@ export default function TenantSettings() {
                                     name="brandColor"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Brand Color</FormLabel>
+                                            <FormLabel>{t('tenant_settings.branding.brand_color')}</FormLabel>
                                             <div className="flex gap-3 items-center">
                                                 <div className="relative">
                                                     <div
@@ -151,7 +155,7 @@ export default function TenantSettings() {
                                                 <div className="flex-1">
                                                     <FormControl>
                                                         <Input
-                                                            placeholder="#000000"
+                                                            placeholder={t('tenant_settings.branding.brand_color_desc')}
                                                             {...field}
                                                             className="font-mono uppercase"
                                                             onChange={(e) => {
@@ -162,7 +166,7 @@ export default function TenantSettings() {
                                                         />
                                                     </FormControl>
                                                     <FormDescription className="text-xs mt-1">
-                                                        Primary color for buttons and accents.
+                                                        {t('tenant_settings.branding.brand_color_desc')}
                                                     </FormDescription>
                                                 </div>
                                             </div>
@@ -176,11 +180,11 @@ export default function TenantSettings() {
                                     name="fontFamily"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Font Family</FormLabel>
+                                            <FormLabel>{t('tenant_settings.branding.font_family')}</FormLabel>
                                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                 <FormControl>
                                                     <SelectTrigger>
-                                                        <SelectValue placeholder="Select a font" />
+                                                        <SelectValue placeholder={t('tenant_settings.branding.font_select_placeholder')} />
                                                     </SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent>
@@ -196,12 +200,12 @@ export default function TenantSettings() {
                                                 </SelectContent>
                                             </Select>
                                             <FormDescription>
-                                                Select the primary font for your portal.
+                                                {t('tenant_settings.branding.font_family_desc')}
                                                 <span
                                                     className="block mt-2 text-lg text-slate-800 border p-2 rounded bg-slate-50"
                                                     style={{ fontFamily: field.value === 'system-ui' ? 'system-ui' : `${field.value}, sans-serif` }}
                                                 >
-                                                    The quick brown fox jumps over the lazy dog.
+                                                    {t('tenant_settings.branding.font_preview')}
                                                 </span>
                                             </FormDescription>
                                             <FormMessage />
@@ -215,7 +219,7 @@ export default function TenantSettings() {
                                 name="logoUrl"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Logo</FormLabel>
+                                        <FormLabel>{t('tenant_settings.branding.logo')}</FormLabel>
                                         <FormControl>
                                             <ImageUpload
                                                 value={field.value}
@@ -223,7 +227,7 @@ export default function TenantSettings() {
                                                 className="w-full max-w-sm"
                                             />
                                         </FormControl>
-                                        <FormDescription>Recommended: PNG or SVG, transparent background.</FormDescription>
+                                        <FormDescription>{t('tenant_settings.branding.logo_desc')}</FormDescription>
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -236,7 +240,7 @@ export default function TenantSettings() {
                         <Button type="submit" disabled={saving} className="bg-blue-600 hover:bg-blue-700">
                             {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                             <Save className="w-4 h-4 mr-2" />
-                            Save Changes
+                            {saving ? t('tenant_settings.buttons.saving') : t('tenant_settings.buttons.save_changes')}
                         </Button>
                     </div>
 

@@ -172,7 +172,7 @@ function Sidebar({ isOpen, setIsOpen }) {
               <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-900/20">
                 <LayoutGrid className="w-5 h-5 text-white" />
               </div>
-              <span className="font-bold text-lg tracking-tight">CMS Portal</span>
+              <span className="font-bold text-lg tracking-tight">{t('sidebar.title')}</span>
             </div>
             <button
               onClick={() => setIsOpen(false)}
@@ -189,7 +189,7 @@ function Sidebar({ isOpen, setIsOpen }) {
               <input
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search menu..."
+                placeholder={t('sidebar.search_placeholder')}
                 className="w-full rounded-md py-2 pl-9 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all"
                 style={{
                   backgroundColor: 'rgba(2, 6, 23, 0.5)',
@@ -214,7 +214,7 @@ function Sidebar({ isOpen, setIsOpen }) {
               </div>
             ) : sortedGroupKeys.length === 0 ? (
               <div className="text-center py-8 text-slate-500 text-sm">
-                No menu items found
+                {t('sidebar.no_items')}
               </div>
             ) : (
               sortedGroupKeys.map(groupLabel => {
