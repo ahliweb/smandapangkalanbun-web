@@ -14,13 +14,25 @@ export const onRequest = defineMiddleware(async (context, next) => {
     const pathname = url.pathname;
 
     try {
+        // --- REFERRAL CODE LOGIC ---
+        // Extract referral code from /ref/refcode paths
+        // e.g., /ref/ABC123/homes/startup -> logicalPath: /homes/startup, refCode: ABC123
+        let logicalPath = pathname;
+        let refCode: string | null = null;
+        const refMatch = pathname.match(/^\/ref\/([a-zA-Z0-9_-]+)(\/|$)/);
+        if (refMatch) {
+            refCode = refMatch[1];
+            logicalPath = pathname.replace(/^\/ref\/[a-zA-Z0-9_-]+/, '') || '/';
+        }
+
         // --- I18N LOGIC ---
         // Strip locale prefix for internal routing and logic
         // e.g., /id/homes/startup -> /homes/startup
-        let logicalPath = pathname;
-        const localeMatch = pathname.match(/^\/(id|en)(\/|$)/);
+        const localeMatch = logicalPath.match(/^\/(id|en)(\/|$)/);
+        let locale: string | null = null;
         if (localeMatch) {
-            logicalPath = pathname.replace(/^\/(id|en)/, '') || '/';
+            locale = localeMatch[1];
+            logicalPath = logicalPath.replace(/^\/(id|en)/, '') || '/';
         }
 
         // 1. Extract tenant from path
@@ -140,9 +152,13 @@ export const onRequest = defineMiddleware(async (context, next) => {
         // Track how tenant was resolved - 'path' only if actually resolved from path lookup
         locals.tenant_source = resolvedFromPath ? 'path' : 'host';
 
-        // Rewrite if locale was stripped to match actual file routes
-        if (localeMatch) {
-            // console.log(`[Middleware] Rewriting i18n path: ${pathname} -> ${logicalPath}`);
+        // Set referral code and locale for downstream components
+        locals.ref_code = refCode;
+        locals.locale = locale || 'en'; // Default to English
+
+        // Rewrite if path was modified (ref code or locale stripped)
+        if (refMatch || localeMatch) {
+            // console.log(`[Middleware] Rewriting path: ${pathname} -> ${logicalPath}`);
             return next(logicalPath);
         }
 

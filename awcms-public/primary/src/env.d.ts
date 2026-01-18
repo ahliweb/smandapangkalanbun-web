@@ -10,6 +10,8 @@ declare namespace App {
         tenant_slug: string;
         host: string;
         tenant_source: 'path' | 'host';
+        ref_code: string | null;
+        locale: string;
         runtime: {
             env: Record<string, string>;
         };
