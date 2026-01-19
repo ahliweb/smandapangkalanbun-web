@@ -12,8 +12,8 @@ declare namespace App {
     tenant_source: "path" | "host";
     ref_code: string | null;
     locale: string;
-    seo?: Record<string, any>;
-    tenant?: Record<string, any>;
+    seo?: Record<string, unknown>;
+    tenant?: Record<string, unknown>;
     runtime: {
       env: Record<string, string>;
     };

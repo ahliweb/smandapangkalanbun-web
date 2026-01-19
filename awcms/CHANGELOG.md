@@ -7,6 +7,14 @@ All notable changes to the **AWCMS** project will be documented in this file.
 
 ### Added
 
+- **Database Synchronization**:
+  - **Baselining**: Consolidated fragmented migration history into a single baseline file (`20260119230212_remote_schema.sql`) to resolve persistent "Duplicate Primary Key" conflicts during `db pull`.
+  - **Stability**: Verified full synchronization between local environment and remote database.
+
+## [2.21.0] "Nexus" - 2026-01-20
+
+### Added
+
 - **Multi-Tenancy & SEO Integration**:
   - **SEO Data Flow**: Public Portal now fetches global SEO settings (Title, Description, OG Image) from Admin Panel via `middleware.ts`.
   - **Tenant Context**: Implemented `getTenant` helper in Public Portal to provide full tenant profile access (`locals.tenant`) to all components.
@@ -18,6 +26,15 @@ All notable changes to the **AWCMS** project will be documented in this file.
   - Renamed `portfolio` table to `projects` to align with Public Portal expectations.
   - Renamed `testimonies` table to `testimonials` to align with Public Portal expectations.
   - Updated `PortfolioManager` and `TestimonyManager` in Admin Panel to use new resource names.
+
+### Fixed
+
+- **Sidebar Visibility**:
+  - Restored visibility of "Email Settings" and "Email Logs" in the admin sidebar.
+  - Updated `useAdminMenu` fallback configuration to include missing email menu items.
+  - Manually seeded `admin_menus` table with missing entries for Mailketing plugin.
+- **Code Quality**:
+  - Fixed `any` type errors in `awcms-public/primary/src/env.d.ts` for strict TypeScript compliance.
 
 ## [2.20.0] "Vanguard" - 2026-01-19
 
