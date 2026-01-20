@@ -1,0 +1,91 @@
+import idLocale from '../locales/id.json';
+import enLocale from '../locales/en.json';
+
+export type Locale = 'id' | 'en';
+
+const locales: Record<Locale, typeof idLocale> = {
+  id: idLocale,
+  en: enLocale,
+};
+
+export const defaultLocale: Locale = 'id';
+export const supportedLocales: Locale[] = ['id', 'en'];
+
+export function getLocale(request?: Request): Locale {
+  if (!request) return defaultLocale;
+  
+  const url = new URL(request.url);
+  const pathLocale = url.pathname.split('/')[1] as Locale;
+  
+  if (supportedLocales.includes(pathLocale)) {
+    return pathLocale;
+  }
+  
+  const acceptLanguage = request.headers.get('accept-language');
+  if (acceptLanguage) {
+    const languages = acceptLanguage.split(',').map(lang => {
+      const [code] = lang.trim().split(';');
+      return code.split('-')[0].toLowerCase() as Locale;
+    });
+    
+    for (const lang of languages) {
+      if (supportedLocales.includes(lang)) {
+        return lang;
+      }
+    }
+  }
+  
+  return defaultLocale;
+}
+
+export function t(key: string, locale: Locale = defaultLocale): string {
+  const keys = key.split('.');
+  let value: any = locales[locale];
+  
+  for (const k of keys) {
+    if (value && typeof value === 'object' && k in value) {
+      value = value[k];
+    } else {
+      // Fallback to default locale
+      value = locales[defaultLocale];
+      for (const fallbackKey of keys) {
+        if (value && typeof value === 'object' && fallbackKey in value) {
+          value = value[fallbackKey];
+        } else {
+          return key; // Return the key if not found
+        }
+      }
+      break;
+    }
+  }
+  
+  return typeof value === 'string' ? value : key;
+}
+
+export function getLocalizedValue<T>(obj: Record<string, T> | undefined, locale: Locale): T | undefined {
+  if (!obj) return undefined;
+  return obj[locale] ?? obj[defaultLocale];
+}
+
+export function getLocalizedPath(path: string, locale: Locale): string {
+  if (locale === defaultLocale) {
+    return path;
+  }
+  return `/${locale}${path.startsWith('/') ? path : `/${path}`}`;
+}
+
+export function extractLocaleFromPath(path: string): { locale: Locale; cleanPath: string } {
+  const segments = path.split('/').filter(Boolean);
+  
+  if (segments.length > 0 && supportedLocales.includes(segments[0] as Locale)) {
+    return {
+      locale: segments[0] as Locale,
+      cleanPath: '/' + segments.slice(1).join('/'),
+    };
+  }
+  
+  return {
+    locale: defaultLocale,
+    cleanPath: path,
+  };
+}
