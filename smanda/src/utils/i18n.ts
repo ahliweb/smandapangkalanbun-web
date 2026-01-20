@@ -11,28 +11,29 @@ const locales: Record<Locale, typeof idLocale> = {
 export const defaultLocale: Locale = 'id';
 export const supportedLocales: Locale[] = ['id', 'en'];
 
-export function getLocale(request?: Request): Locale {
-  if (!request) return defaultLocale;
+export function getLocale(urlOrRequest?: URL | Request | string): Locale {
+  if (!urlOrRequest) return defaultLocale;
   
-  const url = new URL(request.url);
-  const pathLocale = url.pathname.split('/')[1] as Locale;
+  let pathname: string;
+  
+  if (typeof urlOrRequest === 'string') {
+    pathname = urlOrRequest;
+  } else if (urlOrRequest instanceof URL) {
+    pathname = urlOrRequest.pathname;
+  } else if (urlOrRequest instanceof Request) {
+    try {
+      pathname = new URL(urlOrRequest.url).pathname;
+    } catch {
+      return defaultLocale;
+    }
+  } else {
+    return defaultLocale;
+  }
+  
+  const pathLocale = pathname.split('/')[1] as Locale;
   
   if (supportedLocales.includes(pathLocale)) {
     return pathLocale;
-  }
-  
-  const acceptLanguage = request.headers.get('accept-language');
-  if (acceptLanguage) {
-    const languages = acceptLanguage.split(',').map(lang => {
-      const [code] = lang.trim().split(';');
-      return code.split('-')[0].toLowerCase() as Locale;
-    });
-    
-    for (const lang of languages) {
-      if (supportedLocales.includes(lang)) {
-        return lang;
-      }
-    }
   }
   
   return defaultLocale;
