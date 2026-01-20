@@ -5,7 +5,7 @@ import { getLocale, t, getLocalizedValue, type Locale } from '../utils/i18n';
 import contactData from '../data/pages/contact.json';
 import site from '../data/site.json';
 
-const locale = getLocale(Astro.request) as Locale;
+const locale = getLocale(Astro.url) as Locale;
 const { contactPage, contactInfo, socialMedia, mapEmbed } = contactData;
 ---
 

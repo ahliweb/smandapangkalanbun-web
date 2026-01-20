@@ -13,7 +13,7 @@ export async function getStaticPaths() {
 }
 
 const { article } = Astro.props;
-const locale = getLocale(Astro.request) as Locale;
+const locale = getLocale(Astro.url) as Locale;
 
 // Get related articles (same category, exclude current)
 const relatedArticles = newsData.articles

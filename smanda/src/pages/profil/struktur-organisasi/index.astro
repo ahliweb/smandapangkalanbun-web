@@ -4,7 +4,7 @@ import { Icon } from 'astro-icon/components';
 import { getLocale, t, getLocalizedValue, getLocalizedPath, type Locale } from '../../../../utils/i18n';
 import orgData from '../../../../data/pages/organization.json';
 
-const locale = getLocale(Astro.request) as Locale;
+const locale = getLocale(Astro.url) as Locale;
 const { schoolOrganization, committeeOrganization, osisOrganization, mpkOrganization } = orgData;
 ---
 

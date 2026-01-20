@@ -5,7 +5,7 @@ import { getLocale, t, getLocalizedValue, getLocalizedPath, type Locale } from '
 import site from '../data/site.json';
 import newsData from '../data/articles/news.json';
 
-const locale = getLocale(Astro.request) as Locale;
+const locale = getLocale(Astro.url) as Locale;
 const featuredNews = newsData.articles.filter(a => a.featured).slice(0, 3);
 ---
 

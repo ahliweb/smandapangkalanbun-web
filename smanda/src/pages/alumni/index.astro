@@ -4,7 +4,7 @@ import { Icon } from 'astro-icon/components';
 import { getLocale, t, getLocalizedValue, type Locale } from '../../utils/i18n';
 import alumniData from '../../data/pages/alumni.json';
 
-const locale = getLocale(Astro.request) as Locale;
+const locale = getLocale(Astro.url) as Locale;
 const { alumniPage, featuredAlumni, alumniStats, alumniAssociation } = alumniData;
 ---
 

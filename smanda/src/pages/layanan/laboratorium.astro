@@ -5,7 +5,7 @@ import { getLocale, t, getLocalizedValue, getLocalizedPath, type Locale } from '
 import servicesData from '../../../data/pages/services.json';
 import imagesData from '../../../data/images.json';
 
-const locale = getLocale(Astro.request) as Locale;
+const locale = getLocale(Astro.url) as Locale;
 const { laboratory } = servicesData;
 ---
 
