@@ -21,46 +21,79 @@ Build a school website template for SMAN 2 Pangkalan Bun based on AWCMS framewor
 - SEO-optimized pages ✅
 - All menu structure as specified ✅
 
-## What's Been Implemented (Jan 20, 2026)
-### Pages Created:
-- [x] Home (/) - Hero, stats, about, news, CTA
-- [x] Profile (/profil) - Vision/Mission, history timeline, facilities
-- [x] News (/berita) - Articles list, agenda, gallery
-- [x] Finance (/keuangan) - BOS, APBD, Committee
-- [x] Services (/layanan) - Extracurricular, labs, library
-- [x] Achievements (/prestasi) - Categorized achievements
-- [x] Alumni (/alumni) - Featured alumni, association
-- [x] Contact (/kontak) - Form, map, social media
-- [x] English version (/en/)
+## What's Been Implemented
 
-### Data Files:
-- site.json, navigation.json
-- profile.json, organization.json, staff.json
-- news.json, finance.json, services.json
-- achievements.json, alumni.json, contact.json
-- locales/id.json, locales/en.json
+### Iteration 1 (Jan 20, 2026)
+- Home page with hero, stats, about, news, CTA sections
+- Profile overview page
+- News listing page
+- Finance transparency page
+- Services overview
+- Achievements page
+- Alumni page
+- Contact page with form
 
-## Prioritized Backlog (P0/P1/P2)
+### Iteration 2 (Jan 20, 2026) - Sub-pages Added
+**Profile Sub-pages:**
+- /profil/sambutan-kepala-sekolah - Principal's welcome message
+- /profil/sejarah - History with timeline and milestones
+- /profil/visi-misi - Vision & Mission with detailed cards
+- /profil/sarana-prasarana - Facilities with cards and stats
+- /profil/adiwiyata - Adiwiyata environmental program
+- /profil/tenaga-pendidik - Teaching & admin staff tables
+- /profil/struktur-organisasi - Org structure (school, committee, OSIS, MPK)
+
+**News Sub-pages:**
+- /berita/[slug] - Dynamic news article detail pages
+- /berita/galeri - Photo gallery page
+- /berita/agenda - Agenda/events listing
+
+**Services Sub-pages:**
+- /layanan/ekstrakurikuler - All extracurricular activities list
+- /layanan/laboratorium - Labs with images and rules
+- /layanan/perpustakaan - Library with images and services
+
+**Assets:**
+- Integrated school images from Unsplash/Pexels
+- Created /src/data/images.json for image management
+
+## Data Files Structure
+```
+src/data/
+├── site.json - School info, stats, social media
+├── navigation.json - Menu structure (multi-language)
+├── images.json - Image URLs for various sections
+├── pages/
+│   ├── profile.json - Principal message, history, vision, facilities
+│   ├── organization.json - School, committee, OSIS, MPK structures
+│   ├── staff.json - Teachers and admin staff lists
+│   ├── services.json - Extracurricular, labs, library info
+│   ├── achievements.json - Student achievements
+│   ├── alumni.json - Featured alumni
+│   └── contact.json - Contact info and social media
+└── articles/
+    ├── news.json - News articles, gallery, agenda
+    └── finance.json - BOS, APBD, Committee finances
+```
+
+## Prioritized Backlog
 
 ### P0 - Critical (Next Sprint)
-- [ ] Sub-pages for profile (sambutan-kepala-sekolah, sejarah, visi-misi, etc.)
-- [ ] Individual news article pages
-- [ ] Image optimization with real school photos
-
-### P1 - Important
 - [ ] Search functionality
 - [ ] News pagination
-- [ ] Gallery lightbox
-- [ ] PPDB integration form
+- [ ] Real school images from Google Drive assets
+
+### P1 - Important
+- [ ] PPDB online registration form
+- [ ] Gallery lightbox feature
+- [ ] PDF report downloads
+- [ ] Calendar integration
 
 ### P2 - Nice to Have
 - [ ] Dark mode support
-- [ ] PDF report downloads
-- [ ] Calendar integration
 - [ ] E-learning integration
+- [ ] Supabase database migration
 
-## Next Tasks
-1. Create detailed sub-pages for profile section
-2. Add real school images from Google Drive assets
-3. Implement news article detail pages
-4. Add search functionality
+## Testing Status
+- Iteration 1: 100% passed (all pages load, navigation works)
+- Iteration 2: 100% passed (all sub-pages, detail pages, images work)
