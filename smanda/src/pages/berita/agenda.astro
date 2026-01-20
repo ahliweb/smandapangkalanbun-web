@@ -1,8 +1,8 @@
 ---
-import Layout from '../../../layouts/Layout.astro';
+import Layout from '../../layouts/Layout.astro';
 import { Icon } from 'astro-icon/components';
-import { getLocale, t, getLocalizedValue, getLocalizedPath, type Locale } from '../../../utils/i18n';
-import newsData from '../../../data/articles/news.json';
+import { getLocale, t, getLocalizedValue, getLocalizedPath, type Locale } from '../../utils/i18n';
+import newsData from '../../data/articles/news.json';
 
 const locale = getLocale(Astro.url) as Locale;
 const { agenda } = newsData;

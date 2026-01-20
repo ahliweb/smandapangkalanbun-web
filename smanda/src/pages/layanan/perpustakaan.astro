@@ -1,9 +1,9 @@
 ---
-import Layout from '../../../layouts/Layout.astro';
+import Layout from '../../layouts/Layout.astro';
 import { Icon } from 'astro-icon/components';
-import { getLocale, t, getLocalizedValue, getLocalizedPath, type Locale } from '../../../utils/i18n';
-import servicesData from '../../../data/pages/services.json';
-import imagesData from '../../../data/images.json';
+import { getLocale, t, getLocalizedValue, getLocalizedPath, type Locale } from '../../utils/i18n';
+import servicesData from '../../data/pages/services.json';
+import imagesData from '../../data/images.json';
 
 const locale = getLocale(Astro.url) as Locale;
 const { library } = servicesData;
