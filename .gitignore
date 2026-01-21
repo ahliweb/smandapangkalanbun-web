@@ -40,3 +40,7 @@ supabase/functions/*/deno.lock
 # Environment files
 *.env
 *.env.*
+-e 
+# Environment files
+*.env
+*.env.*
